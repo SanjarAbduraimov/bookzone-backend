@@ -10,5 +10,5 @@ const authorSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now() }
 });
 
-const Author = mongoose.model('author', authorSchema);
+const Author = mongoose.model('authors', authorSchema);
 module.exports = Author;
