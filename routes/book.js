@@ -1,5 +1,6 @@
 const express = require('express');
 const { create, fetchBooks, fetchBookById, updateBook, deleteBook } = require('../controller/book');
+
 const router = express.Router();
 router.post('/', create);
 router.get('/', fetchBooks);
