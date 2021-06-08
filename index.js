@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const logger = require('./middleware/logger');
 const booksRouter = require('./routes/books');
+const authRouter = require('./routes/auth');
 const authorsRouter = require('./routes/authors');
 
 // const auth = require('./routes/auth');
@@ -23,6 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('*', cors());
 app.set('view engine', 'pug');
+app.use('/api/auth', authRouter);
 app.use('/api/authors', authorsRouter);
 app.use('/api/books', booksRouter);
 
