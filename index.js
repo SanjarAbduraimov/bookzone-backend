@@ -3,8 +3,8 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const logger = require('./middleware/logger');
-const book = require('./routes/book');
-const author = require('./routes/author');
+const booksRouter = require('./routes/books');
+const authorsRouter = require('./routes/authors');
 
 // const auth = require('./routes/auth');
 // const categories = require('./routes/categories')
@@ -23,8 +23,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('*', cors());
 app.set('view engine', 'pug');
-app.use('/api/authors', author);
-app.use('/api/books', book);
+app.use('/api/authors', authorsRouter);
+app.use('/api/books', booksRouter);
 
 app.use(helmet());
 
