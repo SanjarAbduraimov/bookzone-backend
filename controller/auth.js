@@ -1,26 +1,36 @@
 const User = require('../models/user');
 const Joi = require('joi');
-
+// const bcrypt = require('bcrypt');
+const { createToken } = require('../utils/token');
 exports.signUp = async (req, res) => {
   let { error } = validate(req.body);
-  if (error) return res.send('please fill the requirements')
+  if (error) return res.status(400).res.json({ success: false, msg: error.message });
   try {
-    await User.create({ ...req.body })
+    let user = await User.create({ ...req.body });
+    let token = createToken({ userId: user._id });
+    res.status(201).json({ token, payload: user, success: true });
   } catch (error) {
-    console.log(error);
+    res.json({ success: false, msg: error.message })
   }
 }
 exports.login = async (req, res) => {
-  let { error } = validate(req.query);
-  if (error) return res.status(400).send(error.message);
+  let { email, password } = req.body;
+  let { error } = validate(req.body);
+  if (error) return res.status(400).json({ success: false, msg: error.message });
   try {
-    await User.findOne({ ...req.query }).then(i => {
-      res.json(i);
-    }).catch(err => {
-      res.send(err)
-    })
+    let user = await User.findOne({ email })
+    if (!user) {
+      return res.status(404).json({ success: false, msg: 'No account exist with this email' })
+    }
+    const isPasswordCorreect = await bcrypt.compare(password, user.password);
+    if (isPasswordCorreect) {
+      let token = createToken({ userId: user._id });
+      return res.status(200).json({ token, user, success: true })
+    }
+    return res.json({ success: false, error: 'Email or password is incorrect' })
+
   } catch (err) {
-    console.log(err);
+    res.json({ success: false, error: err.message })
   }
 }
 
@@ -29,11 +39,8 @@ function validate(formData) {
     firstName: Joi.string().min(3),
     lastName: Joi.string().min(3),
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(6).max(20)
-    // lastName: Joi.string().required().min(3).max(20),
-    // email: Joi.string().required().email(),
-    // password: Joi.string().min(8).max(20),
-    // phone: Joi.number().min(9).max(13)
+    password: Joi.string().required().min(6),
+    phone: Joi.string().regex(/^\+?\d{9,12}$/)
   })
 
   return orderSchema.validate(formData);
