@@ -4,7 +4,7 @@ const Joi = require('joi');
 const { createToken } = require('../utils/token');
 exports.signUp = async (req, res) => {
   let { error } = validate(req.body);
-  if (error) return res.status(400).res.json({ success: false, msg: error.message });
+  if (error) return res.status(400).json({ success: false, msg: error.message });
   try {
     let user = await User.create({ ...req.body });
     let token = createToken({ userId: user._id });
