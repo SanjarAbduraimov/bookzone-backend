@@ -11,6 +11,7 @@ const bookSchema = mongoose.Schema({
   year: Number,
   views: { type: Number, default: 0 },
   rate: { type: Number, min: 0, max: 5 },
+  price: Number,
   category: {
     type: String,
     enum: ['classic', 'biography', 'science'],
