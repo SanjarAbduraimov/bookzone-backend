@@ -3,16 +3,14 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const logger = require('./middleware/logger');
-const book = require('./routes/book');
-const author = require('./routes/author');
-
-// const auth = require('./routes/auth');
+const book = require('./routes/books');
+const author = require('./routes/authors');
+const admin = require('./routes/admins');
+const auth = require('./routes/auth');
+const home = require('./routes/home');
 // const categories = require('./routes/categories')
-// const home = require('./routes/home');
 // app.use(express.static('public'));
-// app.use('/', home);
 // app.use('/api/categories', categories)
-// app.use('/api', auth);
 
 
 const helmet = require('helmet');
@@ -23,8 +21,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('*', cors());
 app.set('view engine', 'pug');
-app.use('/api/authors', author);
+app.use('/', home);
+app.use('/api', auth);
 app.use('/api/books', book);
+app.use('/api/authors', author);
+app.use('/api/admins', admin);
 
 app.use(helmet());
 
@@ -33,7 +34,7 @@ if (app.get('env') === 'development') {
   app.use(logger);
 }
 
-mongoose.connect('mongodb://localhost/books', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://localhost/bookzone', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("MongoDB ga ulanish hosil qilindi...");
   })
