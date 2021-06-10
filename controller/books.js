@@ -2,8 +2,8 @@ const Joi = require('joi');
 const Book = require('../models/books');
 const Author = require('../models/authors');
 exports.create = async (req, res) => {
-  let { error } = validate(req.body);
-  if (error) return res.json(error.message)
+  // let { error } = validate(req.body);
+  // if (error) return res.json(error.message)
   try {
     const { author } = req.body;
     const user = await Author.findById(author);
