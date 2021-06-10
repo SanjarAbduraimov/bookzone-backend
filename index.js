@@ -3,15 +3,13 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const logger = require('./middleware/logger');
-const book = require('./routes/books');
-const author = require('./routes/authors');
-const admin = require('./routes/admins');
+const bookRouter = require('./routes/books');
+const authorRouter = require('./routes/authors');
+const adminRouter = require('./routes/admins');
+// const userRouter = require('./routes/users');
 const auth = require('./routes/auth');
 const home = require('./routes/home');
-// const categories = require('./routes/categories')
-// app.use(express.static('public'));
-// app.use('/api/categories', categories)
-
+// const {isAdmin} = require('./utils');
 
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -23,9 +21,11 @@ app.use('*', cors());
 app.set('view engine', 'pug');
 app.use('/', home);
 app.use('/api', auth);
-app.use('/api/books', book);
-app.use('/api/authors', author);
-app.use('/api/admins', admin);
+app.use('/api/books', bookRouter);
+app.use('/api/authors', authorRouter);
+app.use('/api/admins', adminRouter);
+app.use('/api/admins', adminRouter);
+// app.use('/api/users',  userRouter);
 
 app.use(helmet());
 

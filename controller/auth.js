@@ -1,13 +1,13 @@
 const Admin = require('../models/admins');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
-const { createToken } = require('../utils/token');
+const { createToken } = require('../utils');
 exports.signUp = async (req, res) => {
   let { error } = validate(req.body);
   if (error) return res.status(400).res.json({ success: false, msg: error.message });
   try {
     const password = await bcrypt.hash(req.body.password, 8);
-    let user = await Admin.create({ ...req.body, password});
+    let user = await Admin.create({ ...req.body, password });
     let token = createToken({ userId: user._id });
     res.status(201).json({ token, payload: user, success: true });
   } catch (error) {
@@ -47,19 +47,3 @@ function validate(formData) {
 
   return orderSchema.validate(formData);
 }
-// async function createBook() {
-//   const user = new User({
-//     type: ['hight', 'sanjarbek'],
-//     firstName: 'Sanjarbek',
-//     lastName: 'Abduriamov',
-//     email: 'sanjarbekweb@gmail.com',
-//     password: 'shuparol',
-//   });
-
-//   const savedUser = await user.save()
-//   console.log(savedUser);
-// }
-
-// createBook().then(i => {
-//   console.log('user saved successfully!')
-// });
