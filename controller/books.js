@@ -5,11 +5,11 @@ exports.create = async (req, res) => {
   // let { error } = validate(req.body);
   // if (error) return res.json(error.message)
   try {
-    const { author } = req.body;
-    const user = await Author.findById(author);
-    if (!user) {
-      res.json({ success: false, msg: 'author id is invalid', })
-    }
+    // const { author } = req.body;
+    // const user = await Author.findById(author);
+    // if (!user) {
+    //   res.json({ success: false, msg: 'author id is invalid', })
+    // }
     const book = await Book.create({ ...req.body });
     res.status(200).json(book)
   } catch (error) {
