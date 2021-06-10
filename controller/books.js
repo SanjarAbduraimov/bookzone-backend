@@ -1,20 +1,27 @@
 const Joi = require('joi');
 const Book = require('../models/books');
-exports.create = (req, res) => {
-  let { error } = validateCreate(req.body);
-  if (error) return res.send(error.message)
-  Book.create({ ...req.body }).then(docs => {
-    res.json(docs);
-  })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
+const Author = require('../models/authors');
+exports.create = async (req, res) => {
+  let { error } = validate(req.body);
+  if (error) return res.json(error.message)
+  try {
+    const { author } = req.body;
+    const user = await Author.findById(author);
+    if (!user) {
+      res.json({ success: false, msg: 'author id is invalid', })
+    }
+    const book = await Book.create({ ...req.body });
+    res.status(200).json(book)
+  } catch (error) {
+    res.json({ success: false, msg: 'Something went wrong', error })
+  }
 }
 
 exports.fetchBooks = async (req, res) => {
   try {
     const book = await Book
       .find()
-    // .populate('author')
-    // .select('title');
+      .populate('author', '-_id -createdAt -updatedAt -phone')
 
     res.status(200).json(book)
   } catch (error) {
@@ -25,18 +32,19 @@ exports.fetchBooks = async (req, res) => {
 exports.fetchBookById = async (req, res) => {
   try {
     const { id } = req.params;
-    console.log(id);
-    const updatedBook = await Book.findById(id);
-    // if (!updatedBook) {
-    //   res.
-    // }
+    const updatedBook = await Book
+      .findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true })
+      .populate('author', '-_id -createdAt -updatedAt -phone');
     res.status(200).json(updatedBook);
   } catch (error) {
     res.json({ success: false, error: error.message });
   }
 }
 exports.updateBook = (req, res) => {
-  Book.findByIdAndUpdate(req.params.id, { ...req.body, updatedAt: new Date() }, { new: true })
+  let { error } = validateUpdate(req.body);
+  if (error) return res.json(error.message)
+  const { id } = req.params;
+  Book.findByIdAndUpdate(id, { ...req.body, updatedAt: new Date() }, { new: true })
     .then(docs => {
       res.json(docs)
     })
@@ -50,9 +58,41 @@ exports.deleteBook = (req, res) => {
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 
-function validateCreate(formData) {
+function validate(formData) {
   const bookSchema = Joi.object({
     title: Joi.string().required().min(3),
+    description: Joi.string(),
+    author: Joi.string().required(),
+    country: Joi.string(),
+    imageLink: Joi.string(),
+    language: Joi.string(),
+    link: Joi.string(),
+    pages: Joi.number(),
+    year: Joi.number(),
+    rate: Joi.number().min(0).max(5),
+    price: Joi.number(),
+    category: Joi.string().regex(/^(classic|biography|science)$/i),
+    isPublished: Joi.boolean(),
+    updatedAt: Joi.date()
+  })
+
+  return bookSchema.validate(formData);
+}
+function validateUpdate(formData) {
+  const bookSchema = Joi.object({
+    title: Joi.string().required().min(3),
+    description: Joi.string(),
+    country: Joi.string(),
+    imageLink: Joi.string(),
+    language: Joi.string(),
+    link: Joi.string(),
+    pages: Joi.number(),
+    year: Joi.number(),
+    rate: Joi.number().min(0).max(5),
+    price: Joi.number(),
+    category: Joi.string().regex(/^(classic|biography|science)$/i),
+    isPublished: Joi.boolean(),
+    updatedAt: Joi.date()
   })
 
   return bookSchema.validate(formData);

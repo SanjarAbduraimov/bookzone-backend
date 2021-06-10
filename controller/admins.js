@@ -2,7 +2,7 @@ const Joi = require('joi');
 const Admin = require('../models/admins');
 exports.create = (req, res) => {
   let { error } = validateCreate(req.body);
-  if (error) return res.send(error)
+  if (error) return res.json(error)
   Admin.create({ ...req.body }).then(docs => {
     res.json(docs);
   })
@@ -44,6 +44,8 @@ function validateCreate(formData) {
   const userSchema = Joi.object({
     firstName: Joi.string().min(3),
     lastName: Joi.string().min(3),
+    email: Joi.string().email().required(),
+    password: Joi.string().required().min(6)
   })
 
   return userSchema.validate(formData);
