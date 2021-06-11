@@ -3,22 +3,22 @@ html
     title=title
   body 
     h1=signUp 
-    form(class="signUp" action="api/login" method="GET")
+    form(class="create__book" action="api/books" method="POST")
       p
-        label(for="firstName")="First name" 
+        label(for="title")="title" 
         br
-        input(type="text" name="firstName")
+        input(type="text" name="title")
       p 
-        label(for="lastName")="Last name" 
+        label(for="author")="author" 
         br
-        input(type="text" name="lastName")
+        input(type="text" name="author")
       p
-        label(for="email")="Email" 
+        label(for="pages")="pages" 
         br
-        input(type="email" name="email" required)
+        input(type="number" name="pages" required)
       p
-        label(for="password")="Password" 
+        label(for="category")="category" 
         br
-        input(type="password" name="password" required)
+        input(type="text" name="category" required)
       p 
         button(type="submit")="Submit" 

@@ -9,7 +9,7 @@ const adminRouter = require('./routes/admins');
 // const userRouter = require('./routes/users');
 const auth = require('./routes/auth');
 const home = require('./routes/home');
-// const {isAdmin} = require('./utils');
+const {isAdmin} = require('./utils');
 
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -23,7 +23,6 @@ app.use('/', home);
 app.use('/api', auth);
 app.use('/api/books', bookRouter);
 app.use('/api/authors', authorRouter);
-app.use('/api/admins', adminRouter);
 app.use('/api/admins', adminRouter);
 // app.use('/api/users',  userRouter);
 
