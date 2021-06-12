@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const adminSchema = new mongoose.Schema({
+const commentSchema = new mongoose.Schema({
   firstName: { type: String, default: '' },
   lastName: { type: String, default: '' },
   email: { type: String, required: true, unique: true },
@@ -11,5 +11,5 @@ const adminSchema = new mongoose.Schema({
   updatedAt: { type: Date, default: Date.now() },
 });
 
-const User = mongoose.model('admins', adminSchema);
-module.exports = User;
+const Comment = mongoose.model('comments', commentSchema);
+module.exports = Comment;

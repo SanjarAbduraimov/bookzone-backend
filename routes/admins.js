@@ -8,3 +8,6 @@ router.patch('/:id', updateAdmin);
 router.delete('/:id', deleteAdmin);
 
 module.exports = router;
+
+
+

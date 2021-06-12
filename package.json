@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "swagger-autogen": "node ./config/swagger.js"
   },
   "author": "Sanjarbek Abduraimov",
   "license": "ISC",
@@ -18,6 +19,11 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.11",
     "morgan": "^1.10.0",
-    "pug": "^3.0.2"
+    "pug": "^3.0.2",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6"
+  },
+  "devDependencies": {
+    "swagger-autogen": "^2.9.3"
   }
 }
