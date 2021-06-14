@@ -22,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('*', cors());
 app.set('view engine', 'pug');
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-// app.use('/', home);
+app.use('/', home);
 app.use('/api', auth);
 app.use('/api/books', bookRouter);
 app.use('/api/authors', authorRouter);

@@ -10,8 +10,6 @@ exports.create = (req, res) => {
 }
 
 exports.fetchAdmins = (req, res) => {
-  let { error } = validateCreate(req.body);
-  if (error) return res.send(error)
   Admin.find()
     .then(docs => {
       res.json(docs)
@@ -32,11 +30,19 @@ exports.updateAdmin = (req, res) => {
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
+exports.addFavouriteBook =  (req, res) => {
+  const { bookId, id } = req.body;
+  Admin.findByIdAndUpdate(id, { $addToSet: { "favorites": bookId } })
+    .then(docs => {
+      res.json(docs);
+    })
+    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
+}
 exports.deleteAdmin = (req, res) => {
   Admin.findByIdAndDelete(req.params.id)
     .then(docs => {
       res.json(docs)
-    })
+    }) 
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 
