@@ -22,7 +22,7 @@ exports.login = async (req, res) => {
   try {
     let user = await Admin.findOne({ email })
     if (!user) {
-      return res.status(404).json({ success: false, msg: 'No account exist with this email' })
+      return res.status(404).json({ success: false, msg: 'Email or password is incorrect' })
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     console.log(isPasswordCorrect)
