@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const { createToken } = require('../utils');
 exports.signUp = async (req, res) => {
   let { error } = validate(req.body);
+  console.log(req.body);
   if (error) return res.status(400).json({ success: false, msg: error.message });
   try {
     const password = await bcrypt.hash(req.body.password, 8);
@@ -21,7 +22,7 @@ exports.login = async (req, res) => {
   try {
     let user = await Admin.findOne({ email })
     if (!user) {
-      return res.status(404).json({ success: false, msg: 'No account exist with this email' })
+      return res.status(404).json({ success: false, msg: 'Email or password is incorrect' })
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     console.log(isPasswordCorrect)
@@ -37,6 +38,7 @@ exports.login = async (req, res) => {
 }
 
 function validate(formData) {
+  console.log(formData);
   const orderSchema = Joi.object({
     firstName: Joi.string().min(3),
     lastName: Joi.string().min(3),
