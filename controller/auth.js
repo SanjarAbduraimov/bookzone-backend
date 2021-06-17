@@ -20,7 +20,7 @@ exports.login = async (req, res) => {
   let { error } = validate(req.body);
   if (error) return res.status(400).json({ success: false, msg: error.message });
   try {
-    let user = await Admin.findOne({ email })
+    const user = await Admin.findOne({ email })
     if (!user) {
       return res.status(404).json({ success: false, msg: 'Email or password is incorrect' })
     }

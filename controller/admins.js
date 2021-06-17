@@ -1,6 +1,6 @@
 const Joi = require('joi');
 const Admin = require('../models/admins');
-const { validateToken } = require('../utils');
+const { validateToken, getUserData } = require('../utils');
 exports.create = (req, res) => {
   const { error } = validateCreate(req.body);
   if (error) return res.json({ success: false, msg: 'Something went wrong', error: error.message })
@@ -19,23 +19,23 @@ exports.fetchAdmins = (req, res) => {
 }
 exports.fetchAdminById = async (req, res) => {
   try {
-    const admin = await Admin.findById(req.params.id).populate('favorites');
+    const admin = await Admin.findById(req.locals).populate('favorites');
     res.json({ success: true, admin })
   } catch (error) {
     res.json({ success: false, error: error })
   }
 }
 exports.updateAdmin = (req, res) => {
-  Admin.findByIdAndUpdate(req.params.id, { ...req.body, updatedAt: new Date() }, { new: true })
+  Admin.findByIdAndUpdate(req.locals, { ...req.body, updatedAt: new Date() }, { new: true })
     .then(docs => {
       res.json(docs)
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 exports.addFavouriteBook = async (req, res) => {
-  const { bookId, id } = req.body;
+  const { bookId } = req.body;
   try {
-    const admin = await Admin.findByIdAndUpdate(id, { $addToSet: { "favorites": bookId } }, { new: true })
+    const admin = await Admin.findByIdAndUpdate(req.locals, { $addToSet: { "favorites": bookId } }, { new: true })
     res.json({ success: true, admin })
   } catch (error) {
     res.json({ success: false, msg: 'Something went wrong', error: error.message });
@@ -44,12 +44,11 @@ exports.addFavouriteBook = async (req, res) => {
 }
 exports.fetchFavouriteBook = async (req, res) => {
   try {
-    const token = req.headers.authorization?.split(' ')[1];
-    const validToken = token ? validateToken(token) : {};
-    const admin = await Admin.findById(validToken._id).populate('favorites')
+    const admin = await Admin.findById(req.locals).populate('favorites')
     res.json({ success: true, favorites: admin.favorites })
   } catch (error) {
     res.json({ success: false, msg: 'Something went wrong', error: error.message });
+    console.log(req.locals, "not exist locals");
   }
 }
 
@@ -60,7 +59,7 @@ exports.fetchFavouriteBook = async (req, res) => {
 
 // }
 exports.deleteAdmin = (req, res) => {
-  Admin.findByIdAndDelete(req.params.id)
+  Admin.findByIdAndDelete(req.locals)
     .then(docs => {
       res.json(docs)
     })

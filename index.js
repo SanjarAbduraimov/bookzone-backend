@@ -21,6 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('*', cors());
 app.set('view engine', 'pug');
+app.use(express.static('views'));
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use('/', home);
 app.use('/api', auth);
@@ -31,7 +32,7 @@ app.use('/api/admins', adminRouter);
 
 
 
-// app.use(helmet());
+app.use(helmet());
 
 if (app.get('env') === 'development') {
   app.use(morgan('dev'))

@@ -13,6 +13,7 @@ exports.validateToken = token => {
 exports.isAdmin = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   const validToken = token ? this.validateToken(token) : {};
+  req.locals = validToken._id;
   try {
     const now = Date.now().valueOf() / 1000;
     if (validToken.exp > now) {
