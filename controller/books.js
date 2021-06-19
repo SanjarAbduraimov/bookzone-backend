@@ -2,16 +2,17 @@ const Joi = require('joi');
 const Book = require('../models/books');
 const Author = require('../models/authors');
 exports.create = async (req, res) => {
-  let { error } = validate(req.body);
-  if (error) return res.json(error.message)
+  const { error } = validate(req.body);
+  const { id } = req.locals;
+  if (error) return res.json(error.message);
   try {
     const { author } = req.body;
     const user = await Author.findById(author);
     if (!user) {
-      res.json({ success: false, msg: 'author id is invalid', })
+      res.json({ success: false, msg: 'author id is invalid', });
     }
-    const book = await Book.create({ ...req.body });
-    res.status(200).json(book)
+    const book = await Book.create({ ...req.body, user_id: id });
+    res.status(200).json(book);
   } catch (error) {
     res.json({ success: false, msg: 'Something went wrong', error })
   }
