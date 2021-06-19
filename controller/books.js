@@ -34,7 +34,7 @@ exports.fetchBookById = async (req, res) => {
     const { id } = req.params;
     const updatedBook = await Book
       .findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true })
-      .populate('author', '-_id -createdAt -updatedAt -phone');
+      .populate('author', '-createdAt -updatedAt -phone');
     res.status(200).json(updatedBook);
   } catch (error) {
     res.json({ success: false, error: error.message });
