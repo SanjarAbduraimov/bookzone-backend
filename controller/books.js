@@ -22,7 +22,7 @@ exports.fetchBooks = async (req, res) => {
   try {
     const book = await Book
       .find()
-      .populate('author', '-_id -createdAt -updatedAt -phone')
+      .populate('author', '-createdAt -updatedAt -phone')
 
     res.status(200).json(book)
   } catch (error) {
