@@ -6,10 +6,10 @@ const adminSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phone: { type: String, default: '' },
-  favorites: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'books' }],
+  favorites: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Book' }],
   createdAt: { type: Date, default: Date.now() },
   updatedAt: { type: Date, default: Date.now() },
 });
 
-const User = mongoose.model('admins', adminSchema);
+const User = mongoose.model('Admin', adminSchema);
 module.exports = User;

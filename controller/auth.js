@@ -28,6 +28,7 @@ exports.login = async (req, res) => {
     console.log(isPasswordCorrect)
     if (isPasswordCorrect) {
       let token = createToken({ userId: user._id });
+      console.log(token)
       return res.status(200).json({ token, user, success: true })
     }
     res.json({ success: false, error: 'Email or password is incorrect' })

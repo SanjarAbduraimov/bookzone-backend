@@ -6,8 +6,9 @@ const authorSchema = new mongoose.Schema({
   date_of_birth: { type: Date, default: '' },
   date_of_death: { type: Date, default: '' },
   createdAt: { type: Date, default: Date.now() },
-  updatedAt: { type: Date, default: Date.now() }
+  updatedAt: { type: Date, default: Date.now() },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', },
 });
 
-const Author = mongoose.model('authors', authorSchema);
+const Author = mongoose.model('Author', authorSchema);
 module.exports = Author;

@@ -1,16 +1,18 @@
 const Joi = require('joi');
 const Book = require('../models/books');
 const Author = require('../models/authors');
+
 exports.create = async (req, res) => {
+  console.log(req.locals._id)
   let { error } = validate(req.body);
   if (error) return res.json(error.message)
   try {
     const { author } = req.body;
     const user = await Author.findById(author);
     if (!user) {
-      res.json({ success: false, msg: 'author id is invalid', })
+      return res.json({ success: false, msg: 'author id is invalid', })
     }
-    const book = await Book.create({ ...req.body });
+    const book = await Book.create({ ...req.body, user: req.locals._id });
     res.status(200).json(book)
   } catch (error) {
     res.json({ success: false, msg: 'Something went wrong', error })
@@ -22,6 +24,20 @@ exports.fetchBooks = async (req, res) => {
     const book = await Book
       .find()
       .populate('author', '-_id -createdAt -updatedAt -phone')
+
+    res.status(200).json(book)
+  } catch (error) {
+    res.json({ success: false, msg: 'Someting went wrong', error: error.message })
+  }
+
+}
+
+exports.fetchCurrentUserBooks = async (req, res) => {
+  console.log(req.locals._id)
+  try {
+    const book = await Book
+      .find({ user: req.locals._id })
+      .populate('author', '-createdAt -updatedAt -phone')
 
     res.status(200).json(book)
   } catch (error) {
