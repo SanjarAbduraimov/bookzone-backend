@@ -9,6 +9,7 @@ const adminSchema = new mongoose.Schema({
   favorites: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Book' }],
   createdAt: { type: Date, default: Date.now() },
   updatedAt: { type: Date, default: Date.now() },
+  isAdmin: { type: Boolean, default: true },
 });
 
 const User = mongoose.model('Admin', adminSchema);

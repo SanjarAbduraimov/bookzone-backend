@@ -34,13 +34,14 @@ exports.isAdmin = async (req, res, next) => {
   try {
     const admin = await Admin.findById(validToken._id);
     if (admin) {
-      req.locals = { ...req.locals, _id: user._id };
+      req.locals = { ...req.locals, _id: admin._id, role: 'admin' };
       next();
     } else {
       res.status(403).json({ success: false, error: 'You are not authorized' });
     }
 
   } catch (error) {
+    console.log(error)
     res.status(401).json({ success: false, error: 'You are not authenticated' });
   }
 }
