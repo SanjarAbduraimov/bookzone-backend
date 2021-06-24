@@ -7,7 +7,13 @@ exports.createToken = ({ userId }) => {
 };
 
 exports.validateToken = token => {
-  return jwt.verify(token, SECRET_KEY);
+  try {
+    return jwt.verify(token, SECRET_KEY);
+  }
+  catch (err) {
+    return {};
+  }
+
 }
 
 exports.currentUser = async (req, res, next) => {
@@ -30,6 +36,7 @@ exports.currentUser = async (req, res, next) => {
 }
 exports.isAdmin = async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
+  console.log(this.validateToken(token));
   const validToken = token ? this.validateToken(token) : {};
   try {
     const admin = await Admin.findById(validToken._id);
