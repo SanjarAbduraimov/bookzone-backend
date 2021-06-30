@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
 
-const adminSchema = new mongoose.Schema({
+const commentSchema = new mongoose.Schema({
   firstName: { type: String, default: '' },
   lastName: { type: String, default: '' },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phone: { type: String, default: '' },
-  favorites: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Book' }],
+  favorites: { type: Array, default: [] },
   createdAt: { type: Date, default: Date.now() },
   updatedAt: { type: Date, default: Date.now() },
-  isAdmin: { type: Boolean, default: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', },
 });
 
-const User = mongoose.model('Admin', adminSchema);
-module.exports = User;
+const Comment = mongoose.model('Comment', commentSchema);
+module.exports = Comment;
