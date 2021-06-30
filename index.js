@@ -14,9 +14,10 @@ const swaggerUi = require('swagger-ui-express');
 // const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerDocument = require('./config/swagger.json');
 const helmet = require('helmet');
+const compression = require('compression');
 const morgan = require('morgan');
 const config = require('config');
-
+app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('*', cors());
@@ -31,7 +32,7 @@ app.use('/api/admins', adminRouter);
 
 
 
-// app.use(helmet());
+app.use(helmet());
 
 if (app.get('env') === 'development') {
   app.use(morgan('dev'))
