@@ -39,7 +39,7 @@ if (app.get('env') === 'development') {
   app.use(logger);
 }
 
-mongoose.connect('mongodb://localhost/bookzone', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb+srv://codeAdmin:Eskiparol515!@bookzone.bx1ep.mongodb.net/bookzone?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log("MongoDB ga ulanish hosil qilindi...");
   })
