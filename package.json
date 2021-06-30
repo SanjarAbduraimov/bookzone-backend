@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
     "swagger-autogen": "node ./config/swagger.js"
+  },
+  "engines": {
+    "node": "14.15.4"
   },
   "author": "Sanjarbek Abduraimov",
   "license": "ISC",
