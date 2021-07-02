@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const Admin = require('../models/admins');
+const Book = require('../models/books');
 const { validateToken } = require('../utils');
 exports.create = (req, res) => {
   const { error } = validateCreate(req.body);
@@ -42,12 +43,28 @@ exports.addFavouriteBook = async (req, res) => {
   }
 
 }
-exports.fetchFavouriteBook = async (req, res) => {
+exports.addToShelf = async (req, res) => {
+  const { _id } = req.locals;
+  const { bookId, shelfName } = req.body;
   try {
-    const token = req.headers.authorization?.split(' ')[1];
-    const validToken = token ? validateToken(token) : {};
-    const admin = await Admin.findById(validToken._id).populate('favorites')
-    res.json({ success: true, favorites: admin.favorites })
+    const book = await Book.findById(bookId).select('-user').populate('author');
+    await Admin.findByIdAndUpdate(_id,
+      { $addToSet: { "shelf": bookId } },
+      { new: true })
+
+    res.json({ success: true, payload: book });
+  } catch (error) {
+    res.json({ success: false, msg: 'Something went wrong', error: error.message });
+  }
+
+}
+exports.fetchFromShelf = async (req, res) => {
+  const { _id } = req.locals
+  try {
+    const adminShelf = await Admin.findById(_id)
+      .select('shelf')
+      .populate('shelf')
+    res.json({ success: true, payload: adminShelf })
   } catch (error) {
     res.json({ success: false, msg: 'Something went wrong', error: error.message });
   }

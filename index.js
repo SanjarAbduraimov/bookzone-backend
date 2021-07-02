@@ -10,6 +10,7 @@ const adminRouter = require('./routes/admins');
 // const userRouter = require('./routes/users');
 const auth = require('./routes/auth');
 const home = require('./routes/home');
+const { currentUser } = require('./utils');
 const swaggerUi = require('swagger-ui-express');
 // const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerDocument = require('./config/swagger.json');
@@ -27,7 +28,7 @@ app.use('/', home);
 app.use('/api', auth);
 app.use('/api/books', bookRouter);
 app.use('/api/authors', authorRouter);
-app.use('/api/admins', adminRouter);
+app.use('/api/admins', currentUser, adminRouter);
 // app.use('/api/users', userRouter);
 
 
@@ -39,7 +40,8 @@ if (app.get('env') === 'development') {
   app.use(logger);
 }
 
-mongoose.connect('mongodb://localhost/bookzone', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect('mongodb://localhost/bookzone',
+  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true })
   .then(() => {
     console.log("MongoDB ga ulanish hosil qilindi...");
   })
