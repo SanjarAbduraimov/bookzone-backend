@@ -1,6 +1,7 @@
 const Joi = require('joi');
 const Book = require('../models/books');
 const Author = require('../models/authors');
+const Comment = require('../models/comments');
 
 exports.create = async (req, res) => {
   console.log(req.locals._id)
@@ -14,6 +15,20 @@ exports.create = async (req, res) => {
     }
     const book = await Book.create({ ...req.body, user: req.locals._id });
     res.status(200).json({ success: true, payload: book })
+  } catch (error) {
+    res.json({ success: false, msg: 'Something went wrong', error })
+  }
+}
+exports.createComment = async (req, res) => {
+  try {
+    const { _id } = req.locals;
+    const { bookId, text } = req.body
+    const book = await Book.findById(bookId);
+    if (!book) {
+      return res.json({ success: false, msg: 'book id is invalid', })
+    }
+    const comment = await Comment.create({ text, bookId, user: _id });
+    res.status(200).json({ success: true, payload: comment })
   } catch (error) {
     res.json({ success: false, msg: 'Something went wrong', error })
   }
@@ -64,7 +79,9 @@ exports.fetchBookById = async (req, res) => {
     const updatedBook = await Book
       .findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true })
       .populate('author', '-createdAt -updatedAt -phone');
-    res.status(200).json(updatedBook);
+    const comment = await Comment.find({ bookId: id })
+      .populate('user', "-_id firstName lastName ");
+    res.status(200).json({ success: true, payload: { book: updatedBook, comment } });
   } catch (error) {
     res.json({ success: false, error: error.message });
   }
@@ -75,14 +92,14 @@ exports.updateBook = (req, res) => {
   const { id } = req.params;
   Book.findByIdAndUpdate(id, { ...req.body, updatedAt: new Date() }, { new: true })
     .then(docs => {
-      res.json(docs)
+      res.json({ success: true, payload: docs })
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 exports.deleteBook = (req, res) => {
   Book.findByIdAndDelete(req.params.id)
     .then(docs => {
-      res.json(docs)
+      res.json({ success: true, payload: docs })
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }

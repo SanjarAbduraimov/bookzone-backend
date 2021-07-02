@@ -12,7 +12,7 @@ const bookSchema = mongoose.Schema({
   views: { type: Number, default: 0 },
   rate: { type: Number, min: 0, max: 5, default: 0 },
   price: { type: Number, default: 0 },
-  comments: [String],
+  // comments: [String],
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', },
   category: {
     type: String,
