@@ -13,7 +13,7 @@ exports.create = async (req, res) => {
       return res.json({ success: false, msg: 'author id is invalid', })
     }
     const book = await Book.create({ ...req.body, user: req.locals._id });
-    res.status(200).json(book)
+    res.status(200).json({ success: true, payload: book })
   } catch (error) {
     res.json({ success: false, msg: 'Something went wrong', error })
   }
@@ -25,7 +25,20 @@ exports.fetchBooks = async (req, res) => {
       .find()
       .populate('author', '-_id -createdAt -updatedAt -phone')
 
-    res.status(200).json(book)
+    res.status(200).json({ success: true, payload: book })
+  } catch (error) {
+    res.json({ success: false, msg: 'Someting went wrong', error: error.message })
+  }
+
+}
+exports.searchBooks = async (req, res) => {
+  const { title } = req.query;
+  try {
+    const book = await Book
+      .find({ title: { $regex: `^${title}`, $options: 'i' } })
+      .populate('author', '-_id -createdAt -updatedAt')
+
+    res.status(200).json({ success: true, payload: book })
   } catch (error) {
     res.json({ success: false, msg: 'Someting went wrong', error: error.message })
   }
@@ -39,7 +52,7 @@ exports.fetchCurrentUserBooks = async (req, res) => {
       .find({ user: req.locals._id })
       .populate('author', '-createdAt -updatedAt -phone')
 
-    res.status(200).json(book)
+    res.status(200).json({ success: true, payload: book })
   } catch (error) {
     res.json({ success: false, msg: 'Someting went wrong', error: error.message })
   }

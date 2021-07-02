@@ -4,7 +4,7 @@ exports.create = (req, res) => {
   let { error } = validateCreate(req.body);
   if (error) return res.send(error)
   Author.create({ ...req.body }).then(docs => {
-    res.json(docs);
+    res.json({ success: true, payload: docs });
   })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
@@ -14,28 +14,28 @@ exports.fetchAuthors = (req, res) => {
   if (error) return res.send(error)
   Author.find()
     .then(docs => {
-      res.json(docs)
+      res.json({ success: true, payload: docs })
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 exports.fetchAuthorById = (req, res) => {
   Author.findById(req.params.id)
     .then(docs => {
-      res.json(docs)
+      res.json({ success: true, payload: docs })
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 exports.updateAuthor = (req, res) => {
   Author.findByIdAndUpdate(req.params.id, { ...req.body, updatedAt: new Date() }, { new: true })
     .then(docs => {
-      res.json(docs)
+      res.json({ success: true, payload: docs })
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 exports.deleteAuthor = (req, res) => {
   Author.findByIdAndDelete(req.params.id)
     .then(docs => {
-      res.json(docs)
+      res.json({ success: true, payload: docs })
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }

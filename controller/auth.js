@@ -25,10 +25,8 @@ exports.login = async (req, res) => {
       return res.status(404).json({ success: false, msg: 'Email or password is incorrect' })
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
-    console.log(isPasswordCorrect)
     if (isPasswordCorrect) {
       let token = createToken({ userId: user._id });
-      console.log(token)
       return res.status(200).json({ token, user, success: true })
     }
     res.json({ success: false, error: 'Email or password is incorrect' })

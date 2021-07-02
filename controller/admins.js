@@ -5,7 +5,7 @@ exports.create = (req, res) => {
   const { error } = validateCreate(req.body);
   if (error) return res.json({ success: false, msg: 'Something went wrong', error: error.message })
   Admin.create({ ...req.body }).then(docs => {
-    res.json(docs);
+    res.json({ success: true, payload: docs });
   })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
@@ -13,7 +13,7 @@ exports.create = (req, res) => {
 exports.fetchAdmins = (req, res) => {
   Admin.find()
     .then(docs => {
-      res.json(docs)
+      res.json({ success: true, payload: docs })
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
@@ -28,7 +28,7 @@ exports.fetchAdminById = async (req, res) => {
 exports.updateAdmin = (req, res) => {
   Admin.findByIdAndUpdate(req.params.id, { ...req.body, updatedAt: new Date() }, { new: true })
     .then(docs => {
-      res.json(docs)
+      res.json({ success: true, payload: docs })
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
@@ -62,7 +62,7 @@ exports.fetchFavouriteBook = async (req, res) => {
 exports.deleteAdmin = (req, res) => {
   Admin.findByIdAndDelete(req.params.id)
     .then(docs => {
-      res.json(docs)
+      res.json({ success: true, payload: docs })
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }

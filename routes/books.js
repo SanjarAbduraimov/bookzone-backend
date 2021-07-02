@@ -1,10 +1,11 @@
 const express = require('express');
 const { isAdmin, currentUser, } = require('../utils');
-const { create, fetchBooks, fetchBookById, updateBook, deleteBook, fetchCurrentUserBooks } = require('../controller/books');
+const { create, fetchBooks, searchBooks, fetchBookById, updateBook, deleteBook, fetchCurrentUserBooks } = require('../controller/books');
 
 const router = express.Router();
 router.get('/my-books', currentUser, fetchCurrentUserBooks);
 router.get('/', fetchBooks);
+router.get('/search', searchBooks);
 router.get('/:id', fetchBookById);
 router.post('/', currentUser, create);
 router.patch('/:id', isAdmin, updateBook);
