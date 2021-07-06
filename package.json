@@ -8,9 +8,6 @@
     "start": "nodemon index.js",
     "swagger-autogen": "node ./config/swagger.js"
   },
-  "engines": {
-    "node": "14.15.4"
-  },
   "author": "Sanjarbek Abduraimov",
   "license": "ISC",
   "dependencies": {
