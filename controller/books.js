@@ -13,7 +13,14 @@ exports.create = async (req, res) => {
     if (!user) {
       return res.json({ success: false, msg: 'author id is invalid', })
     }
-    const book = await Book.create({ ...req.body,  user: req.locals._id });
+    
+    let data = { ...req.body }
+
+    if (req.file) {
+      const img = req.file.path.replace("public", "");
+      data.imageLink = img
+    }
+    const book = await Book.create({ data, user: req.locals._id });
     res.status(200).json({ success: true, payload: book })
   } catch (error) {
     res.json({ success: false, msg: 'Something went wrong', error })
