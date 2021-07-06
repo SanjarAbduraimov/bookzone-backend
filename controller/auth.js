@@ -2,6 +2,7 @@ const Admin = require('../models/admins');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
 const { createToken } = require('../utils');
+
 exports.signUp = async (req, res) => {
   let { error } = validate(req.body);
   console.log(req.body);

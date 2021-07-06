@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 const logger = require('./middleware/logger');
 
 const bookRouter = require('./routes/books');
@@ -34,6 +35,7 @@ app.use('/api/admins', currentUser, adminRouter);
 
 
 app.use(helmet());
+app.use(express.static(path.join(__dirname, 'public')));
 
 if (app.get('env') === 'development') {
   app.use(morgan('dev'))
