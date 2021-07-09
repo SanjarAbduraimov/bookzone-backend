@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = require('../config/keys');
-const Admin = require('../models/admins');
+const Users = require('../models/users');
 
 exports.createToken = ({ userId }) => {
   return jwt.sign({ _id: userId }, SECRET_KEY, { expiresIn: '10h' });
@@ -21,7 +21,7 @@ exports.currentUser = async (req, res, next) => {
 
   if (validToken._id) {
     try {
-      const user = await Admin.findById(validToken._id);
+      const user = await Users.findById(validToken._id);
       if (user) {
         req.locals = { ...req.locals, _id: user._id };
         next();
@@ -42,7 +42,7 @@ exports.isAdmin = async (req, res, next) => {
   const validToken = token ? this.validateToken(token) : {};
   if (validToken._id) {
     try {
-      const admin = await Admin.findById(validToken._id);
+      const admin = await Users.findById(validToken._id);
       if (admin) {
         req.locals = { ...req.locals, _id: admin._id, role: 'admin' };
         next();

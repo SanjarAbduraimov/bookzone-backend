@@ -6,21 +6,27 @@
     "version": "1.0.0"
   },
   "host": "localhost:8000",
-  "basePath": "",
+  "basePath": "/api",
   "tags": [],
   "schemes": [
     "http"
   ],
-  "consumes": [],
-  "produces": [],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
   "paths": {
     "/api/sign-up": {
       "post": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "Auth"
+        ],
+        "description": "Sign Up as a new user",
         "parameters": [
           {
-            "name": "obj",
+            "name": "data",
             "in": "body",
             "schema": {
               "type": "object",
@@ -29,7 +35,10 @@
                   "example": "any"
                 }
               }
-            }
+            },
+            "type": "object",
+            "required": true,
+            "description": "First name"
           }
         ],
         "responses": {
@@ -76,17 +85,23 @@
         }
       }
     },
-    "/api/books": {
+    "/api/users/": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "description": "Endpoint para obter um usuário.",
+        "parameters": [],
+        "responses": {}
+      },
       "get": {
         "tags": [],
         "description": "",
         "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
+        "responses": {}
+      }
+    },
+    "/api/users/shelf": {
       "post": {
         "tags": [],
         "description": "",
@@ -97,21 +112,26 @@
             "schema": {
               "type": "object",
               "properties": {
-                "author": {
+                "bookId": {
+                  "example": "any"
+                },
+                "shelfName": {
                   "example": "any"
                 }
               }
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": {}
+      },
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
       }
     },
-    "/api/books/{id}": {
+    "/api/users/{id}": {
       "get": {
         "tags": [],
         "description": "",
@@ -123,11 +143,7 @@
             "type": "string"
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
+        "responses": {}
       },
       "patch": {
         "tags": [],
@@ -156,7 +172,7 @@
         "responses": {}
       }
     },
-    "/api/authors": {
+    "/api/authors/": {
       "get": {
         "tags": [],
         "description": "",
@@ -211,7 +227,72 @@
         "responses": {}
       }
     },
-    "/api/admins/{id}": {
+    "/api/books/my-books": {
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/books/": {
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "author": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/books/search": {
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/books/{id}": {
       "get": {
         "tags": [],
         "description": "",
@@ -223,7 +304,11 @@
             "type": "string"
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       },
       "patch": {
         "tags": [],
@@ -251,7 +336,110 @@
         ],
         "responses": {}
       }
+    },
+    "/api/books/comment": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [
+          {
+            "name": "obj",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "bookId": {
+                  "example": "any"
+                },
+                "text": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/": {
+      "get": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
     }
   },
-  "definitions": {}
+  "definitions": {
+    "Auth": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "example": "object"
+        },
+        "properties": {
+          "type": "object",
+          "properties": {
+            "firstName": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Alisher"
+                }
+              }
+            },
+            "lastName": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "Musurmonov"
+                }
+              }
+            },
+            "email": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "info@alitech.uz"
+                }
+              }
+            },
+            "password": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "string"
+                },
+                "example": {
+                  "type": "string",
+                  "example": "something"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

@@ -5,13 +5,7 @@ const cors = require('cors');
 const path = require('path');
 const logger = require('./middleware/logger');
 
-const bookRouter = require('./routes/books');
-const authorRouter = require('./routes/authors');
-const adminRouter = require('./routes/admins');
-// const userRouter = require('./routes/users');
-const auth = require('./routes/auth');
-const home = require('./routes/home');
-const { currentUser } = require('./utils');
+const swaggerFile = require('./config/swagger.json')
 const swaggerUi = require('swagger-ui-express');
 // const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerDocument = require('./config/swagger.json');
@@ -19,18 +13,16 @@ const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 const config = require('config');
+const mainRoutes = require('./routes/index')
 app.use(compression());
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
 app.use('*', cors());
 app.set('view engine', 'pug');
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
-app.use('/', home);
-app.use('/api', auth);
-app.use('/api/books', bookRouter);
-app.use('/api/authors', authorRouter);
-app.use('/api/admins', currentUser, adminRouter);
-// app.use('/api/users', userRouter);
+app.use('/', mainRoutes);
+
 
 
 

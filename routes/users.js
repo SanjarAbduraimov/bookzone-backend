@@ -1,10 +1,16 @@
 const express = require('express');
-const { fetchUsers, create, updateUser, deleteUser } = require('../controller/users');
+const { fetchUsers, create, addToShelf, fetchFromShelf, fetchUserById, updateUser, deleteUser } = require('../controller/users');
 const router = express.Router();
-router.get('/users/', fetchUsers);
-router.get('/users/:id', fetchUserById);
-router.post('/users/', create);
-router.patch('/users/:id', updateUser);
-router.delete('/users/:id', deleteUser);
+
+router.post('/', create);
+router.post('/shelf', addToShelf);
+router.get('/shelf', fetchFromShelf);
+router.get('/', fetchUsers);
+router.get('/:id', fetchUserById);
+router.patch('/:id', updateUser);
+router.delete('/:id', deleteUser);
 
 module.exports = router;
+
+
+
