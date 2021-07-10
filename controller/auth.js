@@ -13,6 +13,7 @@ exports.signUp = async (req, res) => {
          type: 'object',
          required: true,
          description: 'First name',
+         schema: { $ref: '#/definitions/Auth' }
   } */
 
 

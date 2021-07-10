@@ -5,6 +5,7 @@ const { currentUser } = require('../utils');
 
 router.post('/', create);
 router.post('/shelf', currentUser, addToShelf);
+router.delete('/shelf/:id', currentUser, removeFromShelf);
 router.get('/shelf', currentUser, fetchFromShelf);
 router.get('/', currentUser, fetchUsers);
 router.get('/:id', fetchUserById);

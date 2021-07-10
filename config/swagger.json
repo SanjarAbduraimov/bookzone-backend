@@ -7,7 +7,12 @@
   },
   "host": "localhost:8000",
   "basePath": "/api",
-  "tags": [],
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Hey hey"
+    }
+  ],
   "schemes": [
     "http"
   ],
@@ -28,17 +33,12 @@
           {
             "name": "data",
             "in": "body",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "password": {
-                  "example": "any"
-                }
-              }
-            },
             "type": "object",
             "required": true,
-            "description": "First name"
+            "description": "First name",
+            "schema": {
+              "$ref": "#/definitions/Auth"
+            }
           }
         ],
         "responses": {

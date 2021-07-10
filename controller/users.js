@@ -63,6 +63,23 @@ exports.addToShelf = async (req, res) => {
   }
 
 }
+
+exports.removeFromShelf = async (req, res) => {
+  const { _id } = req.locals;
+  const { id: bookId } = req.query;
+  try {
+
+    await Users.findByIdAndUpdate(_id,
+      { $pull: { "shelf": bookId } },
+      { new: true })
+
+    res.json({ success: true, payload: book });
+  } catch (error) {
+    res.json({ success: false, msg: 'Something went wrong', error: error.message });
+  }
+
+}
+
 exports.fetchFromShelf = async (req, res) => {
   const { _id } = req.locals
   try {

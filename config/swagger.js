@@ -17,7 +17,13 @@ const doc = {
       email: "info@alitech.uz",
       password: "something"
     }
-  }
+  },
+  tags: [
+    {
+      name: 'Users',
+      description: 'Hey hey'
+    }
+  ]
 };
 
 const outputFile = './config/swagger.json';
