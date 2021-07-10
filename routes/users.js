@@ -1,5 +1,5 @@
 const express = require('express');
-const { fetchUsers, create, addToShelf, fetchFromShelf, fetchUserById, updateUser, deleteUser } = require('../controller/users');
+const { fetchUsers, create, addToShelf, fetchFromShelf, fetchUserById, updateUser, deleteUser, removeFromShelf } = require('../controller/users');
 const router = express.Router();
 const { currentUser } = require('../utils');
 
