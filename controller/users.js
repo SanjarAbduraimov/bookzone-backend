@@ -1,5 +1,5 @@
 const Joi = require('joi');
-const User = require('../models/users');
+const Users = require('../models/users');
 const Book = require('../models/books');
 
 const { validateToken } = require('../utils');
@@ -9,14 +9,14 @@ exports.create = (req, res) => {
   // #swagger.description = 'Endpoint para obter um usuário.'
   const { error } = validateCreate(req.body);
   if (error) return res.json({ success: false, msg: 'Something went wrong', error: error.message })
-  User.create({ ...req.body }).then(docs => {
+  Users.create({ ...req.body }).then(docs => {
     res.json({ success: true, payload: docs });
   })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 
 exports.fetchUsers = (req, res) => {
-  User.find()
+  Users.find()
     .then(docs => {
       res.json({ success: true, payload: docs })
     })
