@@ -1,43 +1,48 @@
 const Joi = require('joi');
-const Admin = require('../models/admins');
+const Users = require('../models/users');
 const Book = require('../models/books');
+
 const { validateToken } = require('../utils');
+
 exports.create = (req, res) => {
+  // #swagger.tags = ['User']
+  // #swagger.description = 'Endpoint para obter um usuário.'
   const { error } = validateCreate(req.body);
   if (error) return res.json({ success: false, msg: 'Something went wrong', error: error.message })
-  Admin.create({ ...req.body }).then(docs => {
+  Users.create({ ...req.body }).then(docs => {
     res.json({ success: true, payload: docs });
   })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 
-exports.fetchAdmins = (req, res) => {
-  Admin.find()
+exports.fetchUsers = (req, res) => {
+  Users.find()
     .then(docs => {
       res.json({ success: true, payload: docs })
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
-exports.fetchAdminById = async (req, res) => {
+exports.fetchUserById = async (req, res) => {
   try {
-    const admin = await Admin.findById(req.params.id).populate('favorites');
-    res.json({ success: true, admin })
+    const user = await Users.findById(req.params.id).populate('favorites');
+    res.json({ success: true, user })
   } catch (error) {
     res.json({ success: false, error: error })
   }
 }
-exports.updateAdmin = (req, res) => {
-  Admin.findByIdAndUpdate(req.params.id, { ...req.body, updatedAt: new Date() }, { new: true })
+exports.updateUser = (req, res) => {
+  Users.findByIdAndUpdate(req.params.id, { ...req.body, updatedAt: new Date() }, { new: true })
     .then(docs => {
       res.json({ success: true, payload: docs })
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
+
 exports.addFavouriteBook = async (req, res) => {
   const { bookId, id } = req.body;
   try {
-    const admin = await Admin.findByIdAndUpdate(id, { $addToSet: { "favorites": bookId } }, { new: true })
-    res.json({ success: true, admin })
+    const user = await Users.findByIdAndUpdate(id, { $addToSet: { "favorites": bookId } }, { new: true })
+    res.json({ success: true, user })
   } catch (error) {
     res.json({ success: false, msg: 'Something went wrong', error: error.message });
   }
@@ -48,7 +53,7 @@ exports.addToShelf = async (req, res) => {
   const { bookId, shelfName } = req.body;
   try {
     const book = await Book.findById(bookId).select('-user').populate('author');
-    await Admin.findByIdAndUpdate(_id,
+    await Users.findByIdAndUpdate(_id,
       { $addToSet: { "shelf": bookId } },
       { new: true })
 
@@ -58,13 +63,30 @@ exports.addToShelf = async (req, res) => {
   }
 
 }
+
+exports.removeFromShelf = async (req, res) => {
+  const { _id } = req.locals;
+  const { id: bookId } = req.query;
+  try {
+
+    await Users.findByIdAndUpdate(_id,
+      { $pull: { "shelf": bookId } },
+      { new: true })
+
+    res.json({ success: true, payload: book });
+  } catch (error) {
+    res.json({ success: false, msg: 'Something went wrong', error: error.message });
+  }
+
+}
+
 exports.fetchFromShelf = async (req, res) => {
   const { _id } = req.locals
   try {
-    const adminShelf = await Admin.findById(_id)
+    const userShelf = await Users.findById(_id)
       .select('shelf')
       .populate('shelf')
-    res.json({ success: true, payload: adminShelf })
+    res.json({ success: true, payload: userShelf })
   } catch (error) {
     res.json({ success: false, msg: 'Something went wrong', error: error.message });
   }
@@ -76,8 +98,8 @@ exports.fetchFromShelf = async (req, res) => {
 // })
 
 // }
-exports.deleteAdmin = (req, res) => {
-  Admin.findByIdAndDelete(req.params.id)
+exports.deleteUser = (req, res) => {
+  Users.findByIdAndDelete(req.params.id)
     .then(docs => {
       res.json({ success: true, payload: docs })
     })

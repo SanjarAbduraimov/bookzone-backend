@@ -7,7 +7,23 @@ const doc = {
   },
   host: 'localhost:8000',
   schemes: ['http'],
-  basePath: '/api'
+  consumes: ['application/json'],
+  produces: ['application/json'],
+  basePath: '/api',
+  definitions: {
+    Auth: {
+      firstName: "Alisher",
+      lastName: "Musurmonov",
+      email: "info@alitech.uz",
+      password: "something"
+    }
+  },
+  tags: [
+    {
+      name: 'Users',
+      description: 'Hey hey'
+    }
+  ]
 };
 
 const outputFile = './config/swagger.json';

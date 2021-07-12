@@ -3,7 +3,7 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const bookSchema = mongoose.Schema({
   title: { type: String, required: true },
-  description: String,
+  description: { type: String, default: '' },
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author', required: true, trim: true },
   country: { type: String, default: '' },
   imageLink: { type: String },
@@ -27,4 +27,5 @@ const bookSchema = mongoose.Schema({
 })
 bookSchema.plugin(mongoosePaginate);
 const Book = mongoose.model('Book', bookSchema);
+
 module.exports = Book;
