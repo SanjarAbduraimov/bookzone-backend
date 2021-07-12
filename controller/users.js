@@ -23,8 +23,9 @@ exports.fetchUsers = (req, res) => {
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 exports.fetchUserById = async (req, res) => {
+
   try {
-    const user = await Users.findById(req.params.id).populate('favorites');
+    const user = await Users.findById(req.locals._id).populate('favorites');
     res.json({ success: true, user })
   } catch (error) {
     res.json({ success: false, error: error })

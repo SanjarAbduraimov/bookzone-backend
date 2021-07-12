@@ -6,28 +6,20 @@
     "version": "1.0.0"
   },
   "host": "localhost:8000",
-  "basePath": "/api",
+  "basePath": "",
   "tags": [
     {
       "name": "Users",
       "description": "Hey hey"
     }
   ],
-  "schemes": [
-    "http"
-  ],
-  "consumes": [
-    "application/json"
-  ],
-  "produces": [
-    "application/json"
-  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
   "paths": {
     "/api/sign-up": {
       "post": {
-        "tags": [
-          "Auth"
-        ],
+        "tags": ["Auth"],
         "description": "Sign Up as a new user",
         "parameters": [
           {
@@ -37,7 +29,32 @@
             "required": true,
             "description": "First name",
             "schema": {
-              "$ref": "#/definitions/Auth"
+              "type": "object",
+              "properties": {
+                "firstName": {
+                  "type": "string",
+                  "example": "Sanjarbek"
+                },
+                "lastName": {
+                  "type": "string",
+                  "example": "Abduraimov"
+                },
+                "email": {
+                  "type": "string",
+                  "required": true,
+                  "unique": true,
+                  "example": "sanjarbekweb@gmail.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "password"
+                },
+                "phone": {
+                  "type": "string",
+                  "required": true,
+                  "example": "+998995558877"
+                }
+              }
             }
           }
         ],
@@ -53,7 +70,7 @@
     },
     "/api/login": {
       "post": {
-        "tags": [],
+        "tags": ["Auth"],
         "description": "",
         "parameters": [
           {
@@ -63,10 +80,14 @@
               "type": "object",
               "properties": {
                 "email": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "sanjarbekweb@gmail.com",
+                  "required": true
                 },
                 "password": {
-                  "example": "any"
+                  "type": "string",
+                  "example": "password",
+                  "required": true
                 }
               }
             }
@@ -85,25 +106,21 @@
         }
       }
     },
-    "/api/users/": {
-      "post": {
-        "tags": [
-          "User"
-        ],
-        "description": "Endpoint para obter um usuário.",
-        "parameters": [],
-        "responses": {}
-      },
+    "/api/users": {
       "get": {
-        "tags": [],
-        "description": "",
+        "tags": ["User"],
+        "description": "Get your own data",
         "parameters": [],
-        "responses": {}
+        "responses": {
+          "404": {
+            "description": "Not Found"
+          }
+        }
       }
     },
     "/api/users/shelf": {
       "post": {
-        "tags": [],
+        "tags": ["User"],
         "description": "",
         "parameters": [
           {
@@ -122,12 +139,6 @@
             }
           }
         ],
-        "responses": {}
-      },
-      "get": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
         "responses": {}
       }
     },

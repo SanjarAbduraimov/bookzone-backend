@@ -9,7 +9,7 @@ const doc = {
   schemes: ['http'],
   consumes: ['application/json'],
   produces: ['application/json'],
-  basePath: '/api',
+  basePath: '',
   definitions: {
     Auth: {
       firstName: "Alisher",

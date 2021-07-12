@@ -25,6 +25,7 @@ const bookSchema = mongoose.Schema({
   isPublished: { type: Boolean, default: false },
   updatedAt: { type: Date, default: new Date() }
 })
+
 bookSchema.plugin(mongoosePaginate);
 const Book = mongoose.model('Book', bookSchema);
 

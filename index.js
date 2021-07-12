@@ -5,19 +5,15 @@ const cors = require('cors');
 const path = require('path');
 const logger = require('./middleware/logger');
 
-const swaggerFile = require('./config/swagger.json')
 const swaggerUi = require('swagger-ui-express');
-// const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerDocument = require('./config/swagger.json');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
-const config = require('config');
 const mainRoutes = require('./routes/index')
 app.use(compression());
-//form-urlencoded
 app.use(express.json());
-
+//form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 app.use('*', cors());
 app.set('view engine', 'pug');
@@ -43,11 +39,6 @@ mongoose.connect('mongodb://localhost/bookzone',
   .catch((err) => {
     console.log("MongoDBga ulanishda xatolik yuz berdi...", err);
   })
-
-console.log(config.get('name'));
-console.log(config.get('mailserver.host'));
-// console.log(config.get('mailserver.password'));
-console.log(process.env.NODE_ENV);
 
 const port = process.env.PORT || 8000
 console.log(port);
