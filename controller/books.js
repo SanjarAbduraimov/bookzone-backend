@@ -42,10 +42,15 @@ exports.createComment = async (req, res) => {
 }
 
 exports.fetchBooks = async (req, res) => {
+  const { page = 1, pageSize = 10 } = req.query;
   try {
     const book = await Book
-      .find()
-      .populate('author', '-_id -createdAt -updatedAt -phone')
+      .paginate({
+        sort: { name: 1 },
+        page,
+        limit: pageSize,
+        populate: { path: "author", select: "-_id -createdAt -updatedAt -phone" },
+      })
 
     res.status(200).json({ success: true, payload: book })
   } catch (error) {

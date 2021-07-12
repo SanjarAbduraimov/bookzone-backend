@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const logger = require('./middleware/logger');
-
 const bookRouter = require('./routes/books');
 const authorRouter = require('./routes/authors');
 const adminRouter = require('./routes/admins');
@@ -20,6 +19,7 @@ const compression = require('compression');
 const morgan = require('morgan');
 const config = require('config');
 app.use(compression());
+//form-urlencoded
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('*', cors());
