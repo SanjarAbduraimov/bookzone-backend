@@ -74,7 +74,6 @@ exports.searchBooks = async (req, res) => {
 }
 
 exports.fetchCurrentUserBooks = async (req, res) => {
-  console.log(req.locals._id)
   try {
     const book = await Book
       .find({ user: req.locals._id })
@@ -99,15 +98,19 @@ exports.fetchBookById = async (req, res) => {
     res.json({ success: false, error: error.message });
   }
 }
-exports.updateBook = (req, res) => {
+exports.updateBook = async (req, res) => {
   let { error } = validateUpdate(req.body);
-  if (error) return res.json(error.message)
+  if (error) return res.status(404).json(error.message)
   const { id } = req.params;
-  Book.findByIdAndUpdate(id, { ...req.body, updatedAt: new Date() }, { new: true })
-    .then(docs => {
-      res.json({ success: true, payload: docs })
-    })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
+  try {
+    const book = await Book.findByIdAndUpdate(id);
+    // if (book.user === req.locals._id) {
+    //   book.up
+    // }
+    res.status(201).json({ success: true, payload: book })
+  } catch (err) {
+    res.json({ success: false, msg: 'Something went wrong', error: err.message })
+  }
 }
 exports.deleteBook = (req, res) => {
   Book.findByIdAndDelete(req.params.id)

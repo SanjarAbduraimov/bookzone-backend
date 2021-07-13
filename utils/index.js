@@ -43,7 +43,7 @@ exports.isAdmin = async (req, res, next) => {
   if (validToken._id) {
     try {
       const admin = await Users.findById(validToken._id);
-      if (admin) {
+      if (admin.isAdmin) {
         req.locals = { ...req.locals, _id: admin._id, role: 'admin' };
         next();
       } else {

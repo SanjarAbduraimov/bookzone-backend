@@ -4,9 +4,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
 const logger = require('./middleware/logger');
-
-const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./config/swagger.json');
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
@@ -17,7 +14,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('*', cors());
 app.set('view engine', 'pug');
-app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use('/', mainRoutes);
 
 
