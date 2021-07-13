@@ -4,18 +4,25 @@ const bcrypt = require('bcrypt');
 const { createToken } = require('../utils');
 
 exports.signUp = async (req, res) => {
-
-  /* #swagger.tags = ['Auth']
-           #swagger.description = 'Sign Up as a new user' */
-
-  /* #swagger.parameters['data'] = {
+  // #swagger.tags = ['Auth']
+  /* #swagger.parameters['body'] = {
         in: 'body',
-         type: 'object',
-         required: true,
-         description: 'First name',
-         schema: { $ref: '#/definitions/Auth' }
+        description: 'Login params',
+        required: true,
+        type: 'obj',
+        schema: { $ref: '#/definitions/SIGN_UP' }
+} */
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {$ref: '#/definitions/AUTH_RESPONSE'}
   } */
-
+  /* #swagger.responses[400] = {
+          description: 'Password or Email is wrong',
+         schema: {
+            success: false,
+            msg: 'Email or password is wrong'
+        }
+  } */
 
   let { error } = validate(req.body);
   console.log(req.body);
@@ -31,6 +38,26 @@ exports.signUp = async (req, res) => {
 }
 
 exports.login = async (req, res) => {
+  // #swagger.tags = ['Auth']
+  /* #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Login params',
+        required: true,
+        type: 'obj',
+        schema: { $ref: '#/definitions/LOG_IN' }
+} */
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {$ref: '#/definitions/AUTH_RESPONSE'}
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Password or Email is wrong',
+         schema: {
+            success: false,
+            msg: 'Email or password is wrong'
+        }
+  } */
+
   let { email, password } = req.body;
   let { error } = validate(req.body);
   if (error) return res.status(400).json({ success: false, msg: error.message });

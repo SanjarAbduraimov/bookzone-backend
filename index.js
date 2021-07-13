@@ -8,6 +8,9 @@ const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
 const mainRoutes = require('./routes/index')
+const swaggerUi = require('swagger-ui-express')
+const swaggerFile = require('./config/swagger_output.json');
+
 app.use(compression());
 app.use(express.json());
 //form-urlencoded
@@ -18,6 +21,7 @@ app.use('/', mainRoutes);
 
 
 
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
