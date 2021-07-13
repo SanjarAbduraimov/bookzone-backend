@@ -47,6 +47,15 @@ const doc = {
         "_id": "60eda1dfcc002e668c5d4963"
       },
       "success": true
+    },
+    AUTHOR: {
+      $firstName: 'William',
+      $lastName: 'Shekspare',
+      date_of_birth: '2021-07-13T14:23:25.696Z',
+      date_of_death: '2021-07-13T14:23:25.696Z',
+      createdAt: '2021-07-13T14:23:25.696Z',
+      updatedAt: '2021-07-13T14:23:25.696Z',
+      user: 'userId',
     }
   }
 };
