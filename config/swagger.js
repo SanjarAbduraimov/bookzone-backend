@@ -23,29 +23,28 @@ const doc = {
     },
     SIGN_UP: {
       $email: 'admin@mail.ru',
-      $password: '123456',
-      firstName: '',
-      lastName: '',
-      lang: '',
+      $password: '43678yrwiuehruweytr8y348',
+      firstName: 'Admin',
+      lastName: 'Admin',
+      lang: 'uz',
       image: '',
-      phone: '',
-      address: ''
+      phone: '+998995558877',
+      address: 'HelloCity',
     },
     AUTH_RESPONSE: {
       "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MGVkYTFkZmNjMDAyZTY2OGM1ZDQ5NjMiLCJpYXQiOjE2MjYxODYyMDcsImV4cCI6MTYyNjIyMjIwN30.whBHL9YH-TYUHwAySlexSxkQKCAKxI6g603qwweZuEQ",
       "user": {
-        "firstName": "",
-        "lastName": "",
-        "lang": "",
-        "image": "",
-        "email": "aka@mail.ru",
-        "password": "$2b$08$cHKkEquLLVfvUpbDsVtiiuh5YDCdkurTWkC9CRCrcubcMiLZdI0M.",
-        "phone": "",
-        "address": "",
+        email: 'admin@mail.ru',
+        password: '43678yrwiuehruweytr8y348',
+        firstName: 'Admin',
+        lastName: 'Admin',
+        lang: 'uz',
+        image: '',
+        phone: '+998995558877',
+        address: 'HelloCity',
         "createdAt": "2021-07-13T14:23:25.696Z",
         "updatedAt": "2021-07-13T14:23:25.696Z",
-        "_id": "60eda1dfcc002e668c5d4963",
-        "__v": 0
+        "_id": "60eda1dfcc002e668c5d4963"
       },
       "success": true
     }

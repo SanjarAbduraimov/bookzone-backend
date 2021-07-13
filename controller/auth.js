@@ -17,7 +17,7 @@ exports.signUp = async (req, res) => {
           schema: {$ref: '#/definitions/AUTH_RESPONSE'}
   } */
   /* #swagger.responses[400] = {
-          description: 'Password or Email is wrong',
+          description: 'Something went wrong or Error object',
          schema: {
             success: false,
             msg: 'Email or password is wrong'

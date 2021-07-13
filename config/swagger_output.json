@@ -450,19 +450,19 @@
         },
         "password": {
           "type": "string",
-          "example": "123456"
+          "example": "43678yrwiuehruweytr8y348"
         },
         "firstName": {
           "type": "string",
-          "example": ""
+          "example": "Admin"
         },
         "lastName": {
           "type": "string",
-          "example": ""
+          "example": "Admin"
         },
         "lang": {
           "type": "string",
-          "example": ""
+          "example": "uz"
         },
         "image": {
           "type": "string",
@@ -470,11 +470,11 @@
         },
         "phone": {
           "type": "string",
-          "example": ""
+          "example": "+998995558877"
         },
         "address": {
           "type": "string",
-          "example": ""
+          "example": "HelloCity"
         }
       },
       "required": [
@@ -492,37 +492,37 @@
         "user": {
           "type": "object",
           "properties": {
+            "email": {
+              "type": "string",
+              "example": "admin@mail.ru"
+            },
+            "password": {
+              "type": "string",
+              "example": "43678yrwiuehruweytr8y348"
+            },
             "firstName": {
               "type": "string",
-              "example": ""
+              "example": "Admin"
             },
             "lastName": {
               "type": "string",
-              "example": ""
+              "example": "Admin"
             },
             "lang": {
               "type": "string",
-              "example": ""
+              "example": "uz"
             },
             "image": {
               "type": "string",
               "example": ""
             },
-            "email": {
-              "type": "string",
-              "example": "aka@mail.ru"
-            },
-            "password": {
-              "type": "string",
-              "example": "$2b$08$cHKkEquLLVfvUpbDsVtiiuh5YDCdkurTWkC9CRCrcubcMiLZdI0M."
-            },
             "phone": {
               "type": "string",
-              "example": ""
+              "example": "+998995558877"
             },
             "address": {
               "type": "string",
-              "example": ""
+              "example": "HelloCity"
             },
             "createdAt": {
               "type": "string",
@@ -535,10 +535,6 @@
             "_id": {
               "type": "string",
               "example": "60eda1dfcc002e668c5d4963"
-            },
-            "__v": {
-              "type": "number",
-              "example": 0
             }
           }
         },

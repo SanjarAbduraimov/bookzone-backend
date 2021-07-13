@@ -19,6 +19,8 @@ const userSchema = new mongoose.Schema({
   // },
   // updatedAt: { type: Date, default: Date.now() }
   // }],
+  lang: { type: String, default: 'uz', enum: ['uz', 'ru', 'en'] },
+  image: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now() },
   updatedAt: { type: Date, default: Date.now() },
   isAdmin: { type: Boolean, default: false },
