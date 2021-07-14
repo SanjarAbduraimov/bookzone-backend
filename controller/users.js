@@ -4,52 +4,90 @@ const Book = require('../models/books');
 
 const { validateToken } = require('../utils');
 
-exports.create = (req, res) => {
-  // #swagger.tags = ['User']
-  // #swagger.description = 'Endpoint para obter um usuário.'
-  const { error } = validateCreate(req.body);
-  if (error) return res.json({ success: false, msg: 'Something went wrong', error: error.message })
-  Users.create({ ...req.body }).then(docs => {
-    res.json({ success: true, payload: docs });
-  })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
-}
+// exports.create = (req, res) => {
+//   // #swagger.tags = ['User']
+//   // #swagger.description = 'Endpoint para obter um usuário.'
+//   const { error } = validateCreate(req.body);
+//   if (error) return res.json({ success: false, msg: 'Something went wrong', error: error.message })
+//   Users.create({ ...req.body }).then(docs => {
+//     res.status(201).json({ success: true, payload: docs });
+//   })
+//     .catch(err => res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message }));
+// }
 
-exports.fetchUsers = (req, res) => {
-  Users.find()
-    .then(docs => {
-      res.json({ success: true, payload: docs })
-    })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
-}
+// exports.fetchUsers = (req, res) => {
+//   Users.find()
+//     .then(docs => {
+//       res.status(200).json({ success: true, payload: docs })
+//     })
+//     .catch(err => res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message }));
+// }
 exports.fetchUserById = async (req, res) => {
 
   try {
     const user = await Users.findById(req.locals._id).populate('favorites');
-    res.json({ success: true, user })
+    res.status(200).json({ success: true, user })
   } catch (error) {
-    res.json({ success: false, error: error })
+    res.status(400).json({ success: false, error: error })
   }
 }
 exports.updateUser = (req, res) => {
-  Users.findByIdAndUpdate(req.params.id, { ...req.body, updatedAt: new Date() }, { new: true })
+  // #swagger.description = 'Only Admin can update a user or User can update his account'
+  /* #swagger.security = [{
+             "apiKeyAuth": []
+      }] */
+
+  // #swagger.tags = ['USER']
+  /* #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Update user',
+        required: true,
+        type: 'obj',
+        schema: { $ref: '#/definitions/USER' }
+} */
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {$ref: '#/definitions/AUTH_RESPONSE'}
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Password or Email is wrong',
+         schema: {
+            success: false,
+            msg: 'Email or password is wrong'
+        }
+  } */
+  Users.findByIdAndUpdate(req.locals._id, { ...req.body, updatedAt: new Date() }, { new: true })
     .then(docs => {
-      res.json({ success: true, payload: docs })
+      res.status(204).json({ success: true, payload: docs })
     })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
-}
-
-exports.addFavouriteBook = async (req, res) => {
-  const { bookId, id } = req.body;
-  try {
-    const user = await Users.findByIdAndUpdate(id, { $addToSet: { "favorites": bookId } }, { new: true })
-    res.json({ success: true, user })
-  } catch (error) {
-    res.json({ success: false, msg: 'Something went wrong', error: error.message });
-  }
-
+    .catch(err => res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 exports.addToShelf = async (req, res) => {
+  // #swagger.description = 'Only Admin can add a book to own shelf'
+  /* #swagger.security = [{
+             "apiKeyAuth": []
+      }] */
+  // #swagger.tags = ['USER']
+  /* #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Add book to user shelf',
+        required: true,
+        type: 'obj',
+        schema: { $ref: '#/definitions/SHELF' }
+       
+} */
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {$ref: '#/definitions/AUTH_RESPONSE'}
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Password or Email is wrong',
+         schema: {
+            success: false,
+            msg: 'Email or password is wrong'
+        }
+  } */
+
   const { _id } = req.locals;
   const { bookId, shelfName } = req.body;
   try {
@@ -58,38 +96,97 @@ exports.addToShelf = async (req, res) => {
       { $addToSet: { "shelf": bookId } },
       { new: true })
 
-    res.json({ success: true, payload: book });
+    res.status(201).json({ success: true, payload: book });
   } catch (error) {
-    res.json({ success: false, msg: 'Something went wrong', error: error.message });
+    res.status(400).json({ success: false, msg: 'Something went wrong', error: error.message });
   }
 
 }
 
 exports.removeFromShelf = async (req, res) => {
+  // #swagger.description = 'Only Admin can remove a book from own shelf'
+  /* #swagger.security = [{
+             "apiKeyAuth": []
+      }] */
+  // #swagger.tags = ['SHELF']
+  /* #swagger.parameters['body'] = {
+        in: 'path',
+        description: 'Remove book from user shelf',
+        required: true,
+        type: 'obj',
+} */
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {$ref: '#/definitions/AUTH_RESPONSE'}
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Password or Email is wrong',
+         schema: {
+            success: false,
+            msg: 'Email or password is wrong'
+        }
+  } */
   const { _id } = req.locals;
-  const { id: bookId } = req.query;
+  const { id } = req.params;
   try {
 
-    await Users.findByIdAndUpdate(_id,
-      { $pull: { "shelf": bookId } },
+    const book = await Users.findByIdAndUpdate(_id,
+      { $pull: { "shelf": id } },
       { new: true })
+      .select('shelf')
+      .populate({
+        path: 'shelf',
+        populate: {
+          path: 'author',
+          model: 'Author'
+        },
+      })
 
-    res.json({ success: true, payload: book });
+    res.status(204).json({ success: true, payload: book });
   } catch (error) {
-    res.json({ success: false, msg: 'Something went wrong', error: error.message });
+    res.status(400).json({ success: false, msg: 'Something went wrong', error: error.message });
   }
 
 }
 
 exports.fetchFromShelf = async (req, res) => {
+  // #swagger.description = 'Only Admin can get books in own shelf'
+  /* #swagger.security = [{
+             "apiKeyAuth": []
+      }] */
+  // #swagger.tags = ['SHELF']
+  /* #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Remove book to user shelf',
+        required: true,
+        type: 'obj',
+       
+} */
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {$ref: '#/definitions/AUTH_RESPONSE'}
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Password or Email is wrong',
+         schema: {
+            success: false,
+            msg: 'Email or password is wrong'
+        }
+  } */
   const { _id } = req.locals
   try {
     const userShelf = await Users.findById(_id)
       .select('shelf')
-      .populate('shelf')
-    res.json({ success: true, payload: userShelf })
+      .populate({
+        path: 'shelf',
+        populate: {
+          path: 'author',
+          model: 'Author'
+        },
+      })
+    res.status(200).json({ success: true, payload: userShelf })
   } catch (error) {
-    res.json({ success: false, msg: 'Something went wrong', error: error.message });
+    res.status(400).json({ success: false, msg: 'Something went wrong', error: error.message });
   }
 }
 
@@ -100,11 +197,11 @@ exports.fetchFromShelf = async (req, res) => {
 
 // }
 exports.deleteUser = (req, res) => {
-  Users.findByIdAndDelete(req.params.id)
+  Users.findByIdAndDelete(req.locals._id)
     .then(docs => {
-      res.json({ success: true, payload: docs })
+      res.status(204).json({ success: true, payload: docs })
     })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
+    .catch(err => res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 
 function validateCreate(formData) {

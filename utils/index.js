@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { SECRET_KEY } = require('../config/keys');
+const Book = require('../models/books');
 const Users = require('../models/users');
 exports.createToken = ({ userId }) => {
   return jwt.sign({ _id: userId }, SECRET_KEY, { expiresIn: '10h' });
@@ -13,7 +14,24 @@ exports.validateToken = token => {
     return {};
   }
 }
-
+exports.isOwner = async (req, res, next) => {
+  try {
+    const book = await Book.findById(req.params.id)
+    if (!book) { return res.status(400).json({ success: false, error: 'book id  is invalid' }); }
+    // console.log(JSON.stringify(req.locals._id) == JSON.stringify(book.user))
+    // if (book.user == req.locals._id) {
+    if (JSON.stringify(req.locals._id) == JSON.stringify(book.user)) {
+      console.log(true)
+      next();
+    }
+    else {
+      console.log(false)
+      res.status(401).json({ success: false, error: 'You are not authorized' });
+    }
+  } catch (error) {
+    res.status(400).json({ success: false, error: 'book id  is invalid' });
+  }
+}
 exports.currentUser = async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   const validToken = token ? this.validateToken(token) : {};

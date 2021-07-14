@@ -2,6 +2,7 @@ const Users = require('../models/users');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
 const { createToken } = require('../utils');
+const _ = require('lodash');
 
 exports.signUp = async (req, res) => {
   // #swagger.tags = ['Auth']
@@ -25,15 +26,16 @@ exports.signUp = async (req, res) => {
   } */
 
   let { error } = validate(req.body);
-  console.log(req.body);
   if (error) return res.status(400).json({ success: false, msg: error.message });
   try {
-    const password = await bcrypt.hash(req.body.password, 8);
-    let user = await Users.create({ ...req.body, password });
+    const hash = await bcrypt.hash(req.body.password, 8);
+    let user = await Users.create({ ...req.body, password: hash });
     let token = createToken({ userId: user._id });
-    res.status(201).json({ token, payload: user, success: true });
+    console.log(user)
+    const { password, ...docs } = user._doc
+    res.status(201).json({ token, payload: docs, success: true });
   } catch (error) {
-    res.json({ success: false, msg: error.message })
+    res.status(400).json({ success: false, msg: error.message })
   }
 }
 
@@ -60,18 +62,19 @@ exports.login = async (req, res) => {
 
   let { email, password } = req.body;
   let { error } = validate(req.body);
-  if (error) return res.status(400).json({ success: false, msg: error.message });
+  if (error) return res.status(400).json({ success: false, error: error.message });
   try {
     let user = await Users.findOne({ email })
     if (!user) {
-      return res.status(404).json({ success: false, msg: 'Email or password is incorrect' })
+      return res.status(400).json({ success: false, msg: 'Email or password is incorrect' })
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (isPasswordCorrect) {
       let token = createToken({ userId: user._id });
-      return res.status(200).json({ token, user, success: true })
+      let { password, ...docs } = user._doc;
+      return res.status(200).json({ token, docs, success: true })
     }
-    res.json({ success: false, error: 'Email or password is incorrect' })
+    res.status(400).json({ success: false, error: 'Email or password is incorrect' })
 
   } catch (err) {
     res.json({ success: false, error: err.message })
