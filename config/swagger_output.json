@@ -51,7 +51,7 @@
             "description": "Created"
           },
           "400": {
-            "description": "Password or Email is wrong",
+            "description": "Something went wrong or Error object",
             "schema": {
               "type": "object",
               "properties": {
@@ -360,21 +360,107 @@
     },
     "/api/authors/": {
       "get": {
-        "tags": [],
+        "tags": [
+          "Author"
+        ],
         "description": "",
         "parameters": [],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "payload": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/AUTHOR"
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
       },
       "post": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
-        "responses": {}
+        "tags": [
+          "Author"
+        ],
+        "description": "Registerd users can proced this action",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Create author body",
+            "required": true,
+            "type": "obj",
+            "schema": {
+              "$ref": "#/definitions/AUTHOR"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "payload": {
+                  "$ref": "#/definitions/AUTHOR"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/authors/{id}": {
       "get": {
-        "tags": [],
+        "tags": [
+          "Author"
+        ],
         "description": "",
         "parameters": [
           {
@@ -384,24 +470,138 @@
             "type": "string"
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "payload": {
+                  "$ref": "#/definitions/AUTHOR"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
       },
       "patch": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "Author"
+        ],
+        "description": "Registerd users can proced this action",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Create author body",
+            "required": true,
+            "type": "obj",
+            "schema": {
+              "$ref": "#/definitions/AUTHOR"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/AUTHOR"
+            }
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "delete": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "Author"
+        ],
+        "description": "Registerd users can proced this action",
         "parameters": [
           {
             "name": "id",
@@ -410,7 +610,60 @@
             "type": "string"
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "payload": {
+                  "type": "array",
+                  "example": [
+                    "Books"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Response body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": ""
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/books/my-books": {
@@ -605,19 +858,19 @@
         },
         "password": {
           "type": "string",
-          "example": "123456"
+          "example": "43678yrwiuehruweytr8y348"
         },
         "firstName": {
           "type": "string",
-          "example": ""
+          "example": "Admin"
         },
         "lastName": {
           "type": "string",
-          "example": ""
+          "example": "Admin"
         },
         "lang": {
           "type": "string",
-          "example": ""
+          "example": "uz"
         },
         "image": {
           "type": "string",
@@ -625,11 +878,11 @@
         },
         "phone": {
           "type": "string",
-          "example": ""
+          "example": "+998995558877"
         },
         "address": {
           "type": "string",
-          "example": ""
+          "example": "HelloCity"
         }
       },
       "required": [
@@ -647,37 +900,37 @@
         "user": {
           "type": "object",
           "properties": {
+            "email": {
+              "type": "string",
+              "example": "admin@mail.ru"
+            },
+            "password": {
+              "type": "string",
+              "example": "43678yrwiuehruweytr8y348"
+            },
             "firstName": {
               "type": "string",
-              "example": ""
+              "example": "Admin"
             },
             "lastName": {
               "type": "string",
-              "example": ""
+              "example": "Admin"
             },
             "lang": {
               "type": "string",
-              "example": ""
+              "example": "uz"
             },
             "image": {
               "type": "string",
               "example": ""
             },
-            "email": {
-              "type": "string",
-              "example": "aka@mail.ru"
-            },
-            "password": {
-              "type": "string",
-              "example": "$2b$08$cHKkEquLLVfvUpbDsVtiiuh5YDCdkurTWkC9CRCrcubcMiLZdI0M."
-            },
             "phone": {
               "type": "string",
-              "example": ""
+              "example": "+998995558877"
             },
             "address": {
               "type": "string",
-              "example": ""
+              "example": "HelloCity"
             },
             "createdAt": {
               "type": "string",
@@ -690,10 +943,6 @@
             "_id": {
               "type": "string",
               "example": "60eda1dfcc002e668c5d4963"
-            },
-            "__v": {
-              "type": "number",
-              "example": 0
             }
           }
         },
@@ -751,7 +1000,43 @@
           "type": "string",
           "example": "werfgnsbxjj65wd656"
         }
-      }
+      },
+    "AUTHOR": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "example": "William"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Shekspare"
+        },
+        "date_of_birth": {
+          "type": "string",
+          "example": "2021-07-13T14:23:25.696Z"
+        },
+        "date_of_death": {
+          "type": "string",
+          "example": "2021-07-13T14:23:25.696Z"
+        },
+        "createdAt": {
+          "type": "string",
+          "example": "2021-07-13T14:23:25.696Z"
+        },
+        "updatedAt": {
+          "type": "string",
+          "example": "2021-07-13T14:23:25.696Z"
+        },
+        "user": {
+          "type": "string",
+          "example": "userId"
+        }
+      },
+      "required": [
+        "firstName",
+        "lastName"
+      ]
     }
   }
 }
