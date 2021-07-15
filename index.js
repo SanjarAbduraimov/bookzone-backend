@@ -32,7 +32,7 @@ if (app.get('env') === 'development') {
 }
 
 mongoose.connect('mongodb://localhost/bookzone',
-  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true })
+  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true, useFindAndModify: true })
   .then(() => {
     console.log("MongoDB ga ulanish hosil qilindi...");
   })

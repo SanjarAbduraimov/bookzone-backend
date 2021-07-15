@@ -132,62 +132,217 @@
     },
     "/api/users/shelf": {
       "post": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "USER"
+        ],
+        "description": "Only Admin can add a book to own shelf",
         "parameters": [
           {
-            "name": "obj",
+            "name": "body",
             "in": "body",
+            "description": "Add book to user shelf",
+            "required": true,
+            "type": "obj",
             "schema": {
-              "type": "object",
-              "properties": {
-                "bookId": {
-                  "example": "any"
-                },
-                "shelfName": {
-                  "example": "any"
-                }
-              }
+              "$ref": "#/definitions/SHELF"
             }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/AUTH_RESPONSE"
+            }
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Email or password is wrong"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "get": {
-        "tags": [],
-        "description": "",
-        "parameters": [],
-        "responses": {}
+        "tags": [
+          "SHELF"
+        ],
+        "description": "Only Admin can get books in own shelf",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Remove book to user shelf",
+            "required": true,
+            "type": "obj"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/AUTH_RESPONSE"
+            }
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Email or password is wrong"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/users/shelf/{id}": {
       "delete": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "SHELF"
+        ],
+        "description": "Only Admin can remove a book from own shelf",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "description",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "schema",
+            "in": "query",
+            "type": "string"
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/AUTH_RESPONSE"
+            }
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Email or password is wrong"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       }
     },
     "/api/users/{id}": {
       "patch": {
-        "tags": [],
-        "description": "",
+        "tags": [
+          "USER"
+        ],
+        "description": "Only Admin can update a user or User can update his account",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Update user",
+            "required": true,
+            "type": "obj",
+            "schema": {
+              "$ref": "#/definitions/USER"
+            }
           }
         ],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/AUTH_RESPONSE"
+            }
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Email or password is wrong"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [],
@@ -797,6 +952,55 @@
         }
       }
     },
+    "USER": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "example": "admin@mail.ru"
+        },
+        "password": {
+          "type": "string",
+          "example": "123456"
+        },
+        "firstName": {
+          "type": "string",
+          "example": ""
+        },
+        "lastName": {
+          "type": "string",
+          "example": ""
+        },
+        "lang": {
+          "type": "string",
+          "example": ""
+        },
+        "image": {
+          "type": "string",
+          "example": ""
+        },
+        "phone": {
+          "type": "string",
+          "example": ""
+        },
+        "address": {
+          "type": "string",
+          "example": ""
+        }
+      },
+      "required": [
+        "email",
+        "password"
+      ]
+    },
+    "SHELF": {
+      "type": "object",
+      "properties": {
+        "bookId": {
+          "type": "string",
+          "example": "werfgnsbxjj65wd656"
+        }
+      },
     "AUTHOR": {
       "type": "object",
       "properties": {

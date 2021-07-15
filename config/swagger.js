@@ -48,6 +48,17 @@ const doc = {
       },
       "success": true
     },
+    USER: {
+      $email: 'admin@mail.ru',
+      $password: '123456',
+      firstName: '',
+      lastName: '',
+      lang: '',
+      image: '',
+      phone: '',
+      address: ''
+    },
+    SHELF: {bookId: "werfgnsbxjj65wd656"},
     AUTHOR: {
       $firstName: 'William',
       $lastName: 'Shekspare',
