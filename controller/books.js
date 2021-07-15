@@ -4,7 +4,7 @@ const Author = require('../models/authors');
 const Comment = require('../models/comments');
 
 exports.create = async (req, res) => {
-  console.log(req.file)
+  // #swagger.tags = ['Books']
   let { error } = validate(req.body);
   if (error) return res.json(error.message)
   try {
@@ -26,7 +26,9 @@ exports.create = async (req, res) => {
     res.json({ success: false, msg: 'Something went wrong', error })
   }
 }
+
 exports.createComment = async (req, res) => {
+  // #swagger.tags = ['Book Comments']
   try {
     const { _id } = req.locals;
     const { bookId, text } = req.body
@@ -42,6 +44,7 @@ exports.createComment = async (req, res) => {
 }
 
 exports.fetchBooks = async (req, res) => {
+  // #swagger.tags = ['Books']
   const { page = 1, pageSize = 10 } = req.query;
   try {
     const book = await Book
@@ -59,7 +62,9 @@ exports.fetchBooks = async (req, res) => {
   }
 
 }
+
 exports.searchBooks = async (req, res) => {
+  // #swagger.tags = ['Books']
   const { title } = req.query;
   try {
     const book = await Book
@@ -74,6 +79,7 @@ exports.searchBooks = async (req, res) => {
 }
 
 exports.fetchCurrentUserBooks = async (req, res) => {
+  // #swagger.tags = ['MyBooks']
   try {
     const book = await Book
       .find({ user: req.locals._id })
@@ -85,7 +91,9 @@ exports.fetchCurrentUserBooks = async (req, res) => {
   }
 
 }
+
 exports.fetchBookById = async (req, res) => {
+  // #swagger.tags = ['Books']
   try {
     const { id } = req.params;
     const updatedBook = await Book
@@ -98,7 +106,9 @@ exports.fetchBookById = async (req, res) => {
     res.json({ success: false, error: error.message });
   }
 }
+
 exports.updateBook = async (req, res) => {
+  // #swagger.tags = ['Books']
   let { error } = validateUpdate(req.body);
   if (error) return res.status(404).json(error.message)
   const { id } = req.params;
@@ -112,7 +122,9 @@ exports.updateBook = async (req, res) => {
     res.json({ success: false, msg: 'Something went wrong', error: err.message })
   }
 }
+
 exports.deleteBook = (req, res) => {
+  // #swagger.tags = ['Books']
   Book.findByIdAndDelete(req.params.id)
     .then(docs => {
       res.json({ success: true, payload: docs })
@@ -140,6 +152,7 @@ function validate(formData) {
 
   return bookSchema.validate(formData);
 }
+
 function validateUpdate(formData) {
   const bookSchema = Joi.object({
     title: Joi.string().required().min(3),
