@@ -115,9 +115,6 @@
                 "name": "main"
               }
             }
-          },
-          "404": {
-            "description": "Not Found"
           }
         }
       }
@@ -127,7 +124,14 @@
         "tags": [],
         "description": "",
         "parameters": [],
-        "responses": {}
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
       }
     },
     "/api/users/shelf": {
@@ -154,6 +158,9 @@
             "schema": {
               "$ref": "#/definitions/AUTH_RESPONSE"
             }
+          },
+          "201": {
+            "description": "Created"
           },
           "400": {
             "description": "Password or Email is wrong",
@@ -243,14 +250,11 @@
             "type": "string"
           },
           {
-            "name": "description",
-            "in": "query",
-            "type": "string"
-          },
-          {
-            "name": "schema",
-            "in": "query",
-            "type": "string"
+            "name": "body",
+            "in": "path",
+            "description": "Remove book from user shelf",
+            "required": true,
+            "type": "obj"
           }
         ],
         "responses": {
@@ -259,6 +263,9 @@
             "schema": {
               "$ref": "#/definitions/AUTH_RESPONSE"
             }
+          },
+          "204": {
+            "description": "No Content"
           },
           "400": {
             "description": "Password or Email is wrong",
@@ -318,6 +325,9 @@
               "$ref": "#/definitions/AUTH_RESPONSE"
             }
           },
+          "204": {
+            "description": "No Content"
+          },
           "400": {
             "description": "Password or Email is wrong",
             "schema": {
@@ -355,7 +365,14 @@
             "type": "string"
           }
         ],
-        "responses": {}
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
       }
     },
     "/api/authors/": {
@@ -621,13 +638,7 @@
                   "example": true
                 },
                 "payload": {
-                  "type": "array",
-                  "example": [
-                    "Books"
-                  ],
-                  "items": {
-                    "type": "string"
-                  }
+                  "$ref": "#/definitions/AUTHOR"
                 }
               },
               "xml": {
@@ -668,19 +679,26 @@
     },
     "/api/books/my-books": {
       "get": {
-        "tags": [],
+        "tags": [
+          "MyBooks"
+        ],
         "description": "",
         "parameters": [],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
     },
     "/api/books/": {
       "get": {
-        "tags": [],
+        "tags": [
+          "Books"
+        ],
         "description": "",
         "parameters": [
           {
@@ -697,11 +715,16 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
       "post": {
-        "tags": [],
+        "tags": [
+          "Books"
+        ],
         "description": "",
         "parameters": [
           {
@@ -720,13 +743,18 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
     },
     "/api/books/search": {
       "get": {
-        "tags": [],
+        "tags": [
+          "Books"
+        ],
         "description": "",
         "parameters": [
           {
@@ -738,13 +766,18 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
     },
     "/api/books/{id}": {
       "get": {
-        "tags": [],
+        "tags": [
+          "Books"
+        ],
         "description": "",
         "parameters": [
           {
@@ -757,11 +790,16 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       },
       "patch": {
-        "tags": [],
+        "tags": [
+          "Books"
+        ],
         "description": "",
         "parameters": [
           {
@@ -775,13 +813,18 @@
           "201": {
             "description": "Created"
           },
+          "400": {
+            "description": "Bad Request"
+          },
           "404": {
             "description": "Not Found"
           }
         }
       },
       "delete": {
-        "tags": [],
+        "tags": [
+          "Books"
+        ],
         "description": "",
         "parameters": [
           {
@@ -796,7 +839,9 @@
     },
     "/api/books/comment": {
       "post": {
-        "tags": [],
+        "tags": [
+          "Book Comments"
+        ],
         "description": "",
         "parameters": [
           {
@@ -818,6 +863,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
@@ -1000,7 +1048,8 @@
           "type": "string",
           "example": "werfgnsbxjj65wd656"
         }
-      },
+      }
+    },
     "AUTHOR": {
       "type": "object",
       "properties": {

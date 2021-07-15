@@ -5,6 +5,10 @@ const Comment = require('../models/comments');
 const _ = require('lodash');
 exports.create = async (req, res) => {
   // #swagger.tags = ['Books']
+  /* #swagger.security = [{
+       "apiKeyAuth": []
+ }] */
+
   let { error } = validate(req.body);
   if (error) return res.status(400).json(error.message)
   try {
@@ -83,6 +87,10 @@ exports.searchBooks = async (req, res) => {
 
 exports.fetchCurrentUserBooks = async (req, res) => {
   // #swagger.tags = ['MyBooks']
+  /* #swagger.security = [{
+             "apiKeyAuth": []
+      }] */
+
   try {
     const book = await Book
       .find({ user: req.locals._id })
@@ -114,6 +122,10 @@ exports.fetchBookById = async (req, res) => {
 
 exports.updateBook = async (req, res) => {
   // #swagger.tags = ['Books']
+  /* #swagger.security = [{
+       "apiKeyAuth": []
+ }] */
+
   let { error } = validateUpdate(req.body);
   if (error) return res.status(404).json(error.message)
   const { id } = req.params;
@@ -127,6 +139,11 @@ exports.updateBook = async (req, res) => {
 
 exports.deleteBook = (req, res) => {
   // #swagger.tags = ['Books']
+  /* #swagger.security = [{
+         "apiKeyAuth": []
+   }] 
+   */
+
   Book.findByIdAndDelete(req.params.id)
     .then(docs => {
       res.json({ success: true, payload: docs })
