@@ -6,7 +6,7 @@ const doc = {
     title: 'Food API',
     description: 'Simple POS sytem API',
   },
-  host: 'localhost:8002',
+  host: 'localhost:8000',
   schemes: ['http'],
   securityDefinitions: {
     apiKeyAuth: {

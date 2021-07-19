@@ -5,7 +5,7 @@
     "description": "Simple POS sytem API",
     "version": "1.0.0"
   },
-  "host": "localhost:8002",
+  "host": "localhost:8000",
   "basePath": "/",
   "tags": [],
   "schemes": [
@@ -122,7 +122,7 @@
     "/api/users/": {
       "get": {
         "tags": [
-          "USER"
+          "User"
         ],
         "description": "Only Admin can update a user or User can update his account",
         "parameters": [],
@@ -142,7 +142,7 @@
       },
       "patch": {
         "tags": [
-          "USER"
+          "User"
         ],
         "description": "Only Admin can update a user or User can update his account",
         "parameters": [
@@ -195,7 +195,7 @@
       },
       "delete": {
         "tags": [
-          "USER"
+          "User"
         ],
         "description": "Only Admin can update a user or User can update his account",
         "parameters": [],
@@ -239,7 +239,7 @@
     "/api/users/shelf": {
       "post": {
         "tags": [
-          "USER"
+          "Shelf"
         ],
         "description": "Only Admin can add a book to own shelf",
         "parameters": [
@@ -292,7 +292,7 @@
       },
       "get": {
         "tags": [
-          "SHELF"
+          "Shelf"
         ],
         "description": "Only Admin can get books in own shelf",
         "parameters": [
@@ -341,7 +341,7 @@
     "/api/users/shelf/{id}": {
       "delete": {
         "tags": [
-          "SHELF"
+          "Shelf"
         ],
         "description": "Only Admin can remove a book from own shelf",
         "parameters": [
@@ -701,7 +701,7 @@
     "/api/books/my-books": {
       "get": {
         "tags": [
-          "BOOK"
+          "Book"
         ],
         "description": "Get your own created book",
         "parameters": [],
@@ -742,7 +742,7 @@
     "/api/books/": {
       "get": {
         "tags": [
-          "BOOK"
+          "Book"
         ],
         "description": "Fetch all books",
         "parameters": [
@@ -787,7 +787,7 @@
       },
       "post": {
         "tags": [
-          "BOOK"
+          "Book"
         ],
         "description": "",
         "parameters": [
@@ -839,7 +839,7 @@
     "/api/books/search": {
       "get": {
         "tags": [
-          "BOOK"
+          "Book"
         ],
         "description": "search book",
         "parameters": [
@@ -886,7 +886,7 @@
     "/api/books/{id}": {
       "get": {
         "tags": [
-          "BOOK"
+          "Book"
         ],
         "description": "fetch book by id",
         "parameters": [
@@ -927,7 +927,7 @@
       },
       "patch": {
         "tags": [
-          "BOOK"
+          "Book"
         ],
         "description": "Registerd users can proced this action",
         "parameters": [
@@ -967,7 +967,7 @@
       },
       "delete": {
         "tags": [
-          "BOOK"
+          "Book"
         ],
         "description": "Delete your own created book",
         "parameters": [
@@ -1018,7 +1018,7 @@
     "/api/books/comment": {
       "post": {
         "tags": [
-          "COMMENT"
+          "Book Comments"
         ],
         "description": "Registerd users can proced this action",
         "parameters": [
@@ -1051,25 +1051,15 @@
     "/api/books/comment/{id}": {
       "delete": {
         "tags": [
-          "COMMENT"
+          "Book Comments"
         ],
-        "description": "Registerd users can proced this action",
+        "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "description": "Post comment",
-            "required": true,
-            "type": "obj",
-            "schema": {
-              "$ref": "#/definitions/COMMENT"
-            }
           }
         ],
         "responses": {
@@ -1079,12 +1069,7 @@
           "400": {
             "description": "Bad Request"
           }
-        },
-        "security": [
-          {
-            "apiKeyAuth": []
-          }
-        ]
+        }
       }
     }
   },

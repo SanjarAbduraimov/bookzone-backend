@@ -88,7 +88,9 @@ function validate(formData) {
     lastName: Joi.string().min(3),
     email: Joi.string().email().required(),
     password: Joi.string().required().min(6),
-    phone: Joi.string().regex(/^\+?\d{9,12}$/)
+    phone: Joi.string().regex(/^\+?\d{9,12}$/),
+    lang: Joi.string(),
+    image: Joi.string()
   })
 
   return orderSchema.validate(formData);

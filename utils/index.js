@@ -21,6 +21,7 @@ exports.isOwner = async (req, res, next) => {
     // console.log(JSON.stringify(req.locals._id) == JSON.stringify(book.user))
     // if (book.user == req.locals._id) {
     if (JSON.stringify(req.locals._id) == JSON.stringify(book.user)) {
+     
       next();
     }
     else {

@@ -3,7 +3,7 @@ const Users = require('../models/users');
 const Book = require('../models/books');
 
 // exports.create = (req, res) => {
-//   // #swagger.tags = ['User']
+//   // #swagger.tags = ['Auth']
 //   // #swagger.description = 'Endpoint para obter um usuário.'
 //   const { error } = validateCreate(req.body);
 //   if (error) return res.json({ success: false, msg: 'Something went wrong', error: error.message })
@@ -21,11 +21,11 @@ const Book = require('../models/books');
 //     .catch(err => res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message }));
 // }
 exports.fetchUserById = async (req, res) => {
+  // #swagger.tags = ['User']
   // #swagger.description = 'Only Admin can update a user or User can update his account'
   /* #swagger.security = [{
              "apiKeyAuth": []
       }] */
-  // #swagger.tags = ['USER']
   try {
     const user = await Users.findById(req.locals._id).populate('favorites');
     res.status(200).json({ success: true, user })
@@ -34,12 +34,11 @@ exports.fetchUserById = async (req, res) => {
   }
 }
 exports.updateUser = (req, res) => {
+  // #swagger.tags = ['User']
   // #swagger.description = 'Only Admin can update a user or User can update his account'
   /* #swagger.security = [{
              "apiKeyAuth": []
       }] */
-
-  // #swagger.tags = ['USER']
   /* #swagger.parameters['body'] = {
         in: 'body',
         description: 'Update user',
@@ -65,11 +64,11 @@ exports.updateUser = (req, res) => {
     .catch(err => res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 exports.addToShelf = async (req, res) => {
+  // #swagger.tags = ['Shelf']
   // #swagger.description = 'Only Admin can add a book to own shelf'
   /* #swagger.security = [{
              "apiKeyAuth": []
       }] */
-  // #swagger.tags = ['USER']
   /* #swagger.parameters['body'] = {
         in: 'body',
         description: 'Add book to user shelf',
@@ -106,11 +105,11 @@ exports.addToShelf = async (req, res) => {
 }
 
 exports.removeFromShelf = async (req, res) => {
+  // #swagger.tags = ['Shelf']
   // #swagger.description = 'Only Admin can remove a book from own shelf'
   /* #swagger.security = [{
              "apiKeyAuth": []
       }] */
-  // #swagger.tags = ['SHELF']
   /* #swagger.parameters['body'] = {
         in: 'path',
         description: 'Remove book from user shelf',
@@ -152,11 +151,11 @@ exports.removeFromShelf = async (req, res) => {
 }
 
 exports.fetchFromShelf = async (req, res) => {
+  // #swagger.tags = ['Shelf']
   // #swagger.description = 'Only Admin can get books in own shelf'
   /* #swagger.security = [{
              "apiKeyAuth": []
       }] */
-  // #swagger.tags = ['SHELF']
   /* #swagger.parameters['body'] = {
         in: 'body',
         description: 'Remove book to user shelf',
@@ -205,7 +204,7 @@ exports.deleteUser = (req, res) => {
              "apiKeyAuth": []
       }] */
 
-  // #swagger.tags = ['USER']
+  // #swagger.tags = ['User']
 
   /* #swagger.responses[200] = {
           description: 'Response body',

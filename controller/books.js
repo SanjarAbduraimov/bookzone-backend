@@ -4,7 +4,7 @@ const Author = require('../models/authors');
 const Comment = require('../models/comments');
 const _ = require('lodash');
 exports.create = async (req, res) => {
-  // #swagger.tags = ['BOOK']
+  // #swagger.tags = ['Book']
   /* #swagger.security = [{
             "apiKeyAuth": []
      }] */
@@ -51,7 +51,7 @@ exports.create = async (req, res) => {
 }
 
 exports.createComment = async (req, res) => {
-  // #swagger.tags = ['COMMENT']
+  // #swagger.tags = ['Book Comments']
   // #swagger.description = 'Registerd users can proced this action'
   /* #swagger.security = [{
             "apiKeyAuth": []
@@ -77,26 +77,14 @@ exports.createComment = async (req, res) => {
   }
 }
 exports.deleteComment = async (req, res) => {
-  // #swagger.tags = ['COMMENT']
-  // #swagger.description = 'Registerd users can proced this action'
-  /* #swagger.security = [{
-            "apiKeyAuth": []
-     }] */
-  /* #swagger.parameters['body'] = {
-        in: 'body',
-        description: 'Delete comment',
-        required: true,
-        type: 'obj',
-        schema: { $ref: '#/definitions/LOG_IN' }
-} */
+  // #swagger.tags = ['Book Comments']
+  
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-    const book = await Book.findByIdAndDelete(id);
-    console.log(book)
-    if (!book) {
-      return res.status(400).json({ success: false, msg: 'book id is invalid', })
-    }
-    const comment = await Comment.findByIdAndDelete(id);
+    const comment = await Comment.findById(id);
+    console.log(comment)
+    // if (toString(comment.user) !== toString(req.locals._id)) { return res.status(401).json({ success: false, error: 'You are not authorized' }) }
+    // const deletedComment = await Comment.findByIdAndDelete(id);
     res.status(200).json({ success: true, payload: comment })
   } catch (error) {
     res.status(400).json({ success: false, msg: 'Something went wrong', error })
@@ -104,7 +92,7 @@ exports.deleteComment = async (req, res) => {
 }
 
 exports.fetchBooks = async (req, res) => {
-  // #swagger.tags = ['BOOK']
+  // #swagger.tags = ['Book']
   // #swagger.description = 'Fetch all books'
   /* #swagger.responses[200] = {
           description: 'Response body',
@@ -137,7 +125,7 @@ exports.fetchBooks = async (req, res) => {
 }
 
 exports.searchBooks = async (req, res) => {
-  // #swagger.tags = ['BOOK']
+  // #swagger.tags = ['Book']
   // #swagger.description = 'search book'
   /* #swagger.responses[200] = {
           description: 'Response body',
@@ -165,7 +153,7 @@ exports.searchBooks = async (req, res) => {
 }
 
 exports.fetchCurrentUserBooks = async (req, res) => {
-  // #swagger.tags = ['BOOK']
+  // #swagger.tags = ['Book']
   // #swagger.description = 'Get your own created book'
   /* #swagger.security = [{
             "apiKeyAuth": []
@@ -195,7 +183,7 @@ exports.fetchCurrentUserBooks = async (req, res) => {
 }
 
 exports.fetchBookById = async (req, res) => {
-  // #swagger.tags = ['BOOK']
+  // #swagger.tags = ['Book']
   // #swagger.description = 'fetch book by id'
   /* #swagger.responses[200] = {
           description: 'Response body',
@@ -223,7 +211,7 @@ exports.fetchBookById = async (req, res) => {
 }
 
 exports.updateBook = async (req, res) => {
-  // #swagger.tags = ['BOOK']
+  // #swagger.tags = ['Book']
   // #swagger.description = 'Registerd users can proced this action'
   /* #swagger.security = [{
             "apiKeyAuth": []
@@ -248,7 +236,7 @@ exports.updateBook = async (req, res) => {
   }
 }
 exports.deleteBook = async (req, res) => {
-  // #swagger.tags = ['BOOK']
+  // #swagger.tags = ['Book']
   // #swagger.description = 'Delete your own created book'
   /* #swagger.security = [{
             "apiKeyAuth": []
