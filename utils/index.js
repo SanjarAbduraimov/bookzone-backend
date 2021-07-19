@@ -37,7 +37,6 @@ exports.currentUser = async (req, res, next) => {
   const validToken = token ? this.validateToken(token) : {};
 
   if (validToken._id) {
-
     try {
       const user = await Users.findById(validToken._id);
       if (user) {

@@ -24,7 +24,6 @@ app.use('/', mainRoutes);
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.use(helmet());
-app.use(express.static(path.join(__dirname, 'public')));
 
 if (app.get('env') === 'development') {
   app.use(morgan('dev'))
