@@ -33,7 +33,7 @@ exports.signUp = async (req, res) => {
     let token = createToken({ userId: user._id });
     console.log(user)
     const { password, ...docs } = user._doc
-    res.status(201).json({ token, payload: docs, success: true });
+    res.status(201).json({ token, user: docs, success: true });
   } catch (error) {
     res.status(400).json({ success: false, msg: error.message })
   }
@@ -72,7 +72,7 @@ exports.login = async (req, res) => {
     if (isPasswordCorrect) {
       let token = createToken({ userId: user._id });
       let { password, ...docs } = user._doc;
-      return res.status(200).json({ token, docs, success: true })
+      return res.status(200).json({ token, user: docs, success: true })
     }
     res.status(400).json({ success: false, error: 'Email or password is incorrect' })
 

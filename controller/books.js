@@ -49,6 +49,7 @@ exports.create = async (req, res) => {
     res.status(400).json({ success: false, msg: 'Something went wrong', error })
   }
 }
+
 exports.createComment = async (req, res) => {
   // #swagger.tags = ['COMMENT']
   // #swagger.description = 'Registerd users can proced this action'
@@ -134,6 +135,7 @@ exports.fetchBooks = async (req, res) => {
   }
 
 }
+
 exports.searchBooks = async (req, res) => {
   // #swagger.tags = ['BOOK']
   // #swagger.description = 'search book'
@@ -191,6 +193,7 @@ exports.fetchCurrentUserBooks = async (req, res) => {
   }
 
 }
+
 exports.fetchBookById = async (req, res) => {
   // #swagger.tags = ['BOOK']
   // #swagger.description = 'fetch book by id'
@@ -218,6 +221,7 @@ exports.fetchBookById = async (req, res) => {
     res.status(400).json({ success: false, error: error.message });
   }
 }
+
 exports.updateBook = async (req, res) => {
   // #swagger.tags = ['BOOK']
   // #swagger.description = 'Registerd users can proced this action'
@@ -288,6 +292,7 @@ function validate(formData) {
 
   return bookSchema.validate(formData);
 }
+
 function validateUpdate(formData) {
   const bookSchema = Joi.object({
     title: Joi.string().required().min(3),
