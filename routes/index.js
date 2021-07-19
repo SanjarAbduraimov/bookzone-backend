@@ -10,6 +10,6 @@ router.use('/api', authRoutes);
 router.use('/api/users', userRoutes);
 router.use('/api/authors', authorsRoutes);
 router.use('/api/books', booksRoutes);
-router.use('/api', homeRoutes);
+// router.use('/api', homeRoutes);
 
 module.exports = router;

@@ -2,8 +2,6 @@ const Joi = require('joi');
 const Users = require('../models/users');
 const Book = require('../models/books');
 
-const { validateToken } = require('../utils');
-
 // exports.create = (req, res) => {
 //   // #swagger.tags = ['User']
 //   // #swagger.description = 'Endpoint para obter um usuário.'
@@ -23,7 +21,11 @@ const { validateToken } = require('../utils');
 //     .catch(err => res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message }));
 // }
 exports.fetchUserById = async (req, res) => {
-
+  // #swagger.description = 'Only Admin can update a user or User can update his account'
+  /* #swagger.security = [{
+             "apiKeyAuth": []
+      }] */
+  // #swagger.tags = ['USER']
   try {
     const user = await Users.findById(req.locals._id).populate('favorites');
     res.status(200).json({ success: true, user })
@@ -58,7 +60,7 @@ exports.updateUser = (req, res) => {
   } */
   Users.findByIdAndUpdate(req.locals._id, { ...req.body, updatedAt: new Date() }, { new: true })
     .then(docs => {
-      res.status(204).json({ success: true, payload: docs })
+      res.status(201).json({ success: true, payload: docs })
     })
     .catch(err => res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
@@ -142,7 +144,7 @@ exports.removeFromShelf = async (req, res) => {
         },
       })
 
-    res.status(204).json({ success: true, payload: book });
+    res.status(201).json({ success: true, payload: book });
   } catch (error) {
     res.status(400).json({ success: false, msg: 'Something went wrong', error: error.message });
   }
@@ -197,9 +199,28 @@ exports.fetchFromShelf = async (req, res) => {
 
 // }
 exports.deleteUser = (req, res) => {
+
+  // #swagger.description = 'Only Admin can update a user or User can update his account'
+  /* #swagger.security = [{
+             "apiKeyAuth": []
+      }] */
+
+  // #swagger.tags = ['USER']
+
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {$ref: '#/definitions/AUTH_RESPONSE'}
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Password or Email is wrong',
+         schema: {
+            success: false,
+            msg: 'Email or password is wrong'
+        }
+  } */
   Users.findByIdAndDelete(req.locals._id)
     .then(docs => {
-      res.status(204).json({ success: true, payload: docs })
+      res.status(201).json({ success: true, payload: docs })
     })
     .catch(err => res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message }));
 }

@@ -154,6 +154,8 @@ function validateCreate(formData) {
   const authorSchema = Joi.object({
     firstName: Joi.string().min(3),
     lastName: Joi.string().min(3),
+    date_of_birth: Joi.date(),
+    date_of_death: Joi.date()
   })
 
   return authorSchema.validate(formData);

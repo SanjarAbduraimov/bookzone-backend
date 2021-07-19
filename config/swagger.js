@@ -58,7 +58,7 @@ const doc = {
       phone: '',
       address: ''
     },
-    SHELF: {bookId: "werfgnsbxjj65wd656"},
+    SHELF: { bookId: "werfgnsbxjj65wd656" },
     AUTHOR: {
       $firstName: 'William',
       $lastName: 'Shekspare',
@@ -67,6 +67,10 @@ const doc = {
       createdAt: '2021-07-13T14:23:25.696Z',
       updatedAt: '2021-07-13T14:23:25.696Z',
       user: 'userId',
+    },
+    COMMENT: {
+      $text: "William Shakespeare kitoblarini sevib o'qiyman",
+      $bookId: 's54s8jm659fih9hi56pk',
     }
   }
 };

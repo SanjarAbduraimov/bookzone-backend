@@ -4,7 +4,28 @@ const Author = require('../models/authors');
 const Comment = require('../models/comments');
 const _ = require('lodash');
 exports.create = async (req, res) => {
-  console.log(req.file)
+  // #swagger.tags = ['BOOK']
+  /* #swagger.security = [{
+            "apiKeyAuth": []
+     }] */
+  /* #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'create your own book',
+        required: true,
+        type: 'obj',
+        schema: { $ref: '#/definitions/LOG_IN' }
+} */
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {$ref: '#/definitions/AUTH_RESPONSE'}
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Password or Email is wrong',
+         schema: {
+            success: false,
+            msg: 'Email or password is wrong'
+        }
+  } */
   let { error } = validate(req.body);
   if (error) return res.status(400).json(error.message)
   try {
@@ -20,7 +41,8 @@ exports.create = async (req, res) => {
       const img = req.file.path.replace("public", "");
       data.imageLink = img
     }
-    const book = await Book.create({ ...data, user: req.locals._id });
+    let book = await Book.create({ ...data, user: req.locals._id });
+    book = await book.populate('author', '-createdAt').execPopulate();
     const { user, ...docs } = book._doc;
     res.status(200).json({ success: true, payload: docs })
   } catch (error) {
@@ -28,6 +50,18 @@ exports.create = async (req, res) => {
   }
 }
 exports.createComment = async (req, res) => {
+  // #swagger.tags = ['COMMENT']
+  // #swagger.description = 'Registerd users can proced this action'
+  /* #swagger.security = [{
+            "apiKeyAuth": []
+     }] */
+  /* #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Post comment',
+        required: true,
+        type: 'obj',
+        schema: { $ref: '#/definitions/COMMENT' }
+} */
   try {
     const { _id } = req.locals;
     const { bookId, text } = req.body
@@ -41,8 +75,47 @@ exports.createComment = async (req, res) => {
     res.status(400).json({ success: false, msg: 'Something went wrong', error })
   }
 }
+exports.deleteComment = async (req, res) => {
+  // #swagger.tags = ['COMMENT']
+  // #swagger.description = 'Registerd users can proced this action'
+  /* #swagger.security = [{
+            "apiKeyAuth": []
+     }] */
+  /* #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Delete comment',
+        required: true,
+        type: 'obj',
+        schema: { $ref: '#/definitions/LOG_IN' }
+} */
+  try {
+    const { id } = req.params;
+    const book = await Book.findByIdAndDelete(id);
+    console.log(book)
+    if (!book) {
+      return res.status(400).json({ success: false, msg: 'book id is invalid', })
+    }
+    const comment = await Comment.findByIdAndDelete(id);
+    res.status(200).json({ success: true, payload: comment })
+  } catch (error) {
+    res.status(400).json({ success: false, msg: 'Something went wrong', error })
+  }
+}
 
 exports.fetchBooks = async (req, res) => {
+  // #swagger.tags = ['BOOK']
+  // #swagger.description = 'Fetch all books'
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {$ref: '#/definitions/AUTH_RESPONSE'}
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Password or Email is wrong',
+         schema: {
+            success: false,
+            msg: 'Email or password is wrong'
+        }
+  } */
   const { page = 1, pageSize = 10 } = req.query;
   try {
     const book = await Book
@@ -62,6 +135,19 @@ exports.fetchBooks = async (req, res) => {
 
 }
 exports.searchBooks = async (req, res) => {
+  // #swagger.tags = ['BOOK']
+  // #swagger.description = 'search book'
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {$ref: '#/definitions/AUTH_RESPONSE'}
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Password or Email is wrong',
+         schema: {
+            success: false,
+            msg: 'Email or password is wrong'
+        }
+  } */
   const { title } = req.query;
   try {
     const book = await Book
@@ -77,6 +163,22 @@ exports.searchBooks = async (req, res) => {
 }
 
 exports.fetchCurrentUserBooks = async (req, res) => {
+  // #swagger.tags = ['BOOK']
+  // #swagger.description = 'Get your own created book'
+  /* #swagger.security = [{
+            "apiKeyAuth": []
+     }] */
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {$ref: '#/definitions/AUTH_RESPONSE'}
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Password or Email is wrong',
+         schema: {
+            success: false,
+            msg: 'Email or password is wrong'
+        }
+  } */
   try {
     const book = await Book
       .find({ user: req.locals._id })
@@ -90,6 +192,19 @@ exports.fetchCurrentUserBooks = async (req, res) => {
 
 }
 exports.fetchBookById = async (req, res) => {
+  // #swagger.tags = ['BOOK']
+  // #swagger.description = 'fetch book by id'
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {$ref: '#/definitions/AUTH_RESPONSE'}
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Password or Email is wrong',
+         schema: {
+            success: false,
+            msg: 'Email or password is wrong'
+        }
+  } */
   try {
     const { id } = req.params;
     const updatedBook = await Book
@@ -104,22 +219,54 @@ exports.fetchBookById = async (req, res) => {
   }
 }
 exports.updateBook = async (req, res) => {
+  // #swagger.tags = ['BOOK']
+  // #swagger.description = 'Registerd users can proced this action'
+  /* #swagger.security = [{
+            "apiKeyAuth": []
+     }] */
+  /* #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Update book',
+        required: true,
+        type: 'obj',
+        schema: { $ref: '#/definitions/LOG_IN' }
+} */
+
   let { error } = validateUpdate(req.body);
   if (error) return res.status(404).json(error.message)
   const { id } = req.params;
   try {
-    const book = await Book.findByIdAndUpdate(id, { ...req.body }, { new: true });
+    const book = await Book.findByIdAndUpdate(id, { ...req.body }, { new: true })
+      .select('-user');
     res.status(201).json({ success: true, payload: book })
   } catch (err) {
     res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message })
   }
 }
-exports.deleteBook = (req, res) => {
-  Book.findByIdAndDelete(req.params.id)
-    .then(docs => {
-      res.json({ success: true, payload: docs })
-    })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
+exports.deleteBook = async (req, res) => {
+  // #swagger.tags = ['BOOK']
+  // #swagger.description = 'Delete your own created book'
+  /* #swagger.security = [{
+            "apiKeyAuth": []
+     }] */
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {$ref: '#/definitions/AUTH_RESPONSE'}
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Password or Email is wrong',
+         schema: {
+            success: false,
+            msg: 'Email or password is wrong'
+        }
+  } */
+  const { id } = req.params;
+  try {
+    const book = await Book.findByIdAndDelete(id).select('-user');
+    res.status(201).json({ success: true, payload: book })
+  } catch (err) {
+    res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message })
+  }
 }
 
 function validate(formData) {
