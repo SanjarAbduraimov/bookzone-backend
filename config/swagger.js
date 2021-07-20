@@ -68,6 +68,39 @@ const doc = {
       updatedAt: '2021-07-13T14:23:25.696Z',
       user: 'userId',
     },
+    BOOK: {
+      title: 'Harry Potter',
+      description: 'Nice description',
+      author: 'authorId',
+      country: 'Uzbekistan',
+      imageLink: 'https://book.com/cover.jpg',
+      language: 'uz',
+      link: 'book-file-url.pdf',
+      pages: 245,
+      year: 2018,
+      views: 768,
+      rate: 4.3,
+      price: 34000,
+      comments: [{
+        text: 'Good book to read',
+        bookId: 'hg342hghghg23hgj32g'
+      }],
+      user: 'userId_78987dsf7fds8',
+      category: 'classic',
+      isPublished: false,
+      updatedAt: '2021-07-13T14:23:25.696Z'
+    },
+    PAGINATION: {
+      totalDocs: 8,
+      limit: 10,
+      totalPages: 1,
+      page: 1,
+      pagingCounter: 1,
+      hasPrevPage: false,
+      hasNextPage: false,
+      prevPage: 1,
+      nextPage: 3
+    },
     COMMENT: {
       $text: "William Shakespeare kitoblarini sevib o'qiyman",
       $bookId: 's54s8jm659fih9hi56pk',
