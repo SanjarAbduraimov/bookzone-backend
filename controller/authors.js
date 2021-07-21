@@ -85,7 +85,7 @@ exports.fetchAuthorById = (req, res) => {
   } */
   Author.findById(req.params.id)
     .then(docs => {
-      res.json({ success: true, payload: docs })
+      res.json({ success: true, payload: docs });
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }

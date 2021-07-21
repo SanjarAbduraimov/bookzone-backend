@@ -23,6 +23,7 @@ const bookSchema = mongoose.Schema({
     default: 'classic'
   },
   isPublished: { type: Boolean, default: false },
+  isFeatured: { type: Boolean, default: false },
   updatedAt: { type: Date, default: new Date() }
 })
 

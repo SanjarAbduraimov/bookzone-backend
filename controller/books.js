@@ -130,7 +130,7 @@ exports.fetchBooks = async (req, res) => {
           sort: { name: 1 },
           page,
           limit: pageSize,
-          populate: { path: "author", select: "-_id -user -createdAt -updatedAt -phone" },
+          populate: { path: "author", select: "-user -createdAt -updatedAt -phone" },
           select: "-user"
         })
 
@@ -170,7 +170,7 @@ exports.searchBooks = async (req, res) => {
     const book = await Book
       .find({ title: { $regex: `^${title}`, $options: 'i' } })
       .select('-user')
-      .populate('author', '-_id -createdAt -updatedAt')
+      .populate('author', '-createdAt -updatedAt')
 
     res.status(200).json({ success: true, payload: book })
   } catch (error) {
@@ -318,6 +318,41 @@ exports.deleteBook = async (req, res) => {
     res.status(201).json({ success: true, payload: book })
   } catch (err) {
     res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message })
+  }
+}
+
+exports.fetchBookByAuthorId = async (req, res) => {
+  // #swagger.tags = ['Book']
+  /* #swagger.parameters['id'] = {
+        description: 'Author id',
+        required: true,
+        type: 'string',
+        schema: { $ref: '#/definitions/BOOK' }
+} */
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {
+            success: true,
+            payload: [{$ref: '#/definitions/BOOK'}]
+          }
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Book errors page',
+         schema: {
+            success: false,
+            error: 'title can not be empty',
+            msg: 'Author not found'
+        }
+  } */
+  try {
+    const { id } = req.params;
+    const authorBooks = await Book
+      .find({ author: id })
+      .populate('author', '-createdAt -updatedAt -phone');
+
+    res.status(200).json({ success: true, payload: authorBooks });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
   }
 }
 
