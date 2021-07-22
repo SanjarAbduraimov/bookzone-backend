@@ -18,13 +18,9 @@ exports.isOwner = async (req, res, next) => {
   try {
     const book = await Book.findById(req.params.id)
     if (!book) { return res.status(400).json({ success: false, error: 'book id  is invalid' }); }
-    // console.log(JSON.stringify(req.locals._id) == JSON.stringify(book.user))
-    // if (book.user == req.locals._id) {
-    if (JSON.stringify(req.locals._id) == JSON.stringify(book.user)) {
-     
+    if (req.locals._id.toString() === book.user.toString()) {
       next();
-    }
-    else {
+    } else {
       res.status(401).json({ success: false, error: 'You are not authorized' });
     }
   } catch (error) {

@@ -10,25 +10,24 @@ const morgan = require('morgan');
 const mainRoutes = require('./routes/index')
 const swaggerUi = require('swagger-ui-express')
 const swaggerFile = require('./config/swagger_output.json');
-
+console.log(path.resolve(__dirname, 'React-Roadmap.pdf'))
 app.use(compression());
 app.use(express.json());
 //form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 app.use('*', cors());
 app.set('view engine', 'pug');
+app.use(morgan('tiny'))
 app.use('/', mainRoutes);
-
-
 
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 
 app.use(helmet());
 
-if (app.get('env') === 'development') {
-  app.use(morgan('dev'))
-  app.use(logger);
-}
+
+// if (app.get('env') === 'development') {
+//   app.use(logger);
+// }
 
 mongoose.connect('mongodb://localhost/bookzone',
   { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: true, useFindAndModify: true })

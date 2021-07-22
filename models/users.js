@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
   // },
   // updatedAt: { type: Date, default: Date.now() }
   // }],
-  lang: { type: String, default: 'uz', enum: ['uz', 'ru', 'en'] },
+  lang: { type: String, default: 'uz', enum: ['uz', 'ru', 'en'], lowercase: true },
   image: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now() },
   updatedAt: { type: Date, default: Date.now() },
