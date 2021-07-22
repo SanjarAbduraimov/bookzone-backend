@@ -848,6 +848,72 @@
         ]
       }
     },
+    "/api/books/author/{id}": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Author id",
+            "schema": {
+              "$ref": "#/definitions/BOOK"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "payload": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/BOOK"
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Book errors page",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "error": {
+                  "type": "string",
+                  "example": "title can not be empty"
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Author not found"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/books/search": {
       "get": {
         "tags": [
@@ -869,7 +935,7 @@
             }
           },
           "400": {
-            "description": "Password or Email is wrong",
+            "description": "Book errors page",
             "schema": {
               "type": "object",
               "properties": {
@@ -877,13 +943,13 @@
                   "type": "boolean",
                   "example": false
                 },
-                "msg": {
-                  "type": "string",
-                  "example": "Someting went wrong"
-                },
                 "error": {
                   "type": "string",
-                  "example": "error.message"
+                  "example": "title can not be empty"
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
                 }
               },
               "xml": {
@@ -940,18 +1006,22 @@
         "tags": [
           "Book"
         ],
-        "description": "Registerd users can proced this action",
+        "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "book id",
+            "schema": {
+              "$ref": "#/definitions/BOOK"
+            }
           },
           {
             "name": "body",
             "in": "body",
-            "description": "Update book",
+            "description": "update your own book",
             "required": true,
             "type": "obj",
             "schema": {
@@ -1006,13 +1076,17 @@
         "tags": [
           "Book"
         ],
-        "description": "Delete your own created book",
+        "description": "",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "description": "book id",
+            "schema": {
+              "$ref": "#/definitions/BOOK"
+            }
           }
         ],
         "responses": {
@@ -1712,6 +1786,47 @@
         "firstName",
         "lastName"
       ]
+    },
+    "PAGINATION": {
+      "type": "object",
+      "properties": {
+        "totalDocs": {
+          "type": "number",
+          "example": 8
+        },
+        "limit": {
+          "type": "number",
+          "example": 10
+        },
+        "totalPages": {
+          "type": "number",
+          "example": 1
+        },
+        "page": {
+          "type": "number",
+          "example": 1
+        },
+        "pagingCounter": {
+          "type": "number",
+          "example": 1
+        },
+        "hasPrevPage": {
+          "type": "boolean",
+          "example": false
+        },
+        "hasNextPage": {
+          "type": "boolean",
+          "example": false
+        },
+        "prevPage": {
+          "type": "number",
+          "example": 1
+        },
+        "nextPage": {
+          "type": "number",
+          "example": 3
+        }
+      }
     },
     "COMMENT": {
       "type": "object",

@@ -156,6 +156,17 @@ const doc = {
       updatedAt: '2021-07-13T14:23:25.696Z',
       user: 'userId',
     },
+    PAGINATION: {
+      totalDocs: 8,
+      limit: 10,
+      totalPages: 1,
+      page: 1,
+      pagingCounter: 1,
+      hasPrevPage: false,
+      hasNextPage: false,
+      prevPage: 1,
+      nextPage: 3
+    },
     COMMENT: {
       $text: "William Shakespeare kitoblarini sevib o'qiyman",
       $bookId: 's54s8jm659fih9hi56pk',

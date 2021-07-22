@@ -3,6 +3,7 @@ const Book = require('../models/books');
 const Author = require('../models/authors');
 const Comment = require('../models/comments');
 const _ = require('lodash');
+
 exports.create = async (req, res) => {
   let { error } = validate(req.body);
   if (error) return res.status(400).json(error.message)
@@ -89,6 +90,7 @@ exports.createComment = async (req, res) => {
         }
   } */
 }
+
 exports.deleteComment = async (req, res) => {
   try {
     const { id } = req.params;
@@ -136,7 +138,7 @@ exports.fetchBooks = async (req, res) => {
           sort: { name: 1 },
           page,
           limit: pageSize,
-          populate: { path: "author", select: "-_id -user -createdAt -updatedAt -phone" },
+          populate: { path: "author", select: "-user -createdAt -updatedAt -phone" },
           select: "-user"
         })
 
@@ -166,7 +168,7 @@ exports.searchBooks = async (req, res) => {
     const book = await Book
       .find({ title: { $regex: `^${title}`, $options: 'i' } })
       .select('-user')
-      .populate('author', '-_id -createdAt -updatedAt')
+      .populate('author', '-createdAt -updatedAt')
 
     res.status(200).json({ success: true, payload: book })
   } catch (error) {
@@ -180,11 +182,11 @@ exports.searchBooks = async (req, res) => {
           schema: {$ref: '#/definitions/BOOK_RESPONSE'}
   } */
   /* #swagger.responses[400] = {
-          description: 'Password or Email is wrong',
+          description: 'Book errors page',
          schema: {
             success: false,
-            msg: 'Someting went wrong',
-            error: 'error.message'
+            error: 'title can not be empty',
+            msg: 'Something went wrong'
         }
   } */
 
@@ -261,13 +263,18 @@ exports.updateBook = async (req, res) => {
     res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message })
   }
   // #swagger.tags = ['Book']
-  // #swagger.description = 'Registerd users can proced this action'
   /* #swagger.security = [{
             "apiKeyAuth": []
      }] */
+  /* #swagger.parameters['id'] = {
+        description: 'book id',
+        required: true,
+        type: 'string',
+        schema: { $ref: '#/definitions/BOOK' }
+} */
   /* #swagger.parameters['body'] = {
         in: 'body',
-        description: 'Update book',
+        description: 'update your own book',
         required: true,
         type: 'obj',
         schema: { $ref: '#/definitions/BOOK' }
@@ -294,10 +301,15 @@ exports.deleteBook = async (req, res) => {
     res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message })
   }
   // #swagger.tags = ['Book']
-  // #swagger.description = 'Delete your own created book'
   /* #swagger.security = [{
             "apiKeyAuth": []
      }] */
+  /* #swagger.parameters['id'] = {
+        description: 'book id',
+        required: true,
+        type: 'string',
+        schema: { $ref: '#/definitions/BOOK' }
+} */
   /* #swagger.responses[200] = {
           description: 'Response body',
           schema: {$ref: '#/definitions/BOOK_RESPONSE'}
@@ -309,6 +321,41 @@ exports.deleteBook = async (req, res) => {
             msg: 'Something went wrong'
         }
   } */
+}
+
+exports.fetchBookByAuthorId = async (req, res) => {
+  // #swagger.tags = ['Book']
+  /* #swagger.parameters['id'] = {
+        description: 'Author id',
+        required: true,
+        type: 'string',
+        schema: { $ref: '#/definitions/BOOK' }
+} */
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {
+            success: true,
+            payload: [{$ref: '#/definitions/BOOK'}]
+          }
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Book errors page',
+         schema: {
+            success: false,
+            error: 'title can not be empty',
+            msg: 'Author not found'
+        }
+  } */
+  try {
+    const { id } = req.params;
+    const authorBooks = await Book
+      .find({ author: id })
+      .populate('author', '-createdAt -updatedAt -phone');
+
+    res.status(200).json({ success: true, payload: authorBooks });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
 }
 
 function validate(formData) {

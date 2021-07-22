@@ -1,11 +1,12 @@
 const express = require('express');
 const { currentUser, isOwner, } = require('../utils');
-const { create, createComment, fetchBooks, searchBooks, fetchBookById, updateBook, deleteBook, deleteComment, fetchCurrentUserBooks } = require('../controller/books');
+const { create, createComment, fetchBookByAuthorId, fetchBooks, searchBooks, fetchBookById, updateBook, deleteBook, deleteComment, fetchCurrentUserBooks } = require('../controller/books');
 var multer = require('../utils/multer');
 
 const router = express.Router();
 router.get('/my-books', currentUser, fetchCurrentUserBooks);
 router.get('/', fetchBooks);
+router.get('/author/:id', fetchBookByAuthorId);
 router.get('/search', searchBooks);
 router.get('/:id', fetchBookById);
 router.post('/', multer.single('image'), currentUser, create);
