@@ -128,10 +128,29 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/USER_RESPONSE"
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Response body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "error": {
+                  "type": "string",
+                  "example": ""
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
           }
         },
         "security": [
@@ -161,14 +180,14 @@
           "200": {
             "description": "Response body",
             "schema": {
-              "$ref": "#/definitions/AUTH_RESPONSE"
+              "$ref": "#/definitions/USER_RESPONSE"
             }
           },
           "201": {
             "description": "Created"
           },
           "400": {
-            "description": "Password or Email is wrong",
+            "description": "Response body",
             "schema": {
               "type": "object",
               "properties": {
@@ -178,7 +197,7 @@
                 },
                 "msg": {
                   "type": "string",
-                  "example": "Email or password is wrong"
+                  "example": "Something went wrong"
                 }
               },
               "xml": {
@@ -197,20 +216,20 @@
         "tags": [
           "User"
         ],
-        "description": "Only Admin can update a user or User can update his account",
+        "description": "Only User can remove his account",
         "parameters": [],
         "responses": {
           "200": {
             "description": "Response body",
             "schema": {
-              "$ref": "#/definitions/AUTH_RESPONSE"
+              "$ref": "#/definitions/USER_RESPONSE"
             }
           },
           "201": {
             "description": "Created"
           },
           "400": {
-            "description": "Password or Email is wrong",
+            "description": "Response body",
             "schema": {
               "type": "object",
               "properties": {
@@ -220,7 +239,11 @@
                 },
                 "msg": {
                   "type": "string",
-                  "example": "Email or password is wrong"
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "err.message"
                 }
               },
               "xml": {
@@ -258,7 +281,7 @@
           "200": {
             "description": "Response body",
             "schema": {
-              "$ref": "#/definitions/AUTH_RESPONSE"
+              "$ref": "#/definitions/SHELF_RESPONSE"
             }
           },
           "201": {
@@ -275,7 +298,11 @@
                 },
                 "msg": {
                   "type": "string",
-                  "example": "Email or password is wrong"
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error.message"
                 }
               },
               "xml": {
@@ -295,20 +322,12 @@
           "Shelf"
         ],
         "description": "Only Admin can get books in own shelf",
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "description": "Remove book to user shelf",
-            "required": true,
-            "type": "obj"
-          }
-        ],
+        "parameters": [],
         "responses": {
           "200": {
             "description": "Response body",
             "schema": {
-              "$ref": "#/definitions/AUTH_RESPONSE"
+              "$ref": "#/definitions/SHELF_RESPONSE"
             }
           },
           "400": {
@@ -322,7 +341,11 @@
                 },
                 "msg": {
                   "type": "string",
-                  "example": "Email or password is wrong"
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error.message"
                 }
               },
               "xml": {
@@ -350,20 +373,13 @@
             "in": "path",
             "required": true,
             "type": "string"
-          },
-          {
-            "name": "body",
-            "in": "path",
-            "description": "Remove book from user shelf",
-            "required": true,
-            "type": "obj"
           }
         ],
         "responses": {
           "200": {
             "description": "Response body",
             "schema": {
-              "$ref": "#/definitions/AUTH_RESPONSE"
+              "$ref": "#/definitions/SHELF_RESPONSE"
             }
           },
           "201": {
@@ -380,7 +396,11 @@
                 },
                 "msg": {
                   "type": "string",
-                  "example": "Email or password is wrong"
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error.message"
                 }
               },
               "xml": {
@@ -859,11 +879,7 @@
             "name": "id",
             "in": "path",
             "required": true,
-            "type": "string",
-            "description": "Author id",
-            "schema": {
-              "$ref": "#/definitions/BOOK"
-            }
+            "type": "string"
           }
         ],
         "responses": {
@@ -879,7 +895,7 @@
                 "payload": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/definitions/BOOK"
+                    "$ref": "#/definitions/AUTHOR__BOOKS"
                   }
                 }
               },
@@ -1741,12 +1757,319 @@
         "password"
       ]
     },
+    "USER_RESPONSE": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "user": {
+          "type": "object",
+          "properties": {
+            "firstName": {
+              "type": "string",
+              "example": "Sanjar"
+            },
+            "lastName": {
+              "type": "string",
+              "example": "Abduraimov"
+            },
+            "phone": {
+              "type": "string",
+              "example": "+998990134034"
+            },
+            "shelf": {
+              "type": "array",
+              "example": [
+                "60f1213f7160764c30b0badc"
+              ],
+              "items": {
+                "type": "string"
+              }
+            },
+            "lang": {
+              "type": "string",
+              "example": "uz"
+            },
+            "image": {
+              "type": "string",
+              "example": ""
+            },
+            "createdAt": {
+              "type": "string",
+              "example": "2021-07-14T11:14:17.118Z"
+            },
+            "updatedAt": {
+              "type": "string",
+              "example": "2021-07-23T07:47:05.982Z"
+            },
+            "isAdmin": {
+              "type": "boolean",
+              "example": false
+            },
+            "_id": {
+              "type": "string",
+              "example": "60eec7f0492070afeccc0c5c"
+            },
+            "email": {
+              "type": "string",
+              "example": "sanjar@gmail.com"
+            },
+            "__v": {
+              "type": "number",
+              "example": 0
+            }
+          }
+        }
+      }
+    },
     "SHELF": {
       "type": "object",
       "properties": {
         "bookId": {
           "type": "string",
           "example": "werfgnsbxjj65wd656"
+        }
+      },
+      "required": [
+        "bookId"
+      ]
+    },
+    "SHELF_RESPONSE": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "description": {
+              "type": "string",
+              "example": "The Adventures of Tom Sawyer is an 1876 novel by Mark Twain about a boy growing up along the Mississippi River. It is set in the 1840s in the town of St. Petersburg, which is based on Hannibal, Missouri, where Twain lived as a boy.In the novel, Tom Sawyer has several adventures, often with his friend Huckleberry Finn. Originally a commercial failure, the book ended up being the best selling of any of Twain's works during his lifetime. Though overshadowed by its sequel, Adventures of Huckleberry Finn, the book is considered by many to be a masterpiece of American literature. It was one of the first novels to be written on a typewriter"
+            },
+            "country": {
+              "type": "string",
+              "example": "United States of America"
+            },
+            "language": {
+              "type": "string",
+              "example": "English"
+            },
+            "link": {
+              "type": "string",
+              "example": "https://en.wikipedia.org/wiki/The_Adventures_of_Tom_Sawyer"
+            },
+            "pages": {
+              "type": "string",
+              "example": "274"
+            },
+            "year": {
+              "type": "string",
+              "example": "1876"
+            },
+            "views": {
+              "type": "number",
+              "example": 8
+            },
+            "rate": {
+              "type": "number",
+              "example": 4
+            },
+            "price": {
+              "type": "number",
+              "example": 10.92
+            },
+            "category": {
+              "type": "string",
+              "example": "classic"
+            },
+            "isPublished": {
+              "type": "boolean",
+              "example": true
+            },
+            "isFeatured": {
+              "type": "boolean",
+              "example": false
+            },
+            "updatedAt": {
+              "type": "string",
+              "example": "2021-07-16T06:03:41.046Z"
+            },
+            "_id": {
+              "type": "string",
+              "example": "60f1213f7160764c30b0badc"
+            },
+            "author": {
+              "type": "object",
+              "properties": {
+                "lastName": {
+                  "type": "string",
+                  "example": "Twain"
+                },
+                "date_of_birth": {
+                  "type": "string",
+                  "example": "1835-01-01T00:00:00.000Z"
+                },
+                "date_of_death": {
+                  "type": "string",
+                  "example": "1910-01-01T00:00:00.000Z"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "example": "2021-07-15T11:55:39.590Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "example": "2021-07-15T11:55:39.590Z"
+                },
+                "_id": {
+                  "type": "string",
+                  "example": "60f0224792ce9f6d804c994f"
+                },
+                "firstName": {
+                  "type": "string",
+                  "example": "Mark"
+                },
+                "__v": {
+                  "type": "number",
+                  "example": 0
+                }
+              }
+            },
+            "title": {
+              "type": "string",
+              "example": "Tom Sawyer"
+            },
+            "imageLink": {
+              "type": "string",
+              "example": "\\uploads\\qeEWzntk5mJaVHuN4z6hY.jpg"
+            },
+            "__v": {
+              "type": "number",
+              "example": 0
+            }
+          }
+        }
+      }
+    },
+    "AUTHOR__BOOKS": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean",
+          "example": true
+        },
+        "payload": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "description": {
+                "type": "string",
+                "example": "The Adventures of Tom Sawyer is an 1876 novel by Mark Twain about a boy growing up along the Mississippi River. It is set in the 1840s in the town of St. Petersburg, which is based on Hannibal, Missouri, where Twain lived as a boy.In the novel, Tom Sawyer has several adventures, often with his friend Huckleberry Finn. Originally a commercial failure, the book ended up being the best selling of any of Twain's works during his lifetime. Though overshadowed by its sequel, Adventures of Huckleberry Finn, the book is considered by many to be a masterpiece of American literature. It was one of the first novels to be written on a typewriter"
+              },
+              "country": {
+                "type": "string",
+                "example": "United States of America"
+              },
+              "language": {
+                "type": "string",
+                "example": "English"
+              },
+              "link": {
+                "type": "string",
+                "example": "https://en.wikipedia.org/wiki/The_Adventures_of_Tom_Sawyer"
+              },
+              "pages": {
+                "type": "string",
+                "example": "274"
+              },
+              "year": {
+                "type": "string",
+                "example": "1876"
+              },
+              "views": {
+                "type": "number",
+                "example": 8
+              },
+              "rate": {
+                "type": "number",
+                "example": 4
+              },
+              "price": {
+                "type": "number",
+                "example": 10.92
+              },
+              "category": {
+                "type": "string",
+                "example": "classic"
+              },
+              "isPublished": {
+                "type": "boolean",
+                "example": true
+              },
+              "isFeatured": {
+                "type": "boolean",
+                "example": false
+              },
+              "updatedAt": {
+                "type": "string",
+                "example": "2021-07-16T06:03:41.046Z"
+              },
+              "_id": {
+                "type": "string",
+                "example": "60f1213f7160764c30b0badc"
+              },
+              "author": {
+                "type": "object",
+                "properties": {
+                  "lastName": {
+                    "type": "string",
+                    "example": "Twain"
+                  },
+                  "date_of_birth": {
+                    "type": "string",
+                    "example": "1835-01-01T00:00:00.000Z"
+                  },
+                  "date_of_death": {
+                    "type": "string",
+                    "example": "1910-01-01T00:00:00.000Z"
+                  },
+                  "_id": {
+                    "type": "string",
+                    "example": "60f0224792ce9f6d804c994f"
+                  },
+                  "firstName": {
+                    "type": "string",
+                    "example": "Mark"
+                  },
+                  "__v": {
+                    "type": "number",
+                    "example": 0
+                  }
+                }
+              },
+              "title": {
+                "type": "string",
+                "example": "Tom Sawyer"
+              },
+              "imageLink": {
+                "type": "string",
+                "example": "\\uploads\\qeEWzntk5mJaVHuN4z6hY.jpg"
+              },
+              "user": {
+                "type": "string",
+                "example": "60eec7f0492070afeccc0c5c"
+              },
+              "__v": {
+                "type": "number",
+                "example": 0
+              }
+            }
+          }
         }
       }
     },

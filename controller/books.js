@@ -324,28 +324,7 @@ exports.deleteBook = async (req, res) => {
 }
 
 exports.fetchBookByAuthorId = async (req, res) => {
-  // #swagger.tags = ['Book']
-  /* #swagger.parameters['id'] = {
-        description: 'Author id',
-        required: true,
-        type: 'string',
-        schema: { $ref: '#/definitions/BOOK' }
-} */
-  /* #swagger.responses[200] = {
-          description: 'Response body',
-          schema: {
-            success: true,
-            payload: [{$ref: '#/definitions/BOOK'}]
-          }
-  } */
-  /* #swagger.responses[400] = {
-          description: 'Book errors page',
-         schema: {
-            success: false,
-            error: 'title can not be empty',
-            msg: 'Author not found'
-        }
-  } */
+
   try {
     const { id } = req.params;
     const authorBooks = await Book
@@ -356,6 +335,22 @@ exports.fetchBookByAuthorId = async (req, res) => {
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
   }
+  // #swagger.tags = ['Book']
+  /* #swagger.responses[200] = {
+          description: 'Response body',
+          schema: {
+            success: true,
+            payload: [{$ref: '#/definitions/AUTHOR__BOOKS'}]
+          }
+  } */
+  /* #swagger.responses[400] = {
+          description: 'Book errors page',
+         schema: {
+            success: false,
+            error: 'title can not be empty',
+            msg: 'Author not found'
+        }
+  } */
 }
 
 function validate(formData) {

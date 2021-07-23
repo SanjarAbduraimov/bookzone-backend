@@ -2,6 +2,14 @@ const Joi = require('joi');
 const Author = require('../models/authors');
 
 exports.create = (req, res) => {
+
+  let { error } = validateCreate(req.body);
+  if (error) return res.send(error)
+  Author.create({ ...req.body })
+    .then(docs => {
+      res.json({ success: true, payload: docs });
+    })
+    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
   // #swagger.tags = ['Author']
   // #swagger.description = 'Registerd users can proced this action'
   /* #swagger.security = [{
@@ -30,15 +38,16 @@ exports.create = (req, res) => {
             error: 'error message'
         }
   } */
-  let { error } = validateCreate(req.body);
-  if (error) return res.send(error)
-  Author.create({ ...req.body }).then(docs => {
-    res.json({ success: true, payload: docs });
-  })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 
 exports.fetchAuthors = (req, res) => {
+  let { error } = validateCreate(req.body);
+  if (error) return res.send(error)
+  Author.find()
+    .then(docs => {
+      res.json({ success: true, payload: docs })
+    })
+    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
   // #swagger.tags = ['Author']
 
   /* #swagger.responses[200] = {
@@ -48,17 +57,15 @@ exports.fetchAuthors = (req, res) => {
             payload: [{$ref: '#/definitions/AUTHOR'}]
           }
   } */
-
-  let { error } = validateCreate(req.body);
-  if (error) return res.send(error)
-  Author.find()
-    .then(docs => {
-      res.json({ success: true, payload: docs })
-    })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 
 exports.fetchAuthorById = (req, res) => {
+
+  Author.findById(req.params.id)
+    .then(docs => {
+      res.json({ success: true, payload: docs });
+    })
+    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
   // #swagger.tags = ['Author']
   /* #swagger.responses[200] = {
           description: 'Response body',
@@ -83,14 +90,15 @@ exports.fetchAuthorById = (req, res) => {
             error: 'error message'
         }
   } */
-  Author.findById(req.params.id)
-    .then(docs => {
-      res.json({ success: true, payload: docs });
-    })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 
 exports.updateAuthor = (req, res) => {
+
+  Author.findByIdAndUpdate(req.params.id, { ...req.body, updatedAt: new Date() }, { new: true })
+    .then(docs => {
+      res.json({ success: true, payload: docs })
+    })
+    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
   // #swagger.tags = ['Author']
   // #swagger.description = 'Registerd users can proced this action'
   /* #swagger.security = [{
@@ -115,14 +123,15 @@ exports.updateAuthor = (req, res) => {
             error: 'error message'
         }
   } */
-  Author.findByIdAndUpdate(req.params.id, { ...req.body, updatedAt: new Date() }, { new: true })
+}
+
+exports.deleteAuthor = (req, res) => {
+
+  Author.findByIdAndDelete(req.params.id)
     .then(docs => {
       res.json({ success: true, payload: docs })
     })
     .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
-}
-
-exports.deleteAuthor = (req, res) => {
   // #swagger.tags = ['Author']
   // #swagger.description = 'Registerd users can proced this action'
   /* #swagger.security = [{
@@ -143,11 +152,6 @@ exports.deleteAuthor = (req, res) => {
       error: ''
     }
   } */
-  Author.findByIdAndDelete(req.params.id)
-    .then(docs => {
-      res.json({ success: true, payload: docs })
-    })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
 }
 
 function validateCreate(formData) {

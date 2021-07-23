@@ -146,7 +146,91 @@ const doc = {
       phone: '',
       address: ''
     },
-    SHELF: { bookId: "werfgnsbxjj65wd656" },
+    USER_RESPONSE: {
+      "success": true,
+      "user": {
+        "firstName": "Sanjar",
+        "lastName": "Abduraimov",
+        "phone": "+998990134034",
+        "shelf": [
+          "60f1213f7160764c30b0badc"
+        ],
+        "lang": "uz",
+        "image": "",
+        "createdAt": "2021-07-14T11:14:17.118Z",
+        "updatedAt": "2021-07-23T07:47:05.982Z",
+        "isAdmin": false,
+        "_id": "60eec7f0492070afeccc0c5c",
+        "email": "sanjar@gmail.com",
+        "__v": 0
+      }
+    },
+    SHELF: { $bookId: "werfgnsbxjj65wd656" },
+    SHELF_RESPONSE: {
+      "success": true,
+      "payload": {
+        "description": "The Adventures of Tom Sawyer is an 1876 novel by Mark Twain about a boy growing up along the Mississippi River. It is set in the 1840s in the town of St. Petersburg, which is based on Hannibal, Missouri, where Twain lived as a boy.In the novel, Tom Sawyer has several adventures, often with his friend Huckleberry Finn. Originally a commercial failure, the book ended up being the best selling of any of Twain's works during his lifetime. Though overshadowed by its sequel, Adventures of Huckleberry Finn, the book is considered by many to be a masterpiece of American literature. It was one of the first novels to be written on a typewriter",
+        "country": "United States of America",
+        "language": "English",
+        "link": "https://en.wikipedia.org/wiki/The_Adventures_of_Tom_Sawyer",
+        "pages": "274",
+        "year": "1876",
+        "views": 8,
+        "rate": 4,
+        "price": 10.92,
+        "category": "classic",
+        "isPublished": true,
+        "isFeatured": false,
+        "updatedAt": "2021-07-16T06:03:41.046Z",
+        "_id": "60f1213f7160764c30b0badc",
+        "author": {
+          "lastName": "Twain",
+          "date_of_birth": "1835-01-01T00:00:00.000Z",
+          "date_of_death": "1910-01-01T00:00:00.000Z",
+          "createdAt": "2021-07-15T11:55:39.590Z",
+          "updatedAt": "2021-07-15T11:55:39.590Z",
+          "_id": "60f0224792ce9f6d804c994f",
+          "firstName": "Mark",
+          "__v": 0
+        },
+        "title": "Tom Sawyer",
+        "imageLink": "\\uploads\\qeEWzntk5mJaVHuN4z6hY.jpg",
+        "__v": 0
+      }
+    },
+    AUTHOR__BOOKS: {
+      "success": true,
+      "payload": [
+        {
+          "description": "The Adventures of Tom Sawyer is an 1876 novel by Mark Twain about a boy growing up along the Mississippi River. It is set in the 1840s in the town of St. Petersburg, which is based on Hannibal, Missouri, where Twain lived as a boy.In the novel, Tom Sawyer has several adventures, often with his friend Huckleberry Finn. Originally a commercial failure, the book ended up being the best selling of any of Twain's works during his lifetime. Though overshadowed by its sequel, Adventures of Huckleberry Finn, the book is considered by many to be a masterpiece of American literature. It was one of the first novels to be written on a typewriter",
+          "country": "United States of America",
+          "language": "English",
+          "link": "https://en.wikipedia.org/wiki/The_Adventures_of_Tom_Sawyer",
+          "pages": "274",
+          "year": "1876",
+          "views": 8,
+          "rate": 4,
+          "price": 10.92,
+          "category": "classic",
+          "isPublished": true,
+          "isFeatured": false,
+          "updatedAt": "2021-07-16T06:03:41.046Z",
+          "_id": "60f1213f7160764c30b0badc",
+          "author": {
+            "lastName": "Twain",
+            "date_of_birth": "1835-01-01T00:00:00.000Z",
+            "date_of_death": "1910-01-01T00:00:00.000Z",
+            "_id": "60f0224792ce9f6d804c994f",
+            "firstName": "Mark",
+            "__v": 0
+          },
+          "title": "Tom Sawyer",
+          "imageLink": "\\uploads\\qeEWzntk5mJaVHuN4z6hY.jpg",
+          "user": "60eec7f0492070afeccc0c5c",
+          "__v": 0
+        }
+      ]
+    },
     AUTHOR: {
       $firstName: 'William',
       $lastName: 'Shekspare',
