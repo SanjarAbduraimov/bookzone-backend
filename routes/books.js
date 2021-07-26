@@ -9,7 +9,7 @@ router.get('/', fetchBooks);
 router.get('/author/:id', fetchBookByAuthorId);
 router.get('/search', searchBooks);
 router.get('/:id', fetchBookById);
-router.post('/', multer.single('image'), currentUser, create);
+router.post('/', currentUser, multer.single('image'), create);
 router.post('/comment', currentUser, createComment);
 router.delete('/comment/:id', currentUser, deleteComment);
 router.patch('/:id', currentUser, isOwner, updateBook);

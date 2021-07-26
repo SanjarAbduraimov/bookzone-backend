@@ -13,6 +13,7 @@ const swaggerFile = require('./config/swagger_output.json');
 console.log(path.resolve(__dirname, 'React-Roadmap.pdf'))
 app.use(compression());
 app.use(express.json());
+app.use(express.static('public'));
 //form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 app.use('*', cors());
