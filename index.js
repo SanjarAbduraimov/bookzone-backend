@@ -10,7 +10,6 @@ const morgan = require('morgan');
 const mainRoutes = require('./routes/index')
 const swaggerUi = require('swagger-ui-express')
 const swaggerFile = require('./config/swagger_output.json');
-console.log(path.resolve(__dirname, 'React-Roadmap.pdf'))
 app.use(compression());
 app.use(express.json());
 app.use(express.static('public'));

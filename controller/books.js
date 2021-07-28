@@ -17,8 +17,9 @@ exports.create = async (req, res) => {
     let data = { ...req.body }
 
     if (req.file) {
-      const img = req.file.path.replace("public", "");
-      data.imageLink = img
+      // const img = req.file.path.replace("public", "");
+      const imageUrl = req.protocol + '://' + req.headers.host + req.file.path.replace('public', '');
+      data.imageLink = imageUrl
     }
     let book = await Book.create({ ...data, user: req.locals._id });
     book = await book.populate('author', '-createdAt').execPopulate();

@@ -213,6 +213,10 @@ exports.fetchFromShelf = async (req, res) => {
   } */
 }
 
+exports.addProfilePicture = () => {
+
+}
+
 // .then(favorites => {
 // }).catch(err => {
 //   res.json({ success: false, msg: 'Something went wrong', error: err.message });
