@@ -117,6 +117,7 @@ const doc = {
         },
         title: "The Adventures of Tom Sawyer",
         imageLink: "\\uploads\\RBGQ9C3-u26J_E5EtrSXN.jpg",
+        pdfLink: "\\uploads\\RBGQ9C3-u26J_E5EtrSXN.pdf",
       }
     },
     AUTH_RESPONSE: {
