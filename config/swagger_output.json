@@ -1661,6 +1661,10 @@
             "imageLink": {
               "type": "string",
               "example": "\\uploads\\RBGQ9C3-u26J_E5EtrSXN.jpg"
+            },
+            "pdfLink": {
+              "type": "string",
+              "example": "\\uploads\\RBGQ9C3-u26J_E5EtrSXN.pdf"
             }
           }
         }
