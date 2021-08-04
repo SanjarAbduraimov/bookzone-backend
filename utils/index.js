@@ -31,10 +31,8 @@ exports.currentUser = async (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
   const validToken = token ? this.validateToken(token) : {};
   if (validToken._id) {
-    console.log("user", validToken._id)
     try {
       const user = await Users.findById(validToken._id);
-      console.log("user", user)
       if (user) {
         req.locals = { ...req.locals, _id: user._id };
         next();
@@ -43,7 +41,6 @@ exports.currentUser = async (req, res, next) => {
       }
 
     } catch (error) {
-      console.log(error)
       res.status(401).json({ success: false, error: 'You are not authenticated' });
     }
   } else {

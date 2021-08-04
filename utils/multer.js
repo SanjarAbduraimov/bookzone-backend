@@ -9,7 +9,7 @@ var storage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     cb(null, `${nanoid()}${path.extname(file.originalname)}`);
-  }
+  },
 })
 
 var upload = multer({ storage: storage })

@@ -7,6 +7,7 @@ const bookSchema = mongoose.Schema({
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'Author', required: true, trim: true },
   country: { type: String, default: '' },
   imageLink: { type: String },
+  pdfLink: { type: String },
   language: { type: String, default: '' },
   link: { type: String, default: '' },
   pages: { type: String, default: '' },

@@ -361,6 +361,14 @@
         ]
       }
     },
+    "/api/users/files": {
+      "post": {
+        "tags": [],
+        "description": "",
+        "parameters": [],
+        "responses": {}
+      }
+    },
     "/api/users/shelf/{id}": {
       "delete": {
         "tags": [
@@ -1352,7 +1360,7 @@
           "type": "string",
           "example": "United States of America"
         },
-        "imageLink": {
+        "files": {
           "type": "string",
           "example": "File"
         },
@@ -1493,6 +1501,10 @@
                   "example": "Tom Sawyer"
                 },
                 "imageLink": {
+                  "type": "string",
+                  "example": "\\uploads\\qeEWzntk5mJaVHuN4z6hY.jpg"
+                },
+                "pdfLink": {
                   "type": "string",
                   "example": "\\uploads\\qeEWzntk5mJaVHuN4z6hY.jpg"
                 },

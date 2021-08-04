@@ -16,17 +16,27 @@ exports.create = async (req, res) => {
 
     let data = { ...req.body }
 
-    if (req.file) {
+    if (req.files) {
+      req.files.map((file) => {
+        if (file.mimetype.includes('image')) {
+          const imageUrl = req.protocol + '://' + req.headers.host + file.path.replace('public', '');
+          data.imageLink = imageUrl;
+        }
+        if (file.mimetype == "application/pdf") {
+          const pdfUrl = req.protocol + '://' + req.headers.host + file.path.replace('public', '');
+          data.pdfLink = pdfUrl;
+        }
+      })
       // const img = req.file.path.replace("public", "");
-      const imageUrl = req.protocol + '://' + req.headers.host + req.file.path.replace('public', '');
-      data.imageLink = imageUrl
+
     }
     let book = await Book.create({ ...data, user: req.locals._id });
     book = await book.populate('author', '-createdAt').execPopulate();
     const { user, ...docs } = book._doc;
     res.status(200).json({ success: true, payload: docs })
   } catch (error) {
-    res.status(400).json({ success: false, msg: 'Something went wrong', error })
+    console.log(error.message)
+    res.status(400).json({ success: false, msg: 'Something went wrong', error: error.message })
   }
   // #swagger.tags = ['Book']
   /* #swagger.security = [{
@@ -360,7 +370,7 @@ function validate(formData) {
     description: Joi.string(),
     author: Joi.string().required(),
     country: Joi.string(),
-    imageLink: Joi.string(),
+    files: Joi.array(),
     language: Joi.string(),
     link: Joi.string(),
     pages: Joi.number(),

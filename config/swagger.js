@@ -35,7 +35,7 @@ const doc = {
       description: "The Adventures of Tom Sawyer is an 1876 novel by Mark Twain about a boy growing up along the Mississippi River. It is set in the 1840s in the town of St. Petersburg, ",
       $author: "60f0224792ce9f6d804c994f",
       country: "United States of America",
-      imageLink: "File",
+      files: "File",
       language: "English",
       link: "https://en.wikipedia.org/wiki/The_Adventures_of_Tom_Sawyer",
       pages: 274,
@@ -72,6 +72,7 @@ const doc = {
           },
           "title": "Tom Sawyer",
           "imageLink": "\\uploads\\qeEWzntk5mJaVHuN4z6hY.jpg",
+          "pdfLink": "\\uploads\\qeEWzntk5mJaVHuN4z6hY.jpg",
           "__v": 0
         },
         "comment": [
