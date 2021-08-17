@@ -28,12 +28,12 @@ exports.create = async (req, res) => {
         }
       })
       // const img = req.file.path.replace("public", "");
-
     }
     let book = await Book.create({ ...data, user: req.locals._id });
+    console.log(book, req.files, "qwertyui")
     book = await book.populate('author', '-createdAt').execPopulate();
     const { user, ...docs } = book._doc;
-    res.status(200).json({ success: true, payload: docs })
+    res.status(201).json({ success: true, payload: docs })
   } catch (error) {
     console.log(error.message)
     res.status(400).json({ success: false, msg: 'Something went wrong', error: error.message })
@@ -386,9 +386,10 @@ function validate(formData) {
 
 function validateUpdate(formData) {
   const bookSchema = Joi.object({
-    title: Joi.string().required().min(3),
+    title: Joi.string().min(3),
     description: Joi.string(),
     country: Joi.string(),
+    author: Joi.string(),
     language: Joi.string(),
     link: Joi.string(),
     pages: Joi.number(),
