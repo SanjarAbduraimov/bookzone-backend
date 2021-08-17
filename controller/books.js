@@ -370,7 +370,7 @@ function validate(formData) {
     description: Joi.string(),
     author: Joi.string().required(),
     country: Joi.string(),
-    files: Joi.array(),
+    // files: Joi.array(),
     language: Joi.string(),
     link: Joi.string(),
     pages: Joi.number(),
