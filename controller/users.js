@@ -2,7 +2,6 @@ const Joi = require('joi');
 const Users = require('../models/users');
 const Book = require('../models/books');
 const bcrypt = require('bcrypt');
-
 // exports.create = (req, res) => {
 //   // #swagger.tags = ['Auth']
 //   // #swagger.description = 'Endpoint para obter um usuário.'
@@ -23,7 +22,7 @@ const bcrypt = require('bcrypt');
 // }
 exports.fetchUserById = async (req, res) => {
   try {
-    const user = await Users.findById(req.locals._id).select('-password');
+    const user = await Users.findById(req.locals._id).populate('favorites').select('-password');
     res.status(200).json({ success: true, user })
   } catch (error) {
     res.status(400).json({ success: false, error: error })
