@@ -2,6 +2,7 @@ const Joi = require('joi');
 const Users = require('../models/users');
 const Book = require('../models/books');
 const bcrypt = require('bcrypt');
+
 // exports.create = (req, res) => {
 //   // #swagger.tags = ['Auth']
 //   // #swagger.description = 'Endpoint para obter um usuário.'
