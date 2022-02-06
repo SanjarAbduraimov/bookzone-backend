@@ -1,0 +1,49 @@
+.signUp {
+    .container {
+        max-width: 100%;
+    }
+    .img {
+        height: 100%;
+    }
+    .form {
+        margin: 5rem 10rem;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .signUp {
+        .form {
+            margin: 5rem 5rem;
+            .fef {
+                color: rebeccapurple;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .signUp {
+        .form {
+            margin: 5rem 10rem;
+        }
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .signUp {
+        .img {
+            margin: 5rem 5rem;
+        }
+        .form {
+            margin: 3rem 5rem;
+        }
+    }
+}
+
+@media screen and (max-width: 375px) {
+    .signUp {
+        .form {
+            margin: 3rem auto;
+        }
+    }
+}

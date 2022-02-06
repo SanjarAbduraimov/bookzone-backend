@@ -1,0 +1,38 @@
+body {
+    font-family: "Poppins", sans-serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+}
+
+.lead {
+    font-size: 2rem;
+    font-weight: 300;
+}
+
+.text__center {
+    text-align: center;
+}
+
+.text__muted {
+    color: $muted;
+}
+
+@font-face {
+    font-family: rotterburg;
+    src: url(../../assets/fonts/rotterburg_stylish/Rotterburg\ Display\ Font.otf);
+}
+
+@font-face {
+  font-family: steinbeck;
+  src: url(../../assets/fonts/steinbeck/SteinbeckFC-Reg.otf);
+}
+
+@font-face {
+  font-family: new-helvetica;
+  src: url(../../assets/fonts/helveticaneuecyrmedium/HelveticaNeueCyr-Light.otf);
+}
+
+@font-face {
+    font-family: visuelt;
+    src: url(../../assets/fonts/Visuelt/VisueltPro-ExtraLight.ttf);
+}
