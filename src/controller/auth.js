@@ -3,6 +3,7 @@ const Joi = require("joi");
 const bcrypt = require("bcrypt");
 const { createToken } = require("../utils");
 const _ = require("lodash");
+const Author = require("../models/authors");
 
 exports.signUp = async (req, res) => {
   // #swagger.tags = ['Auth']
@@ -31,7 +32,11 @@ exports.signUp = async (req, res) => {
   try {
     const hash = await bcrypt.hash(req.body.password, 8);
     let user = await Users.create({ ...req.body, password: hash });
-    let token = createToken({ userId: user._id });
+    if (req.body.role === "author") {
+      await Author.create({ ...user._doc });
+    }
+
+    let token = createToken({ userId: user._id, role: user.role });
     const { password, ...docs } = user._doc;
     res.status(201).json({ token, user: docs, success: true });
   } catch (error) {
@@ -73,7 +78,7 @@ exports.login = async (req, res) => {
     }
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (isPasswordCorrect) {
-      let token = createToken({ userId: user._id });
+      let token = createToken({ userId: user._id, role: user.role });
       let { password, ...docs } = user._doc;
       return res.status(200).json({ token, user: docs, success: true });
     }

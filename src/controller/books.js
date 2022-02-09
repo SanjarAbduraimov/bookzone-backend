@@ -1,41 +1,54 @@
-const Joi = require('joi');
-const Book = require('../models/books');
-const Author = require('../models/authors');
-const Comment = require('../models/comments');
-const _ = require('lodash');
+const Joi = require("joi");
+const Book = require("../models/books");
+const Author = require("../models/authors");
+const Comment = require("../models/comments");
+const _ = require("lodash");
 
 exports.create = async (req, res) => {
   let { error } = validate(req.body);
-  if (error) return res.status(400).json(error.message)
+  if (error) return res.status(400).json(error.message);
   try {
-    const { author } = req.body;
-    const authorData = await Author.findById(author);
+    const authorData = await Author.findById(req.locals._id);
     if (!authorData) {
-      return res.status(400).json({ success: false, msg: 'author id is invalid', })
+      return res
+        .status(400)
+        .json({ success: false, msg: "author id is invalid" });
     }
 
-    let data = { ...req.body }
+    let data = { ...req.body };
     if (req.files) {
       req.files.map((file) => {
-        if (file.mimetype.includes('image')) {
-          const imageUrl = req.protocol + '://' + req.headers.host + file.path.replace('public', '');
+        if (file.mimetype.includes("image")) {
+          const imageUrl =
+            req.protocol +
+            "://" +
+            req.headers.host +
+            file.path.replace("public", "");
           data.imageLink = imageUrl;
         }
         if (file.mimetype == "application/pdf") {
-          const pdfUrl = req.protocol + '://' + req.headers.host + file.path.replace('public', '');
+          const pdfUrl =
+            req.protocol +
+            "://" +
+            req.headers.host +
+            file.path.replace("public", "");
           data.pdfLink = pdfUrl;
         }
-      })
+      });
       // const img = req.file.path.replace("public", "");
     }
-    let book = await Book.create({ ...data, user: req.locals._id });
-    console.log(book, req.files, "qwertyui")
-    book = await book.populate('author', '-createdAt').execPopulate();
+    let book = await Book.create({ ...data, author: req.locals._id });
+    console.log(book, req.files, "qwertyui");
+    book = await book.populate("author", "-createdAt").execPopulate();
     const { user, ...docs } = book._doc;
-    res.status(201).json({ success: true, payload: docs })
+    res.status(201).json({ success: true, payload: docs });
   } catch (error) {
-    console.log(error.message)
-    res.status(400).json({ success: false, msg: 'Something went wrong', error: error.message })
+    console.log(error.message);
+    res.status(400).json({
+      success: false,
+      msg: "Something went wrong",
+      error: error.message,
+    });
   }
   // #swagger.tags = ['Book']
   /* #swagger.security = [{
@@ -60,25 +73,31 @@ exports.create = async (req, res) => {
             error: 'error.message'
         }
   } */
-}
+};
 
 exports.createComment = async (req, res) => {
   try {
     const { _id } = req.locals;
-    const { bookId, text } = req.body
-    const book = await Book.findById(bookId);
-    if (!book) {
-      return res.status(400).json({ success: false, msg: 'book id is invalid', })
+    const { book, text } = req.body;
+    const isExists = await Book.findById(book);
+    if (!isExists) {
+      return res
+        .status(400)
+        .json({ success: false, msg: "book id is invalid" });
     }
-    const comment = await Comment.create({ text, bookId, user: _id });
-    await Book.findByIdAndUpdate(bookId,
+    const comment = await Comment.create({ text, book, user: _id });
+    await Book.findByIdAndUpdate(
+      book,
       {
-        $addToSet: { comments: comment._id }
+        $addToSet: { comments: comment._id },
       },
-      { new: true })
-    res.status(200).json({ success: true, payload: comment })
+      { new: true }
+    );
+    res.status(200).json({ success: true, payload: comment });
   } catch (error) {
-    res.status(400).json({ success: false, msg: 'Something went wrong', error })
+    res
+      .status(400)
+      .json({ success: false, msg: "Something went wrong", error });
   }
   // #swagger.tags = ['Book Comments']
   // #swagger.description = 'Registerd users can proced this action'
@@ -104,18 +123,17 @@ exports.createComment = async (req, res) => {
             error: 'error.message'
         }
   } */
-}
+};
 
 exports.deleteComment = async (req, res) => {
   try {
     const { id } = req.params;
-    const comment = await Comment.findById(id);
-    if (comment.user.toString() !== req.locals._id.toString()) {
-      return res.status(401).json({ success: false, error: 'You are not authorized' })
-    }
-    res.status(200).json({ success: true, payload: comment })
+    const comment = await Comment.findByIdAndDelete(id);
+    res.status(200).json({ success: true, payload: comment });
   } catch (error) {
-    res.status(400).json({ success: false, msg: 'Something went wrong', error })
+    res
+      .status(400)
+      .json({ success: false, msg: "Something went wrong", error });
   }
   // #swagger.tags = ['Book Comments']
   // #swagger.description = 'Registerd users can proced this action'
@@ -142,24 +160,31 @@ exports.deleteComment = async (req, res) => {
             error: 'error.message'
         }
   } */
-}
+};
 
 exports.fetchBooks = async (req, res) => {
   try {
     const { page = 1, pageSize = 10 } = req.query;
-    const book = await Book
-      .paginate({},
-        {
-          sort: { name: 1 },
-          page,
-          limit: pageSize,
-          populate: { path: "author", select: "-user -createdAt -updatedAt -phone" },
-          select: "-user"
-        })
+    const book = await Book.paginate(
+      {},
+      {
+        sort: { name: 1 },
+        page,
+        limit: pageSize,
+        populate: {
+          path: "author",
+          select: " -createdAt -updatedAt",
+        },
+      }
+    );
 
-    res.status(200).json({ success: true, payload: book })
+    res.status(200).json({ success: true, payload: book });
   } catch (error) {
-    res.status(400).json({ success: false, msg: 'Someting went wrong', error: error.message })
+    res.status(400).json({
+      success: false,
+      msg: "Someting went wrong",
+      error: error.message,
+    });
   }
   // #swagger.tags = ['Book']
   // #swagger.description = 'Fetch all books'
@@ -175,19 +200,22 @@ exports.fetchBooks = async (req, res) => {
             error: 'error.message'
         }
   } */
-}
+};
 
 exports.searchBooks = async (req, res) => {
   const { title } = req.query;
   try {
-    const book = await Book
-      .find({ title: { $regex: `^${title}`, $options: 'i' } })
-      .select('-user')
-      .populate('author', '-createdAt -updatedAt')
+    const book = await Book.find({
+      title: { $regex: `^${title}`, $options: "i" },
+    }).populate("author", "-createdAt -updatedAt");
 
-    res.status(200).json({ success: true, payload: book })
+    res.status(200).json({ success: true, payload: book });
   } catch (error) {
-    res.status(400).json({ success: false, msg: 'Someting went wrong', error: error.message })
+    res.status(400).json({
+      success: false,
+      msg: "Someting went wrong",
+      error: error.message,
+    });
   }
 
   // #swagger.tags = ['Book']
@@ -204,19 +232,33 @@ exports.searchBooks = async (req, res) => {
             msg: 'Something went wrong'
         }
   } */
-
-}
+};
 
 exports.fetchCurrentUserBooks = async (req, res) => {
+  const { page = 1, pageSize = 10, name = 1 } = req.query;
   try {
-    const book = await Book
-      .find({ user: req.locals._id })
-      .select('-user')
-      .populate('author', '-createdAt -updatedAt -phone')
+    const book = await Book.paginate(
+      {
+        author: req.locals._id,
+      },
+      {
+        sort: { name: name },
+        page,
+        limit: pageSize,
+        populate: {
+          path: "author",
+          select: " -createdAt -updatedAt",
+        },
+      }
+    );
 
-    res.status(200).json({ success: true, payload: book })
+    res.status(200).json({ success: true, payload: book });
   } catch (error) {
-    res.status(400).json({ success: false, msg: 'Someting went wrong', error: error.message })
+    res.status(400).json({
+      success: false,
+      msg: "Someting went wrong",
+      error: error.message,
+    });
   }
   // #swagger.tags = ['Book']
   // #swagger.description = 'Get your own created book'
@@ -235,18 +277,23 @@ exports.fetchCurrentUserBooks = async (req, res) => {
             error: 'error.message'
         }
   } */
-}
+};
 
 exports.fetchBookById = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedBook = await Book
-      .findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true })
-      .select('-user')
-      .populate('author', '-createdAt -updatedAt -phone');
-    const comment = await Comment.find({ bookId: id })
-      .populate('user', "-_id firstName lastName image");
-    res.status(200).json({ success: true, payload: { book: updatedBook, comment } });
+    const updatedBook = await Book.findByIdAndUpdate(
+      id,
+      { $inc: { views: 1 } },
+      { new: true }
+    ).populate("author", "-createdAt -updatedAt ");
+    const comment = await Comment.find({ book: id }).populate(
+      "user",
+      "-_id firstName lastName image"
+    );
+    res
+      .status(200)
+      .json({ success: true, payload: { book: updatedBook, comment } });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
   }
@@ -263,19 +310,25 @@ exports.fetchBookById = async (req, res) => {
             error: 'error.message'
         }
   } */
-}
+};
 
 exports.updateBook = async (req, res) => {
-
   let { error } = validateUpdate(req.body);
-  if (error) return res.status(404).json(error.message)
+  if (error) return res.status(404).json(error.message);
   const { id } = req.params;
   try {
-    const book = await Book.findByIdAndUpdate(id, { ...req.body }, { new: true })
-      .select('-user');
-    res.status(201).json({ success: true, payload: book })
+    const book = await Book.findByIdAndUpdate(
+      id,
+      { ...req.body },
+      { new: true }
+    ).select("-author");
+    res.status(201).json({ success: true, payload: book });
   } catch (err) {
-    res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message })
+    res.status(400).json({
+      success: false,
+      msg: "Something went wrong",
+      error: err.message,
+    });
   }
   // #swagger.tags = ['Book']
   /* #swagger.security = [{
@@ -306,14 +359,18 @@ exports.updateBook = async (req, res) => {
               error: 'err.message'  
           }
     } */
-}
+};
 exports.deleteBook = async (req, res) => {
   const { id } = req.params;
   try {
-    const book = await Book.findByIdAndDelete(id).select('-user');
-    res.status(201).json({ success: true, payload: book })
+    const book = await Book.findByIdAndDelete(id);
+    res.status(201).json({ success: true, payload: book });
   } catch (err) {
-    res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message })
+    res.status(400).json({
+      success: false,
+      msg: "Something went wrong",
+      error: err.message,
+    });
   }
   // #swagger.tags = ['Book']
   /* #swagger.security = [{
@@ -336,15 +393,24 @@ exports.deleteBook = async (req, res) => {
             msg: 'Something went wrong'
         }
   } */
-}
+};
 
 exports.fetchBookByAuthorId = async (req, res) => {
-
   try {
+    const { page = 1, pageSize = 10, name = 1 } = req.query;
     const { id } = req.params;
-    const authorBooks = await Book
-      .find({ author: id })
-      .populate('author', '-createdAt -updatedAt -phone');
+    const authorBooks = await Book.paginate(
+      { author: id },
+      {
+        sort: { name: name },
+        page,
+        limit: pageSize,
+        populate: {
+          path: "author",
+          select: " -createdAt -updatedAt",
+        },
+      }
+    );
 
     res.status(200).json({ success: true, payload: authorBooks });
   } catch (error) {
@@ -366,13 +432,13 @@ exports.fetchBookByAuthorId = async (req, res) => {
             msg: 'Author not found'
         }
   } */
-}
+};
 
 function validate(formData) {
   const bookSchema = Joi.object({
     title: Joi.string().required().min(3),
     description: Joi.string(),
-    author: Joi.string().required(),
+    // author: Joi.string().required(),
     country: Joi.string(),
     // files: Joi.array(),
     language: Joi.string(),
@@ -383,7 +449,7 @@ function validate(formData) {
     price: Joi.number(),
     category: Joi.string().regex(/^(classic|biography|science)$/i),
     isPublished: Joi.boolean(),
-  })
+  });
 
   return bookSchema.validate(formData);
 }
@@ -393,7 +459,6 @@ function validateUpdate(formData) {
     title: Joi.string().min(3),
     description: Joi.string(),
     country: Joi.string(),
-    author: Joi.string(),
     language: Joi.string(),
     link: Joi.string(),
     pages: Joi.number(),
@@ -402,7 +467,7 @@ function validateUpdate(formData) {
     price: Joi.number(),
     category: Joi.string().regex(/^(classic|biography|science)$/i),
     isPublished: Joi.boolean(),
-  })
+  });
 
   return bookSchema.validate(formData);
 }
