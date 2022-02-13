@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "jest",
-    "start": "node ./src/config/swagger.js && sass frontend/sass:frontend/css && nodemon ./src/app.js",
+    "start": "node ./src/app.js",
+    "dev": "node ./src/config/swagger.js && sass frontend/sass:frontend/css && nodemon ./src/app.js",
     "swagger-autogen": "node ./src/config/swagger.js"
   },
   "author": "Sanjarbek Abduraimov",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "jest": "^27.0.6",
+    "nodemon": "^2.0.15",
     "swagger-autogen": "^2.10.2"
   }
 }
