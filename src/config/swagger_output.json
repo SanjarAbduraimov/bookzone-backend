@@ -19,7 +19,1123 @@
       "description": "Copy and paste token from data using \"Berear token\" using /auth/sign-up or /auth/login\""
     }
   },
-  "paths": {},
+  "paths": {
+    "/api/sign-up": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Login params",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SIGN_UP"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/AUTH_RESPONSE"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Something went wrong or Error object",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Email or password is wrong"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Login params",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LOG_IN"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/AUTH_RESPONSE"
+            }
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Email or password is wrong"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users/": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "description": "Only Admin can update a user or User can update his account",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/USER_RESPONSE"
+            }
+          },
+          "400": {
+            "description": "Response body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "error": {
+                  "type": "string",
+                  "example": ""
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "description": "Only Admin can update a user or User can update his account",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Update user",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/USER"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/USER_RESPONSE"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Response body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "description": "Only User can remove his account",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/USER_RESPONSE"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Response body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "err.message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users/shelf": {
+      "post": {
+        "tags": [
+          "Shelf"
+        ],
+        "description": "Only Admin can add a book to own shelf",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Add book to user shelf",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SHELF"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/SHELF_RESPONSE"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error.message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Shelf"
+        ],
+        "description": "Only Admin can get books in own shelf",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/SHELF_RESPONSE"
+            }
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error.message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/users/files": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "host",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/users/shelf/{id}": {
+      "delete": {
+        "tags": [
+          "Shelf"
+        ],
+        "description": "Only Admin can remove a book from own shelf",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/SHELF_RESPONSE"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error.message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/authors/": {
+      "get": {
+        "tags": [
+          "Author"
+        ],
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "payload": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/AUTHOR"
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/authors/{id}": {
+      "get": {
+        "tags": [
+          "Author"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "payload": {
+                  "$ref": "#/definitions/AUTHOR"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "500": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/books/my-books": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "description": "Get your own created book",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/BOOK_RESPONSE"
+            }
+          },
+          "400": {
+            "description": "Someting went wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Someting went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error.message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/books/": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "description": "Fetch all books",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/BOOK_RESPONSE"
+            }
+          },
+          "400": {
+            "description": "Someting went wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Someting went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error.message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Book"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "create your own book",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BOOK"
+            }
+          },
+          {
+            "name": "host",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/BOOK_RESPONSE"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Something went wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong / author id is invalid"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error.message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/books/author/{id}": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "payload": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/AUTHOR__BOOKS"
+                  }
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "400": {
+            "description": "Book errors page",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "error": {
+                  "type": "string",
+                  "example": "title can not be empty"
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Author not found"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/books/search": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "description": "Search book",
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/BOOK_RESPONSE"
+            }
+          },
+          "400": {
+            "description": "Book errors page",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "error": {
+                  "type": "string",
+                  "example": "title can not be empty"
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/books/{id}": {
+      "get": {
+        "tags": [
+          "Book"
+        ],
+        "description": "fetch book by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/BOOKID_RESPONSE"
+            }
+          },
+          "400": {
+            "description": "Someting went wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error.message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Book"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "book id",
+            "schema": {
+              "$ref": "#/definitions/BOOK"
+            }
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "update your own book",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BOOK"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/BOOK_RESPONSE"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Something went wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "err.message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Book"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "book id",
+            "schema": {
+              "$ref": "#/definitions/BOOK"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/BOOK_RESPONSE"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Something went wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/books/comment": {
+      "post": {
+        "tags": [
+          "Book Comments"
+        ],
+        "description": "Registerd users can proced this action",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Post comment",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/COMMENT"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/COMMENT_RESPONSE"
+            }
+          },
+          "400": {
+            "description": "Something went wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong / author id is invalid"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error.message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/api/books/comment/{id}": {
+      "delete": {
+        "tags": [
+          "Book Comments"
+        ],
+        "description": "Registerd users can proced this action",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/COMMENT_RESPONSE"
+            }
+          },
+          "400": {
+            "description": "Something went wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong / book id is invalid"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error.message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          },
+          "401": {
+            "description": "Something went wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Something went wrong you are not authorization"
+                },
+                "error": {
+                  "type": "string",
+                  "example": "error.message"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "apiKeyAuth": []
+          }
+        ]
+      }
+    }
+  },
   "definitions": {
     "LOG_IN": {
       "type": "object",
@@ -41,42 +1157,47 @@
     "SIGN_UP": {
       "type": "object",
       "properties": {
+        "firstName": {
+          "type": "string",
+          "example": "Sanjar"
+        },
+        "lastName": {
+          "type": "string",
+          "example": "Abduraimov"
+        },
+        "phone": {
+          "type": "string",
+          "example": "+998990134034"
+        },
         "email": {
           "type": "string",
-          "example": "admin@mail.ru"
+          "example": "sanjarbekweb@gmail.com"
         },
         "password": {
           "type": "string",
           "example": "43678yrwiuehruweytr8y348"
         },
-        "firstName": {
+        "role": {
           "type": "string",
-          "example": "Admin"
+          "example": "reader | author"
         },
-        "lastName": {
+        "address": {
           "type": "string",
-          "example": "Admin"
-        },
-        "lang": {
-          "type": "string",
-          "example": "uz"
+          "example": "HelloCity"
         },
         "image": {
           "type": "string",
           "example": ""
         },
-        "phone": {
+        "lang": {
           "type": "string",
-          "example": "+998995558877"
-        },
-        "address": {
-          "type": "string",
-          "example": "HelloCity"
+          "example": "uz"
         }
       },
       "required": [
         "email",
-        "password"
+        "password",
+        "role"
       ]
     },
     "BOOK": {
@@ -89,10 +1210,6 @@
         "description": {
           "type": "string",
           "example": "The Adventures of Tom Sawyer is an 1876 novel by Mark Twain about a boy growing up along the Mississippi River. It is set in the 1840s in the town of St. Petersburg, "
-        },
-        "author": {
-          "type": "string",
-          "example": "60f0224792ce9f6d804c994f"
         },
         "country": {
           "type": "string",
@@ -133,11 +1250,14 @@
         "isPublished": {
           "type": "boolean",
           "example": true
+        },
+        "isFeatured": {
+          "type": "boolean",
+          "example": false
         }
       },
       "required": [
-        "title",
-        "author"
+        "title"
       ]
     },
     "BOOKID_RESPONSE": {
@@ -197,6 +1317,51 @@
                   "type": "boolean",
                   "example": true
                 },
+                "isFeatured": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "comments": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "example": "60f563ac6d822a2968084124"
+                      },
+                      "text": {
+                        "type": "string",
+                        "example": "Mark twainni kitoblarini sevib o'qiyman"
+                      },
+                      "user": {
+                        "type": "object",
+                        "properties": {
+                          "firstName": {
+                            "type": "string",
+                            "example": "Sanjarbek"
+                          },
+                          "lastName": {
+                            "type": "string",
+                            "example": "Abduraimov"
+                          },
+                          "image": {
+                            "type": "string",
+                            "example": ""
+                          }
+                        }
+                      },
+                      "createdAt": {
+                        "type": "string",
+                        "example": "2021-07-19T11:33:05.081Z"
+                      },
+                      "__v": {
+                        "type": "number",
+                        "example": 0
+                      }
+                    }
+                  }
+                },
                 "updatedAt": {
                   "type": "string",
                   "example": "2021-07-16T06:03:41.046Z"
@@ -208,6 +1373,10 @@
                 "author": {
                   "type": "object",
                   "properties": {
+                    "firstName": {
+                      "type": "string",
+                      "example": "Mark"
+                    },
                     "lastName": {
                       "type": "string",
                       "example": "Twain"
@@ -223,10 +1392,6 @@
                     "_id": {
                       "type": "string",
                       "example": "60f0224792ce9f6d804c994f"
-                    },
-                    "firstName": {
-                      "type": "string",
-                      "example": "Mark"
                     },
                     "__v": {
                       "type": "number",
@@ -249,47 +1414,6 @@
                 "__v": {
                   "type": "number",
                   "example": 0
-                }
-              }
-            },
-            "comment": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "createdAt": {
-                    "type": "string",
-                    "example": "2021-07-19T11:33:05.081Z"
-                  },
-                  "_id": {
-                    "type": "string",
-                    "example": "60f563ac6d822a2968084124"
-                  },
-                  "text": {
-                    "type": "string",
-                    "example": "Mark twainni kitoblarini sevib o'qiyman"
-                  },
-                  "bookId": {
-                    "type": "string",
-                    "example": "60f1213f7160764c30b0badc"
-                  },
-                  "user": {
-                    "type": "object",
-                    "properties": {
-                      "firstName": {
-                        "type": "string",
-                        "example": "Sanjarbek"
-                      },
-                      "lastName": {
-                        "type": "string",
-                        "example": "Abduraimov"
-                      }
-                    }
-                  },
-                  "__v": {
-                    "type": "number",
-                    "example": 0
-                  }
                 }
               }
             }

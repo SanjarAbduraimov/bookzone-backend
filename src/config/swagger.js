@@ -1,5 +1,4 @@
 const swaggerAutogen = require("swagger-autogen")();
-const path = require("path");
 const doc = {
   info: {
     title: "Book API",
@@ -22,20 +21,20 @@ const doc = {
       $password: "123456",
     },
     SIGN_UP: {
-      $email: "admin@mail.ru",
+      firstName: "Sanjar",
+      lastName: "Abduraimov",
+      phone: "+998990134034",
+      $email: "sanjarbekweb@gmail.com",
       $password: "43678yrwiuehruweytr8y348",
-      firstName: "Admin",
-      lastName: "Admin",
-      lang: "uz",
-      image: "",
-      phone: "+998995558877",
+      $role: "reader | author",
       address: "HelloCity",
+      image: "",
+      lang: "uz",
     },
     BOOK: {
       $title: "The Adventures of Tom Sawyer",
       description:
         "The Adventures of Tom Sawyer is an 1876 novel by Mark Twain about a boy growing up along the Mississippi River. It is set in the 1840s in the town of St. Petersburg, ",
-      $author: "60f0224792ce9f6d804c994f",
       country: "United States of America",
       files: "File",
       language: "English",
@@ -46,6 +45,7 @@ const doc = {
       price: 10.92,
       category: "classic | biography | science",
       isPublished: true,
+      isFeatured: false,
     },
     BOOKID_RESPONSE: {
       success: true,
@@ -63,14 +63,28 @@ const doc = {
           price: 10.92,
           category: "classic",
           isPublished: true,
+          isFeatured: false,
+          comments: [
+            {
+              _id: "60f563ac6d822a2968084124",
+              text: "Mark twainni kitoblarini sevib o'qiyman",
+              user: {
+                firstName: "Sanjarbek",
+                lastName: "Abduraimov",
+                image: "",
+              },
+              createdAt: "2021-07-19T11:33:05.081Z",
+              __v: 0,
+            },
+          ],
           updatedAt: "2021-07-16T06:03:41.046Z",
           _id: "60f1213f7160764c30b0badc",
           author: {
+            firstName: "Mark",
             lastName: "Twain",
             date_of_birth: "1835-01-01T00:00:00.000Z",
             date_of_death: "1910-01-01T00:00:00.000Z",
             _id: "60f0224792ce9f6d804c994f",
-            firstName: "Mark",
             __v: 0,
           },
           title: "Tom Sawyer",
@@ -78,19 +92,6 @@ const doc = {
           pdfLink: "\\uploads\\qeEWzntk5mJaVHuN4z6hY.jpg",
           __v: 0,
         },
-        comment: [
-          {
-            createdAt: "2021-07-19T11:33:05.081Z",
-            _id: "60f563ac6d822a2968084124",
-            text: "Mark twainni kitoblarini sevib o'qiyman",
-            bookId: "60f1213f7160764c30b0badc",
-            user: {
-              firstName: "Sanjarbek",
-              lastName: "Abduraimov",
-            },
-            __v: 0,
-          },
-        ],
       },
     },
     BOOK_RESPONSE: {
@@ -277,6 +278,5 @@ const doc = {
 };
 
 const outputFile = "./src/config/swagger_output.json";
-const endpointsFiles = ["./src/config/swagger.js"];
-
+const endpointsFiles = ["./src/routes/index.js"];
 swaggerAutogen(outputFile, endpointsFiles, doc);

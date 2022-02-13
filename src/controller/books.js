@@ -286,14 +286,22 @@ exports.fetchBookById = async (req, res) => {
       id,
       { $inc: { views: 1 } },
       { new: true }
-    ).populate("author", "-createdAt -updatedAt ");
-    const comment = await Comment.find({ book: id }).populate(
-      "user",
-      "-_id firstName lastName image"
-    );
-    res
-      .status(200)
-      .json({ success: true, payload: { book: updatedBook, comment } });
+    ).populate([
+      {
+        path: "author",
+        model: "User",
+        select: " -createdAt -updatedAt",
+      },
+      {
+        path: "comments",
+        populate: {
+          path: "user",
+          model: "User",
+          select: "-book -createdAt -updatedAt",
+        },
+      },
+    ]);
+    res.status(200).json({ success: true, payload: { book: updatedBook } });
   } catch (error) {
     res.status(400).json({ success: false, error: error.message });
   }
@@ -438,9 +446,7 @@ function validate(formData) {
   const bookSchema = Joi.object({
     title: Joi.string().required().min(3),
     description: Joi.string(),
-    // author: Joi.string().required(),
     country: Joi.string(),
-    // files: Joi.array(),
     language: Joi.string(),
     link: Joi.string(),
     pages: Joi.number(),

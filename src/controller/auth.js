@@ -26,7 +26,7 @@ exports.signUp = async (req, res) => {
         }
   } */
 
-  let { error } = validate(req.body);
+  let { error } = validateSignUp(req.body);
   if (error)
     return res.status(400).json({ success: false, msg: error.message });
   try {
@@ -66,7 +66,7 @@ exports.login = async (req, res) => {
   } */
 
   let { email, password } = req.body;
-  let { error } = validate(req.body);
+  let { error } = validateLogin(req.body);
   if (error)
     return res.status(400).json({ success: false, msg: error.message });
   try {
@@ -86,12 +86,19 @@ exports.login = async (req, res) => {
       .status(400)
       .json({ success: false, msg: "Email or password is incorrect" });
   } catch (err) {
-    res.json({ success: false, msg: err.message });
+    res.status(400).json({ success: false, msg: err.message });
   }
 };
 
-function validate(formData) {
-  console.log(formData);
+function validateLogin(formData) {
+  const orderSchema = Joi.object({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  });
+
+  return orderSchema.validate(formData, { abortEarly: false });
+}
+function validateSignUp(formData) {
   const orderSchema = Joi.object({
     firstName: Joi.string().min(3),
     lastName: Joi.string().min(3),
@@ -106,5 +113,5 @@ function validate(formData) {
     oldImage: Joi.string(),
   });
 
-  return orderSchema.validate(formData);
+  return orderSchema.validate(formData, { abortEarly: false });
 }
