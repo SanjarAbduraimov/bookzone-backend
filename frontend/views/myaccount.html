@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyAccount</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap-grid.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <div class="tab">
+        <button class="tablinks d" onclick="openCity(event, 'Myaccount')">My account</button>
+        <button class="tablinks" onclick="openCity(event, 'Security')">Security</button>
+        <button class="tablinks" onclick="openCity(event, 'Settings')">Settings</button>
+    </div>
+
+    <div id="Myaccount" class="tabcontent my__profile">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12 col-md-3">
+                        <img class="img" src="../assets/img/svg/my-profile.svg" alt="" />
+                    </div>
+                    <div class="col-12 col-md-9 form__group">
+                        <h1 class="title">My profile</h1>
+                        <form action="">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" class="input">
+                            <label for="password">Current password</label>
+                            <input type="password" class="input" name="input">
+                            <div>
+                                <label for="newPassword">New Password<input type="password" name="NewPassword" class="input"></label>
+                                
+                                <label for="confirmPassword">Confirm Password<input type="password" name="confirmPassword" class="input"></label>      
+                            </div>
+                            <hr>
+                            <button class="btn">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <div id="Security" class="tabcontent">
+        <h3>Change Or Recover Your Password:</h3>
+        <form action="">
+            <label for="email">Email</label>
+            <input type="email" name="email" class="input">
+            <label for="password">Current password</label>
+            <input type="password" class="input" name="input">
+            <div>
+                <label for="newPassword">New Password<input type="password" name="NewPassword" class="input"></label>
+                
+                <label for="confirmPassword">Confirm Password<input type="password" name="confirmPassword" class="input"></label>      
+            </div>
+            <hr>
+            <button class="btn">Save Changes</button>
+        </form>
+    </div>
+
+    <div id="Settings" class="tabcontent">
+        <h3>Settings</h3>
+        <form action="">
+            <label for="email">Language</label>
+            <select name="lang" id="lang" class="input">
+                <option class="input" value="English">English</option>
+            </select>
+            
+            <label for="thime">Thime</label>
+            <div class="switch">
+                <div class="switch__indicator" /></div>
+            </div>
+        </form>
+    </div>
+    <script src="../js/myaccount.js"></script>
+</body>
+</html>
