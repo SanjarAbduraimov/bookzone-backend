@@ -5197,6 +5197,10 @@ body {
   font-weight: 500;
 }
 
+.containers {
+  padding: 0 5rem;
+}
+
 .lead {
   font-size: 2rem;
   font-weight: 300;
@@ -6476,6 +6480,346 @@ body {
   text-align: left;
   color: rgba(255, 255, 255, 0.6);
   margin-bottom: 50px;
+}
+
+.tab {
+  overflow: hidden;
+  background-color: #fff;
+}
+
+/* Style the buttons inside the tab */
+.tab button {
+  background-color: #F3F6F9;
+  width: 300px;
+  height: 100px;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  margin-right: 5px;
+  transition: 0.3s;
+  font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #fff;
+}
+
+/* Style the tab content */
+.tabcontent {
+  width: 100%;
+  padding: 10rem 30rem;
+}
+.tabcontent h3 {
+  margin: 2rem 0;
+}
+
+#Myaccount.tabcontent.my__profile .input {
+  background-color: #f3f6f9;
+}
+#Myaccount.tabcontent.my__profile .img {
+  margin-top: 2rem;
+  border-radius: 50%;
+}
+#Myaccount.tabcontent.my__profile .form__group .title {
+  margin: 5rem 0 2rem;
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 2.7rem;
+}
+#Myaccount.tabcontent.my__profile .form__group form div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#Myaccount.tabcontent.my__profile .form__group form div label {
+  width: 100%;
+}
+#Myaccount.tabcontent.my__profile .form__group form div label input {
+  width: 100%;
+}
+#Myaccount.tabcontent.my__profile .form__group form div label:nth-last-child(2) input {
+  width: 90%;
+}
+#Myaccount.tabcontent.my__profile .form__group form input {
+  display: block;
+  width: 100%;
+  height: 5rem;
+  margin: 2rem 0;
+  background-color: #F3F6F9;
+}
+#Myaccount.tabcontent.my__profile .form__group form hr {
+  margin-bottom: 2rem;
+}
+#Myaccount.tabcontent.my__profile .form__group form .btn {
+  float: right;
+  margin-bottom: 3rem;
+}
+#Myaccount.tabcontent.my__profile .form__group .row .col-12 {
+  margin-top: -2rem;
+}
+
+#Security {
+  height: 100vh;
+}
+#Security form div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+#Security form div label {
+  width: 100%;
+}
+#Security form div label input {
+  width: 100%;
+}
+#Security form div label:nth-last-child(2) input {
+  width: 90%;
+}
+#Security form input {
+  display: block;
+  width: 100%;
+  height: 5rem;
+  margin: 2rem 0;
+  background-color: #F3F6F9;
+}
+#Security form hr {
+  margin-bottom: 2rem;
+}
+#Security form .btn {
+  float: right;
+  margin-bottom: 3rem;
+}
+
+#Settings {
+  height: 100vh;
+}
+#Settings select {
+  display: block;
+  width: 100%;
+  margin: 2rem 0;
+  background-color: #F3F6F9;
+  height: 5rem;
+}
+#Settings .switch {
+  margin: 2rem 0;
+  width: 10rem;
+  height: 4rem;
+  border-radius: 20rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  background-color: #F3F6F9;
+  box-shadow: 5px 8px 10px #89898a;
+  cursor: pointer;
+}
+#Settings .switch .switch__indicator {
+  position: absolute;
+  height: 4rem;
+  width: 4rem;
+  border-radius: 50%;
+  background-color: #3699FF;
+}
+
+@media screen and (max-width: 1024px) {
+  .tabcontent {
+    padding: 10rem 10rem;
+  }
+
+  .tab button {
+    width: 200px;
+    height: 70px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .tab button {
+    width: 100px;
+    height: 70px;
+  }
+
+  #Myaccount.tabcontent.my__profile .form__group form div {
+    display: block;
+  }
+  #Myaccount.tabcontent.my__profile .form__group form div label:nth-last-child(2) input {
+    width: 100%;
+  }
+
+  #Security form div {
+    display: block;
+  }
+  #Security form div label:nth-last-child(2) input {
+    width: 100%;
+  }
+
+  .my__profile .img {
+    border-radius: 0;
+    margin: 0;
+    width: 100%;
+    object-fit: contain;
+  }
+}
+@media screen and (max-width: 580px) {
+  .tabcontent {
+    padding: 10rem 5rem;
+  }
+
+  form div {
+    display: block;
+  }
+}
+@media screen and (max-width: 991px) {
+  .container {
+    max-width: 100% !important;
+  }
+}
+.mainBg {
+  background-color: #191919;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+.containers {
+  padding: 0 5rem;
+}
+
+.lead {
+  font-size: 2rem;
+  font-weight: 300;
+}
+
+.text__center {
+  text-align: center;
+}
+
+.text__muted {
+  color: #b4b4bb;
+}
+
+@font-face {
+  font-family: rotterburg;
+  src: url(../../assets/fonts/rotterburg_stylish/Rotterburg\ Display\ Font.otf);
+}
+@font-face {
+  font-family: steinbeck;
+  src: url(../../assets/fonts/steinbeck/SteinbeckFC-Reg.otf);
+}
+@font-face {
+  font-family: new-helvetica;
+  src: url(../../assets/fonts/helveticaneuecyrmedium/HelveticaNeueCyr-Light.otf);
+}
+@font-face {
+  font-family: visuelt;
+  src: url(../../assets/fonts/Visuelt/VisueltPro-ExtraLight.ttf);
+}
+._profile_page {
+  background-color: #191919;
+  width: 100%;
+  min-height: 100vh;
+  padding-top: 5rem !important;
+}
+._profile_page h2 {
+  font-weight: 200;
+  color: #c9ac8c;
+  margin-top: 2rem;
+}
+._profile_page p {
+  font-weight: 200;
+  color: #fff;
+  font-size: 20px;
+  padding-top: 1rem;
+}
+._profile_page ._profile_block {
+  width: 100%;
+  height: 50vh;
+  background: linear-gradient(90deg, #191919, #ffffff21), url("../../assets/img/user/Vector.png");
+  background-repeat: no-repeat;
+  background-position: right;
+  border-radius: 30px;
+  background-size: contain;
+  display: flex;
+  flex-direction: row;
+  padding-top: 5rem;
+}
+._profile_page ._profile_block span {
+  color: rgba(255, 255, 255, 0.564);
+  font-weight: normal;
+}
+._profile_page ._profile_block ._profile_name {
+  width: 30%;
+  text-align: center;
+}
+._profile_page ._profile_block ._logo_ {
+  padding-top: 1rem;
+  position: relative;
+}
+._profile_page ._javon {
+  display: flex;
+  margin: 5rem 0 0;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 5rem;
+}
+._profile_page ._javon1 {
+  width: 30%;
+  padding-bottom: 3rem;
+  background-color: #ffffff21;
+  border-radius: 20px;
+  text-align: center;
+}
+._profile_page ._javon1 h2 {
+  text-align: center;
+  padding-bottom: 2rem;
+}
+._profile_page ._javon1 p {
+  padding: 0;
+}
+._profile_page ._javon1 li {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  align-items: center;
+}
+._profile_page ._javon1 .btns {
+  margin-top: 3rem;
+}
+._profile_page ._javon2 {
+  width: 65%;
+}
+._profile_page ._javon2 ._sort {
+  display: flex;
+  height: 70px;
+  justify-content: center;
+  align-items: center;
+}
+._profile_page ._javon2 ._sort a {
+  margin: 0 4rem;
+  color: #fff;
+}
+._profile_page ._javon2 .row {
+  margin-top: 5rem;
+}
+._profile_page ._javon2 .row .col-3 h2 {
+  margin: 0;
+  font-size: 20px;
+  padding-top: 1rem;
+}
+._profile_page ._javon2 .row .col-3 p {
+  padding-top: 1rem;
+  font-size: 15px;
+}
+._profile_page ._javon2 .row .col-3 span {
+  display: block;
+  margin-top: 1rem;
+  color: #fff;
+  font-size: 15px;
 }
 
 /*# sourceMappingURL=style.css.map */
