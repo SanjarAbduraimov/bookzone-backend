@@ -5,6 +5,7 @@ const path = require("path");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const helmet = require("helmet");
+const bodyParser = require("body-parser");
 const compression = require("compression");
 const morgan = require("morgan");
 const mainRoutes = require("./routes/index");
@@ -17,20 +18,21 @@ const envVariables =
 dotenv.config({ path: path.resolve(__dirname, envVariables) });
 
 app.use(compression());
-app.use(express.json());
-app.use(express.static(path.resolve(__dirname, "../frontend")));
-//form-urlencoded
-app.use(express.urlencoded({ extended: true }));
 app.use("*", cors());
-// app.set("view engine", "pug");
+app.use(helmet());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+//form-urlencoded
 app.use(morgan("tiny"));
 app.use("/", mainRoutes);
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
-app.use("*", function (req, res) {
-  res.sendFile(path.resolve(__dirname, "../frontend/views/index.html"));
-});
-
-app.use(helmet());
+app.use(
+  "/uploads",
+  express.static(path.resolve(__dirname, "../public/uploads"))
+);
+// app.use("*", function (req, res) {
+//   res.sendFile(path.resolve(__dirname, "../frontend/views/index.html"));
+// });
 
 mongoose
   .connect(process.env.DB_URI, {

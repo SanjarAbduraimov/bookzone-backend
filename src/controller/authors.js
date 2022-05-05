@@ -1,15 +1,20 @@
-const Joi = require('joi');
-const Author = require('../models/authors');
+const Joi = require("joi");
+const Author = require("../models/authors");
 
 exports.create = (req, res) => {
-
   let { error } = validateCreate(req.body);
-  if (error) return res.send(error)
+  if (error) return res.send(error);
   Author.create({ ...req.body })
-    .then(docs => {
+    .then((docs) => {
       res.json({ success: true, payload: docs });
     })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
+    .catch((err) =>
+      res.json({
+        success: false,
+        msg: "Something went wrong",
+        error: err.message,
+      })
+    );
   // #swagger.tags = ['Author']
   // #swagger.description = 'Registerd users can proced this action'
   /* #swagger.security = [{
@@ -38,16 +43,22 @@ exports.create = (req, res) => {
             error: 'error message'
         }
   } */
-}
+};
 
 exports.fetchAuthors = (req, res) => {
   let { error } = validateCreate(req.body);
-  if (error) return res.send(error)
+  if (error) return res.send(error);
   Author.find()
-    .then(docs => {
-      res.json({ success: true, payload: docs })
+    .then((docs) => {
+      res.json({ success: true, payload: docs });
     })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
+    .catch((err) =>
+      res.json({
+        success: false,
+        msg: "Something went wrong",
+        error: err.message,
+      })
+    );
   // #swagger.tags = ['Author']
 
   /* #swagger.responses[200] = {
@@ -57,15 +68,20 @@ exports.fetchAuthors = (req, res) => {
             payload: [{$ref: '#/definitions/AUTHOR'}]
           }
   } */
-}
+};
 
 exports.fetchAuthorById = (req, res) => {
-
   Author.findById(req.params.id)
-    .then(docs => {
+    .then((docs) => {
       res.json({ success: true, payload: docs });
     })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
+    .catch((err) =>
+      res.json({
+        success: false,
+        msg: "Something went wrong",
+        error: err.message,
+      })
+    );
   // #swagger.tags = ['Author']
   /* #swagger.responses[200] = {
           description: 'Response body',
@@ -90,15 +106,24 @@ exports.fetchAuthorById = (req, res) => {
             error: 'error message'
         }
   } */
-}
+};
 
 exports.updateAuthor = (req, res) => {
-
-  Author.findByIdAndUpdate(req.params.id, { ...req.body, updatedAt: new Date() }, { new: true })
-    .then(docs => {
-      res.json({ success: true, payload: docs })
+  Author.findByIdAndUpdate(
+    req.params.id,
+    { ...req.body, updatedAt: new Date() },
+    { new: true }
+  )
+    .then((docs) => {
+      res.json({ success: true, payload: docs });
     })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
+    .catch((err) =>
+      res.json({
+        success: false,
+        msg: "Something went wrong",
+        error: err.message,
+      })
+    );
   // #swagger.tags = ['Author']
   // #swagger.description = 'Registerd users can proced this action'
   /* #swagger.security = [{
@@ -123,15 +148,20 @@ exports.updateAuthor = (req, res) => {
             error: 'error message'
         }
   } */
-}
+};
 
 exports.deleteAuthor = (req, res) => {
-
   Author.findByIdAndDelete(req.params.id)
-    .then(docs => {
-      res.json({ success: true, payload: docs })
+    .then((docs) => {
+      res.json({ success: true, payload: docs });
     })
-    .catch(err => res.json({ success: false, msg: 'Something went wrong', error: err.message }));
+    .catch((err) =>
+      res.json({
+        success: false,
+        msg: "Something went wrong",
+        error: err.message,
+      })
+    );
   // #swagger.tags = ['Author']
   // #swagger.description = 'Registerd users can proced this action'
   /* #swagger.security = [{
@@ -152,15 +182,16 @@ exports.deleteAuthor = (req, res) => {
       error: ''
     }
   } */
-}
+};
 
 function validateCreate(formData) {
   const authorSchema = Joi.object({
     firstName: Joi.string().min(3),
     lastName: Joi.string().min(3),
+    image: Joi.string(),
     date_of_birth: Joi.date(),
-    date_of_death: Joi.date()
-  })
+    date_of_death: Joi.date(),
+  });
 
   return authorSchema.validate(formData);
 }

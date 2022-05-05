@@ -10,35 +10,14 @@ exports.create = async (req, res) => {
   try {
     const authorData = await Author.findById(req.locals._id);
     if (!authorData) {
-      return res
-        .status(400)
-        .json({ success: false, msg: "author id is invalid" });
+      return res.status(400).json({
+        success: false,
+        msg: "You don't have a permission to create a book",
+      });
     }
 
     let data = { ...req.body };
-    if (req.files) {
-      req.files.map((file) => {
-        if (file.mimetype.includes("image")) {
-          const imageUrl =
-            req.protocol +
-            "://" +
-            req.headers.host +
-            file.path.replace("public", "");
-          data.imageLink = imageUrl;
-        }
-        if (file.mimetype == "application/pdf") {
-          const pdfUrl =
-            req.protocol +
-            "://" +
-            req.headers.host +
-            file.path.replace("public", "");
-          data.pdfLink = pdfUrl;
-        }
-      });
-      // const img = req.file.path.replace("public", "");
-    }
     let book = await Book.create({ ...data, author: req.locals._id });
-    console.log(book, req.files, "qwertyui");
     book = await book.populate("author", "-createdAt").execPopulate();
     const { user, ...docs } = book._doc;
     res.status(201).json({ success: true, payload: docs });
@@ -171,10 +150,16 @@ exports.fetchBooks = async (req, res) => {
         sort: { name: 1 },
         page,
         limit: pageSize,
-        populate: {
-          path: "author",
-          select: " -createdAt -updatedAt",
-        },
+        populate: [
+          {
+            path: "author",
+            select: " -createdAt -updatedAt",
+          },
+          {
+            path: "image",
+            model: "File",
+          },
+        ],
       }
     );
 
@@ -207,7 +192,10 @@ exports.searchBooks = async (req, res) => {
   try {
     const book = await Book.find({
       title: { $regex: `^${title}`, $options: "i" },
-    }).populate("author", "-createdAt -updatedAt");
+    }).populate([
+      { path: "author", select: "-createdAt -updatedAt" },
+      { path: "image", model: "File" },
+    ]);
 
     res.status(200).json({ success: true, payload: book });
   } catch (error) {
@@ -245,10 +233,16 @@ exports.fetchCurrentUserBooks = async (req, res) => {
         sort: { name: name },
         page,
         limit: pageSize,
-        populate: {
-          path: "author",
-          select: " -createdAt -updatedAt",
-        },
+        populate: [
+          {
+            path: "author",
+            select: " -createdAt -updatedAt",
+          },
+          {
+            path: "image",
+            model: "File",
+          },
+        ],
       }
     );
 
@@ -291,6 +285,10 @@ exports.fetchBookById = async (req, res) => {
         path: "author",
         model: "User",
         select: " -createdAt -updatedAt",
+      },
+      {
+        path: "image",
+        model: "File",
       },
       {
         path: "comments",
@@ -449,6 +447,7 @@ function validate(formData) {
     country: Joi.string(),
     language: Joi.string(),
     link: Joi.string(),
+    image: Joi.string(),
     pages: Joi.number(),
     year: Joi.number(),
     rate: Joi.number().min(0).max(5),
@@ -467,6 +466,8 @@ function validateUpdate(formData) {
     country: Joi.string(),
     language: Joi.string(),
     link: Joi.string(),
+    image: Joi.string(),
+    oldImg: Joi.string(),
     pages: Joi.number(),
     year: Joi.number(),
     rate: Joi.number().min(0).max(5),

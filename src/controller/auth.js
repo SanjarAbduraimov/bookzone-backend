@@ -109,8 +109,6 @@ function validateSignUp(formData) {
     date_of_birth: Joi.date(),
     date_od_death: Joi.date(),
     lang: Joi.string(),
-    image: Joi.string(),
-    oldImage: Joi.string(),
   });
 
   return orderSchema.validate(formData, { abortEarly: false });

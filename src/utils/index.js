@@ -75,6 +75,7 @@ exports.currentUser = async (req, res, next) => {
           .json({ success: false, error: "You are not authorized" });
       }
     } catch (error) {
+      console.log(error, "error");
       res
         .status(401)
         .json({ success: false, error: "You are not authenticated" });
@@ -110,4 +111,30 @@ exports.isAdmin = async (req, res, next) => {
       .status(401)
       .json({ success: false, error: "You are not authenticated" });
   }
+};
+exports.deleteImg = (img) => {
+  let dir = `../public${img}`;
+  if (process.env.NODE_ENV !== "development") {
+    dir = `/var/www/${img}/`;
+  }
+  const imgPath = path.join(__dirname, dir);
+  if (fs.existsSync(imgPath) && img) {
+    fs.unlinkSync(imgPath);
+  }
+};
+
+exports.imgFileFromBase64 = (dataurl, filename) => {
+  const arr = dataurl.split(",");
+  const mime = arr[0].match(/:(.*?);/)[1];
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  return new File([u8arr], filename, {
+    type: mime,
+  });
 };

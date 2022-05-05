@@ -24,7 +24,7 @@ form.addEventListener("submit", async (e) => {
     const response = await signIn(data);
     if (response.success) {
       localStorage.setItem("token", response.token);
-      navigateTo("/", response.user);
+      // navigateTo("/", response.user);
       return;
     }
     throw new Error(response.msg);

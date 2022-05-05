@@ -25,7 +25,7 @@ router.get("/", fetchBooks);
 router.get("/author/:id", fetchBookByAuthorId);
 router.get("/search", searchBooks);
 router.get("/:id", fetchBookById);
-router.post("/", currentUser, isAuthorized, multer.array("files"), create);
+router.post("/", currentUser, isAuthorized, create);
 router.post("/comment", currentUser, createComment);
 router.delete("/comment/:id", currentUser, deleteComment);
 router.patch("/:id", currentUser, isAuthorized, isOwnBook, updateBook);

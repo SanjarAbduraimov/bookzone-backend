@@ -12,7 +12,7 @@ const bookSchema = mongoose.Schema(
       trim: true,
     },
     country: { type: String, default: "" },
-    imageLink: { type: String },
+    image: { type: mongoose.Schema.Types.ObjectId, ref: "File" },
     pdfLink: { type: String },
     language: { type: String, default: "" },
     link: { type: String, default: "" },
