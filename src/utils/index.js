@@ -47,22 +47,24 @@ exports.isAuthorized = async (req, res, next) => {
     const user = await Users.findById(req.locals._id);
     if (!user) {
       return res
-        .status(400)
+        .status(401)
         .json({ success: false, error: "user id  is invalid" });
     }
     if (user.role === "author") {
       next();
     } else {
-      res.status(401).json({ success: false, error: "You are not authorized" });
+      res.status(403).json({ success: false, error: "You are not authorized" });
     }
   } catch (error) {
-    res.status(400).json({ success: false, error: "user id  is invalid" });
+    res.status(401).json({ success: false, error: "user id  is invalid" });
   }
 };
 
 exports.currentUser = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
+  console.log(token, "tokkeeeeeeen")
   const validToken = token ? this.validateToken(token) : {};
+  console.log(validToken, "validToken")
   if (validToken._id) {
     try {
       const user = await Users.findById(validToken._id);

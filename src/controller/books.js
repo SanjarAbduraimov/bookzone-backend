@@ -454,6 +454,7 @@ function validate(formData) {
     price: Joi.number(),
     category: Joi.string().regex(/^(classic|biography|science)$/i),
     isPublished: Joi.boolean(),
+    isFeatured: Joi.boolean(),
   });
 
   return bookSchema.validate(formData);

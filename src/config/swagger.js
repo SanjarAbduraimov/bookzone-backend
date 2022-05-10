@@ -4,7 +4,7 @@ const doc = {
     title: "Book API",
     description: "Simple Book sytem API",
   },
-  host: "https://bookzone-v2.herokuapp.com",
+  host: "localhost:8000",
   schemes: ["http", "https"],
   securityDefinitions: {
     apiKeyAuth: {
@@ -15,6 +15,7 @@ const doc = {
         'Copy and paste token from data using "Berear token" using /auth/sign-up or /auth/login"',
     },
   },
+  
   definitions: {
     LOG_IN: {
       $email: "admin@mail.ru",
@@ -28,7 +29,7 @@ const doc = {
       $password: "43678yrwiuehruweytr8y348",
       $role: "reader | author",
       address: "HelloCity",
-      image: "",
+      image: "ID",
       lang: "uz",
     },
     BOOK: {
@@ -36,7 +37,7 @@ const doc = {
       description:
         "The Adventures of Tom Sawyer is an 1876 novel by Mark Twain about a boy growing up along the Mississippi River. It is set in the 1840s in the town of St. Petersburg, ",
       country: "United States of America",
-      files: "File",
+      image: "ID",
       language: "English",
       link: "https://en.wikipedia.org/wiki/The_Adventures_of_Tom_Sawyer",
       pages: 274,

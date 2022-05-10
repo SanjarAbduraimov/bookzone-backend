@@ -5,7 +5,7 @@
     "description": "Simple Book sytem API",
     "version": "1.0.0"
   },
-  "host": "https://bookzone-v2.herokuapp.com",
+  "host": "localhost:8000",
   "basePath": "/",
   "schemes": [
     "http",
@@ -1318,7 +1318,7 @@
         },
         "image": {
           "type": "string",
-          "example": ""
+          "example": "ID"
         },
         "lang": {
           "type": "string",
@@ -1346,9 +1346,9 @@
           "type": "string",
           "example": "United States of America"
         },
-        "files": {
+        "image": {
           "type": "string",
-          "example": "File"
+          "example": "ID"
         },
         "language": {
           "type": "string",
