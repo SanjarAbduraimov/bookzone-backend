@@ -11,7 +11,6 @@ const morgan = require("morgan");
 const mainRoutes = require("./routes/index");
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("./config/swagger_output.json");
-// "mongodb+srv://codeAdmin:<password>@bookzone.bx1ep.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
 const envVariables =
   process.env.NODE_ENV === "development" ? "../.env.development" : "../.env";
 
