@@ -449,7 +449,7 @@ function validate(formData) {
     link: Joi.string(),
     image: Joi.string(),
     pages: Joi.number(),
-    year: Joi.number(),
+    year: Joi.date(),
     rate: Joi.number().min(0).max(5),
     price: Joi.number(),
     category: Joi.string().regex(/^(classic|biography|science)$/i),

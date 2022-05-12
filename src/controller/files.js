@@ -65,8 +65,6 @@ exports.fetchFilesById = (req, res) => {
 };
 
 exports.createFiles = async (req, res) => {
-  console.log(req.body, "req.body");
-  console.log(req.files, "req.body");
   const { _id: user } = req.locals;
   const files = await Promise.all(
     req.files?.map((item) => {
@@ -90,14 +88,14 @@ exports.createFiles = async (req, res) => {
       if (req.body?.oldImg?.length) {
         deleteImgaes(req.body.oldImg);
       }
-      return res.json({
+      return res.status(200).json({
         success: true,
         payload: data,
         msg: "File created",
       });
     })
     .catch((err) => {
-      res.json({
+      res.status(400).json({
         success: false,
         msg: err.message,
       });

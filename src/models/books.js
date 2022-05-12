@@ -17,7 +17,7 @@ const bookSchema = mongoose.Schema(
     language: { type: String, default: "" },
     link: { type: String, default: "" },
     pages: { type: String, default: "" },
-    year: { type: String, default: "" },
+    year: { type: Date, default: "" },
     views: { type: Number, default: 0 },
     rate: { type: Number, min: 0, max: 5, default: 0 },
     price: { type: Number, default: 0 },

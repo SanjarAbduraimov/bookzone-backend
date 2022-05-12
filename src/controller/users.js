@@ -2,6 +2,7 @@ const Joi = require("joi");
 const Users = require("../models/users");
 const Book = require("../models/books");
 const bcrypt = require("bcrypt");
+const Author = require("../models/authors");
 
 // exports.create = (req, res) => {
 //   // #swagger.tags = ['Auth']
@@ -23,9 +24,10 @@ const bcrypt = require("bcrypt");
 // }
 exports.fetchUserById = async (req, res) => {
   try {
-    const user = await Users.findById(req.locals._id)
-      .populate("favorites")
-      .select("-password");
+    const user = await Users.findById(req.locals._id).populate([
+      { path: "image", model: "File" },
+      { path: "shelf", model: "Book" },
+    ]);
     res.status(200).json({ success: true, user });
   } catch (error) {
     res.status(400).json({ success: false, error: error });
@@ -62,7 +64,12 @@ exports.updateUser = async (req, res) => {
       req.locals._id,
       { ...updatedProfile, updatedAt: new Date() },
       { new: true }
-    );
+    ).populate([{ path: "image", model: "File" }]);
+    await Author.findByIdAndUpdate(user._id, {
+      ...updatedProfile,
+      updatedAt: new Date(),
+    });
+
     res.status(201).json({ success: true, payload: user });
   } catch (ex) {
     res
