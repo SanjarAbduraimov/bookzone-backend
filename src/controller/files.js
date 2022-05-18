@@ -113,7 +113,7 @@ exports.createBase64Files = async (req, res) => {
   }
 
   const files = await Promise.all(
-    req.body.files?.map((item) => {
+    req.body?.files?.map((item) => {
       const imagePath = webImgtoFile(item);
       return {
         mimetype: "image/jpeg",
