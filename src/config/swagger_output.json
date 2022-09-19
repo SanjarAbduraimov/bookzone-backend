@@ -3,9 +3,9 @@
   "info": {
     "title": "Book API",
     "description": "Simple Book sytem API",
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
-  "host": "localhost:8000",
+  "host": "https://bookzone-v2.herokuapp.com",
   "basePath": "/",
   "schemes": [
     "http",

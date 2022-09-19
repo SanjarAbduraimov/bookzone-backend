@@ -4,7 +4,7 @@ const doc = {
     title: "Book API",
     description: "Simple Book sytem API",
   },
-  host: "localhost:8000",
+  host: "bookzone-v2.herokuapp.com",
   schemes: ["http", "https"],
   securityDefinitions: {
     apiKeyAuth: {
@@ -15,7 +15,7 @@ const doc = {
         'Copy and paste token from data using "Berear token" using /auth/sign-up or /auth/login"',
     },
   },
-  
+
   definitions: {
     LOG_IN: {
       $email: "admin@mail.ru",
