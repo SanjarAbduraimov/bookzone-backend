@@ -3,7 +3,7 @@
   "info": {
     "title": "Book API",
     "description": "Simple Book sytem API",
-    "version": "2.0.0"
+    "version": "1.0.0"
   },
   "host": "bookzone-v2.herokuapp.com",
   "basePath": "/",
