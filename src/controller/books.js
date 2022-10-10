@@ -57,8 +57,10 @@ exports.create = async (req, res) => {
 exports.createComment = async (req, res) => {
   try {
     const { _id } = req.locals;
+    console.log(req.body, "salom");
     const { book, text } = req.body;
     const isExists = await Book.findById(book);
+    console.log(isExists, "salom");
     if (!isExists) {
       return res
         .status(400)
@@ -107,7 +109,10 @@ exports.createComment = async (req, res) => {
 exports.deleteComment = async (req, res) => {
   try {
     const { id } = req.params;
-    const comment = await Comment.findByIdAndDelete(id);
+    const comment = await Comment.findOneAndDelete({ _id: id });
+    await Book.findByIdAndUpdate(comment.book, {
+      $pull: { comments: { $in: comment._id } },
+    });
     res.status(200).json({ success: true, payload: comment });
   } catch (error) {
     res
@@ -156,6 +161,10 @@ exports.fetchBooks = async (req, res) => {
             select: " -createdAt -updatedAt",
           },
           {
+            path: "comments",
+            model: "Comment",
+          },
+          {
             path: "image",
             model: "File",
           },
@@ -194,6 +203,10 @@ exports.searchBooks = async (req, res) => {
       title: { $regex: `^${title}`, $options: "i" },
     }).populate([
       { path: "author", select: "-createdAt -updatedAt" },
+      {
+        path: "comments",
+        model: "Comment",
+      },
       { path: "image", model: "File" },
     ]);
 
@@ -237,6 +250,10 @@ exports.fetchCurrentUserBooks = async (req, res) => {
           {
             path: "author",
             select: " -createdAt -updatedAt",
+          },
+          {
+            path: "comments",
+            model: "Comment",
           },
           {
             path: "image",
@@ -292,11 +309,7 @@ exports.fetchBookById = async (req, res) => {
       },
       {
         path: "comments",
-        populate: {
-          path: "user",
-          model: "User",
-          select: "-book -createdAt -updatedAt",
-        },
+        model: "Comment",
       },
     ]);
     res.status(200).json({ success: true, payload: { book: updatedBook } });
@@ -411,10 +424,16 @@ exports.fetchBookByAuthorId = async (req, res) => {
         sort: { name: name },
         page,
         limit: pageSize,
-        populate: {
-          path: "author",
-          select: " -createdAt -updatedAt",
-        },
+        populate: [
+          {
+            path: "author",
+            select: " -createdAt -updatedAt",
+          },
+          {
+            path: "comments",
+            model: "Comment",
+          },
+        ],
       }
     );
 
