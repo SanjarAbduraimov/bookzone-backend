@@ -12,7 +12,7 @@ const mainRoutes = require("./routes/index");
 const swaggerUi = require("swagger-ui-express");
 const swaggerFile = require("./config/swagger_output.json");
 const envVariables =
-  process.env.NODE_ENV === "development" ? "../.env.development" : "../.env";
+  process.env.NODE_ENV === "development" ? "./.env.development" : "./.env";
 
 dotenv.config({ path: path.resolve(__dirname, envVariables) });
 
@@ -29,7 +29,7 @@ app.use("/", mainRoutes);
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.use(
   "/uploads",
-  express.static(path.resolve(__dirname, "../public/uploads"))
+  express.static(path.resolve(__dirname, "./public/uploads"))
 );
 // app.use("*", function (req, res) {
 //   res.sendFile(path.resolve(__dirname, "../frontend/views/index.html"));

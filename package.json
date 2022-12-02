@@ -5,9 +5,9 @@
   "main": "app.js",
   "scripts": {
     "test": "jest",
-    "start": "node ./src/app.js",
-    "dev": "node ./src/config/swagger.js && nodemon ./src/app.js",
-    "swagger-autogen": "node ./src/config/swagger.js"
+    "start": "node app.js",
+    "dev": "node config/swagger.js && nodemon app.js",
+    "swagger-autogen": "node config/swagger.js"
   },
   "engines": {
     "node": "v16.13.0"
