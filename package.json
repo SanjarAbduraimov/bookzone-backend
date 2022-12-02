@@ -9,6 +9,9 @@
     "dev": "node ./src/config/swagger.js && nodemon ./src/app.js",
     "swagger-autogen": "node ./src/config/swagger.js"
   },
+  "engines": {
+    "node": "v16.13.0"
+  },
   "author": "Sanjarbek Abduraimov",
   "license": "ISC",
   "dependencies": {

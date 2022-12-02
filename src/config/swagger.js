@@ -4,8 +4,8 @@ const doc = {
     title: "Book API",
     description: "Simple Book sytem API",
   },
-  host: "bookzone-v2.herokuapp.com",
-  schemes: ["http", "https"],
+  host: "bookzone.onrender.com",
+  schemes: ["https", "http"],
   securityDefinitions: {
     apiKeyAuth: {
       type: "apiKey",
