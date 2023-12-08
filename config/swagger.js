@@ -155,6 +155,14 @@ const doc = {
       phone: "",
       address: "",
     },
+    UPDATE_USER: {
+      firstName: "",
+      lastName: "",
+      lang: "",
+      image: "",
+      phone: "",
+      address: "",
+    },
     USER_RESPONSE: {
       success: true,
       user: {

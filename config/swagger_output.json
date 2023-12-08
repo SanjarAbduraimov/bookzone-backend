@@ -115,6 +115,171 @@
         }
       }
     },
+    "/api/auth/verify": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/auth/verify/{token}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/api/auth/forget-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Forgot Password params",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LOG_IN"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/AUTH_RESPONSE"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Email or password is wrong"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/verify/forget-password/{token}": {
+      "get": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Forgot Password params",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/LOG_IN"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Response body",
+            "schema": {
+              "$ref": "#/definitions/AUTH_RESPONSE"
+            }
+          },
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Password or Email is wrong",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "msg": {
+                  "type": "string",
+                  "example": "Email or password is wrong"
+                }
+              },
+              "xml": {
+                "name": "main"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/users/": {
       "get": {
         "tags": [
@@ -184,7 +349,7 @@
             "description": "Update user",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/USER"
+              "$ref": "#/definitions/UPDATE_USER"
             }
           }
         ],
@@ -485,7 +650,6 @@
           "Author"
         ],
         "description": "",
-        "parameters": [],
         "responses": {
           "200": {
             "description": "Response body",
@@ -1900,6 +2064,35 @@
         "email",
         "password"
       ]
+    },
+    "UPDATE_USER": {
+      "type": "object",
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "example": ""
+        },
+        "lastName": {
+          "type": "string",
+          "example": ""
+        },
+        "lang": {
+          "type": "string",
+          "example": ""
+        },
+        "image": {
+          "type": "string",
+          "example": ""
+        },
+        "phone": {
+          "type": "string",
+          "example": ""
+        },
+        "address": {
+          "type": "string",
+          "example": ""
+        }
+      }
     },
     "USER_RESPONSE": {
       "type": "object",

@@ -1,7 +1,6 @@
 const Joi = require("joi");
 const Users = require("../models/users");
 const Book = require("../models/books");
-const bcrypt = require("bcrypt");
 const Author = require("../models/authors");
 
 // exports.create = (req, res) => {
@@ -49,33 +48,23 @@ exports.fetchUserById = async (req, res) => {
     }
   } */
 };
+
 exports.updateUser = async (req, res) => {
   const { error } = validateUpdate(req.body);
   if (error) {
     return res.status(400).json({ success: false, error: error.message });
   }
-  let updatedProfile = { ...req.body };
-  try {
-    if (req.body?.password) {
-      const hash = await bcrypt.hash(req.body.password, 8);
-      updatedProfile = { ...updatedProfile, password: hash };
-    }
-    const user = await Users.findByIdAndUpdate(
-      req.locals._id,
-      { ...updatedProfile, updatedAt: new Date() },
-      { new: true }
-    ).populate([{ path: "image", model: "File" }]);
-    await Author.findByIdAndUpdate(user._id, {
-      ...updatedProfile,
-      updatedAt: new Date(),
-    });
+  const user = await Users.findByIdAndUpdate(
+    req.locals._id,
+    { ...req.body, updatedAt: new Date() },
+    { new: true }
+  ).populate([{ path: "image", model: "File" }]);
+  await Author.findByIdAndUpdate(user._id, {
+    ...req.body,
+    updatedAt: new Date(),
+  });
 
-    res.status(201).json({ success: true, payload: user });
-  } catch (ex) {
-    res
-      .status(400)
-      .json({ success: false, msg: "Something went wrong", error: ex.message });
-  }
+  res.status(201).json({ success: true, payload: user });
 
   // #swagger.tags = ['User']
   // #swagger.description = 'Only Admin can update a user or User can update his account'
@@ -87,7 +76,7 @@ exports.updateUser = async (req, res) => {
         description: 'Update user',
         required: true,
         type: 'obj',
-        schema: { $ref: '#/definitions/USER' }
+        schema: { $ref: '#/definitions/UPDATE_USER' }
 } */
   /* #swagger.responses[200] = {
           description: 'Response body',
@@ -271,8 +260,8 @@ function validateUpdate(formData) {
   const userSchema = Joi.object({
     firstName: Joi.string().min(3),
     lastName: Joi.string().min(3),
-    email: Joi.string().email(),
-    password: Joi.string().min(6),
+    // email: Joi.string().email(),
+    // password: Joi.string().min(6),
     phone: Joi.string().regex(/^\+?\d{9,12}$/),
     lang: Joi.string().valid("uz", "ru", "en"),
     image: Joi.string(),

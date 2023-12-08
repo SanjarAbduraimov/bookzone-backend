@@ -3,15 +3,23 @@ const { SECRET_KEY } = require("../config/keys");
 const Book = require("../models/books");
 const Comment = require("../models/comments");
 const Users = require("../models/users");
-exports.createToken = ({ userId }) => {
-  return jwt.sign({ _id: userId }, SECRET_KEY, { expiresIn: "10h" });
+const rateLimit = require("express-rate-limit");
+const MyError = require("./error");
+exports.createToken = (user, options) => {
+  return jwt.sign({ ...user }, SECRET_KEY, { expiresIn: "10h", ...options });
 };
 
-exports.validateToken = (token) => {
+// Rate limiting middleware
+exports.sendVerificationLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour window
+  max: 5, // Max 5 requests per hour
+  message: 'Too many attempts to send verification email, please try again later.',
+});
+exports.validateToken = (token, msg) => {
   try {
     return jwt.verify(token, SECRET_KEY);
   } catch (err) {
-    return {};
+    throw new MyError(msg || err.message, 500);
   }
 };
 exports.isOwnComment = async (req, res, next) => {
@@ -62,9 +70,7 @@ exports.isAuthorized = async (req, res, next) => {
 
 exports.currentUser = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
-  console.log(token, "tokkeeeeeeen")
   const validToken = token ? this.validateToken(token) : {};
-  console.log(validToken, "validToken")
   if (validToken._id) {
     try {
       const user = await Users.findById(validToken._id);
