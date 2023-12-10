@@ -1,13 +1,12 @@
-const Users = require("../models/users");
-const Joi = require("joi");
-const bcrypt = require("bcrypt");
-const { createToken, validateToken } = require("../utils");
-const Author = require("../models/authors");
-const User = require("../models/users");
-const emailService = require("../lib/nodemailer");
-const MyError = require("../utils/error");
+import Users from "../models/users.js";
+import Joi from "joi";
+import * as utils from "../utils/index.js";
+import Author from "../models/authors.js";
+import User from "../models/users.js";
+import emailService from "../lib/nodemailer/index.js";
+import MyError from "../utils/error.js";
 
-exports.signUp = async (req, res) => {
+export const signUp = async (req, res) => {
   // #swagger.tags = ['Auth']
   /* #swagger.parameters['body'] = {
         in: 'body',
@@ -35,12 +34,12 @@ exports.signUp = async (req, res) => {
     await Author.create({ ...user._doc });
   }
 
-  let token = createToken({ userId: user._id, role: user.role });
+  let token = utils.createToken({ userId: user._id, role: user.role });
   const { password, ...docs } = user._doc;
   res.status(201).json({ token, user: docs, success: true });
 };
 
-exports.forgotPassword = async (req, res) => {
+export const forgotPassword = async (req, res) => {
   // #swagger.tags = ['Auth']
   /* #swagger.parameters['body'] = {
         in: 'body',
@@ -65,7 +64,7 @@ exports.forgotPassword = async (req, res) => {
   if (error) throw new MyError(error.message, 400);
   const user = await User.findOne({ email: req.body.email });
   // Generate a reset token and store it in the database
-  const resetToken = createToken({ _id: user._id, email: user.email, role: user.role }, { expiresIn: "15m" });
+  const resetToken = utils.createToken({ _id: user._id, email: user.email, role: user.role }, { expiresIn: "15m" });
   const fullUrl = req.get("Referer") ? `${new URL(req.url, req.get("Referer"))}` : `${req.protocol}://${req.get('host')}${req.originalUrl}`
 
   const mail = await emailService.send({
@@ -76,7 +75,7 @@ exports.forgotPassword = async (req, res) => {
   await user.save();
   return res.status(201).json({ success: true, msg: `Verification link sended to your email` });
 }
-exports.changePassword  = async (req, res) => {
+export const changePassword = async (req, res) => {
   // #swagger.tags = ['Auth']
   /* #swagger.parameters['body'] = {
         in: 'body',
@@ -101,7 +100,7 @@ exports.changePassword  = async (req, res) => {
   if (error) throw new MyError(error.message, 400);
   const user = await User.findOne({ email: req.body.email });
   // Generate a reset token and store it in the database
-  const resetToken = createToken({ _id: user._id, email: user.email, role: user.role }, { expiresIn: "15m" });
+  const resetToken = utils.createToken({ _id: user._id, email: user.email, role: user.role }, { expiresIn: "15m" });
   const fullUrl = req.get("Referer") ? `${new URL(req.url, req.get("Referer"))}` : `${req.protocol}://${req.get('host')}${req.originalUrl}`
 
   const mail = await emailService.send({
@@ -113,11 +112,11 @@ exports.changePassword  = async (req, res) => {
   return res.status(201).json({ success: true, msg: `Verification link sended to your email` });
 }
 
-exports.resetPassword = async (req, res) => {
+export const resetPassword = async (req, res) => {
   const token = req.params.token
   const { error } = validatePassword(req.body)
   if (error) throw new MyError(error.message, 400)
-  const validatedToken = validateToken(token, "Invalid verification link")
+  const validatedToken = utils.validateToken(token, "Invalid verification link")
   const user = await User.findOne({ email: validatedToken.email, resetToken: token })
   if (!user) throw new MyError("Invalid verification link", 400);
   user.password = req.body.password
@@ -125,18 +124,18 @@ exports.resetPassword = async (req, res) => {
   await user.save()
   return res.status(201).json({ success: true, msg: 'Password resettled successfully' });
 }
-exports.verifyResetPassword = async (req, res) => {
+export const verifyResetPassword = async (req, res) => {
   const token = req.params.token
-  const validatedToken = validateToken(token, "Invalid verification link")
+  const validatedToken = utils.validateToken(token, "Invalid verification link")
   const user = await User.findOne({ email: validatedToken.email, resetToken: token })
   if (!user) throw new MyError("Invalid verification link", 400);
   return res.status(200).json({ success: true });
 }
 
-exports.verifyEmail = async (req, res) => {
+export const verifyEmail = async (req, res) => {
 
   const { token } = req.params
-  let validToken = validateToken(token, "Invalid verification link")
+  let validToken = utils.validateToken(token, "Invalid verification link")
   let user = await User.findById(validToken._id)
   if (!user) throw new MyError("Invalid verification link", 400)
   user.verified = true;
@@ -146,7 +145,7 @@ exports.verifyEmail = async (req, res) => {
 
 }
 
-exports.generateEmailVerificationToken = async (req, res) => {
+export const generateEmailVerificationToken = async (req, res) => {
 
   const { error } = validateEmail(req.body);
   if (error) throw new MyError(error.message, 400);
@@ -158,7 +157,7 @@ exports.generateEmailVerificationToken = async (req, res) => {
   }
 
   if (user && !user.verified) {
-    let token = createToken({ _id: user._id, email: user.email, role: user.role }, { expiresIn: "15m" });
+    let token = utils.createToken({ _id: user._id, email: user.email, role: user.role }, { expiresIn: "15m" });
 
     const fullUrl = req.get("Referer") ? `${new URL(req.url, req.get("Referer"))}` : `${req.protocol}://${req.get('host')}${req.originalUrl}`
     console.log(token, "token");
@@ -173,7 +172,7 @@ exports.generateEmailVerificationToken = async (req, res) => {
   return res.status(400).json({ success: true, msg: 'Email already verified' });
 
 }
-exports.login = async (req, res) => {
+export const login = async (req, res) => {
   // #swagger.tags = ['Auth']
   /* #swagger.parameters['body'] = {
         in: 'body',
@@ -193,7 +192,6 @@ exports.login = async (req, res) => {
             msg: 'Email or password is wrong'
         }
   } */
-
   let { email, password } = req.body;
   let { error } = validateLogin(req.body);
   if (error) throw new MyError(error.message, 400)
@@ -204,7 +202,7 @@ exports.login = async (req, res) => {
 
   const isPasswordCorrect = await user.comparePassword(password);
   if (isPasswordCorrect) {
-    let token = createToken({ _id: user._id, role: user.role });
+    let token = utils.createToken({ _id: user._id, role: user.role });
     let { password, ...docs } = user._doc;
     return res.status(200).json({ token, user: docs, success: true });
   }

@@ -1,10 +1,10 @@
-const Joi = require("joi");
-const Book = require("../models/books");
-const Author = require("../models/authors");
-const Comment = require("../models/comments");
-const _ = require("lodash");
+import Joi from "joi";
+import Book from "../models/books.js";
+import Author from "../models/authors.js";
+import Comment from "../models/comments.js";
+import _ from "lodash";
 
-exports.create = async (req, res) => {
+export const create = async (req, res) => {
   let { error } = validate(req.body);
   if (error) return res.status(400).json(error.message);
   try {
@@ -54,7 +54,7 @@ exports.create = async (req, res) => {
   } */
 };
 
-exports.createComment = async (req, res) => {
+export const createComment = async (req, res) => {
   try {
     const { _id } = req.locals;
     const { book, text } = req.body;
@@ -97,7 +97,7 @@ exports.createComment = async (req, res) => {
   } */
 };
 
-exports.deleteComment = async (req, res) => {
+export const deleteComment = async (req, res) => {
   try {
     const { id } = req.params;
     const comment = await Comment.findOneAndDelete({ _id: id });
@@ -134,7 +134,7 @@ exports.deleteComment = async (req, res) => {
   } */
 };
 
-exports.fetchBooks = async (req, res) => {
+export const fetchBooks = async (req, res) => {
   try {
     const { page = 1, pageSize = 10 } = req.query;
     const book = await Book.paginate(
@@ -180,7 +180,7 @@ exports.fetchBooks = async (req, res) => {
   } */
 };
 
-exports.searchBooks = async (req, res) => {
+export const searchBooks = async (req, res) => {
   const { title } = req.query;
   try {
     const book = await Book.find({
@@ -215,7 +215,7 @@ exports.searchBooks = async (req, res) => {
   } */
 };
 
-exports.fetchCurrentUserBooks = async (req, res) => {
+export const fetchCurrentUserBooks = async (req, res) => {
   const { page = 1, pageSize = 10, name = 1 } = req.query;
   try {
     const book = await Book.paginate(
@@ -266,7 +266,7 @@ exports.fetchCurrentUserBooks = async (req, res) => {
   } */
 };
 
-exports.fetchBookById = async (req, res) => {
+export const fetchBookById = async (req, res) => {
   try {
     const { id } = req.params;
     const updatedBook = await Book.findByIdAndUpdate(
@@ -313,7 +313,7 @@ exports.fetchBookById = async (req, res) => {
   } */
 };
 
-exports.updateBook = async (req, res) => {
+export const updateBook = async (req, res) => {
   let { error } = validateUpdate(req.body);
   if (error) return res.status(404).json(error.message);
   const { id } = req.params;
@@ -361,7 +361,7 @@ exports.updateBook = async (req, res) => {
           }
     } */
 };
-exports.deleteBook = async (req, res) => {
+export const deleteBook = async (req, res) => {
   const { id } = req.params;
   try {
     const book = await Book.findByIdAndDelete(id);
@@ -396,7 +396,7 @@ exports.deleteBook = async (req, res) => {
   } */
 };
 
-exports.fetchBookByAuthorId = async (req, res) => {
+export const fetchBookByAuthorId = async (req, res) => {
   try {
     const { page = 1, pageSize = 10, name = 1 } = req.query;
     const { id } = req.params;

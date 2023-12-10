@@ -1,19 +1,20 @@
-const express = require('express');
-const { fetchUsers, addToShelf, addProfilePicture, fetchFromShelf, fetchUserById, updateUser, deleteUser, removeFromShelf } = require('../controller/users');
+import express from 'express';
+import * as userController from '../controller/users.js';
 const router = express.Router();
-const { currentUser } = require('../utils');
-var multer = require('../utils/multer');
 
-router.get('/', currentUser, fetchUserById);
-router.post('/shelf', currentUser, addToShelf);
-// router.post('/files', currentUser, multer.single('image'), addProfilePicture);
-router.delete('/shelf/:id', currentUser, removeFromShelf);
-router.get('/shelf', currentUser, fetchFromShelf);
-// router.get('/', currentUser, fetchUsers);
-router.patch('/', currentUser, updateUser);
-router.delete('/', currentUser, deleteUser);
+import { currentUser } from '../utils/index.js';
+import multer from '../utils/multer.js';
 
-module.exports = router;
+router.get('/', currentUser, userController.fetchUserById);
+router.post('/shelf', currentUser, userController.addToShelf);
+// router.post('/files', currentUser, multer.single('image'), userController.addProfilePicture);
+router.delete('/shelf/:id', currentUser, userController.removeFromShelf);
+router.get('/shelf', currentUser, userController.fetchFromShelf);
+// router.get('/', currentUser, userController.fetchUsers);
+router.patch('/', currentUser, userController.updateUser);
+router.delete('/', currentUser, userController.deleteUser);
+
+export default router;
 
 
 

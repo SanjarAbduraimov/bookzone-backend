@@ -1,3 +1,1 @@
-module.exports = {
-  SECRET_KEY: "secretkey",
-}
+export const SECRET_KEY = "secretkey"

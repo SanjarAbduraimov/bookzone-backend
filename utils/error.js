@@ -4,4 +4,4 @@ class MyError extends Error {
     this.status = status
   }
 }
-module.exports = MyError
+export default MyError;

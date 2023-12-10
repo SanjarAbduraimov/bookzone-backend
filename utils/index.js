@@ -1,28 +1,28 @@
-const jwt = require("jsonwebtoken");
-const { SECRET_KEY } = require("../config/keys");
-const Book = require("../models/books");
-const Comment = require("../models/comments");
-const Users = require("../models/users");
-const rateLimit = require("express-rate-limit");
-const MyError = require("./error");
-exports.createToken = (user, options) => {
+import jwt from "jsonwebtoken";
+import { SECRET_KEY } from "../config/keys.js";
+import Book from "../models/books.js";
+import Comment from "../models/comments.js";
+import Users from "../models/users.js";
+import rateLimit from "express-rate-limit";
+import MyError from "./error.js";
+export const createToken = (user, options) => {
   return jwt.sign({ ...user }, SECRET_KEY, { expiresIn: "10h", ...options });
 };
 
 // Rate limiting middleware
-exports.sendVerificationLimiter = rateLimit({
+export const sendVerificationLimiter = rateLimit({
   windowMs: 60 * 60 * 1000, // 1 hour window
   max: 5, // Max 5 requests per hour
   message: 'Too many attempts to send verification email, please try again later.',
 });
-exports.validateToken = (token, msg) => {
+export const validateToken = (token, msg) => {
   try {
     return jwt.verify(token, SECRET_KEY);
   } catch (err) {
     throw new MyError(msg || err.message, 500);
   }
 };
-exports.isOwnComment = async (req, res, next) => {
+export const isOwnComment = async (req, res, next) => {
   const comment = await Comment.findById(req.params.commentId);
   if (comment.user.toString() !== req.user._id.toString()) {
     return res.status(401).json({
@@ -33,7 +33,7 @@ exports.isOwnComment = async (req, res, next) => {
   next();
 };
 
-exports.isOwnBook = async (req, res, next) => {
+export const isOwnBook = async (req, res, next) => {
   try {
     const book = await Book.findById(req.params.id);
     if (!book) {
@@ -50,7 +50,7 @@ exports.isOwnBook = async (req, res, next) => {
     res.status(400).json({ success: false, error: "book id  is invalid" });
   }
 };
-exports.isAuthorized = async (req, res, next) => {
+export const isAuthorized = async (req, res, next) => {
   try {
     const user = await Users.findById(req.locals._id);
     if (!user) {
@@ -68,7 +68,7 @@ exports.isAuthorized = async (req, res, next) => {
   }
 };
 
-exports.currentUser = async (req, res, next) => {
+export const currentUser = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   const validToken = token ? this.validateToken(token) : {};
   if (validToken._id) {
@@ -94,7 +94,7 @@ exports.currentUser = async (req, res, next) => {
       .json({ success: false, error: "You are not authenticated" });
   }
 };
-exports.isAdmin = async (req, res, next) => {
+export const isAdmin = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   const validToken = token ? this.validateToken(token) : {};
   if (validToken._id) {
@@ -120,7 +120,7 @@ exports.isAdmin = async (req, res, next) => {
       .json({ success: false, error: "You are not authenticated" });
   }
 };
-exports.deleteImg = (img) => {
+export const deleteImg = (img) => {
   let dir = `../public${img}`;
   if (process.env.NODE_ENV !== "development") {
     dir = `/var/www/${img}/`;
@@ -131,7 +131,7 @@ exports.deleteImg = (img) => {
   }
 };
 
-exports.imgFileFromBase64 = (dataurl, filename) => {
+export const imgFileFromBase64 = (dataurl, filename) => {
   const arr = dataurl.split(",");
   const mime = arr[0].match(/:(.*?);/)[1];
   const bstr = atob(arr[1]);

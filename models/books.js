@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const mongoosePaginate = require("mongoose-paginate-v2");
+import mongoose from "mongoose";
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const bookSchema = mongoose.Schema(
   {
@@ -38,4 +38,4 @@ const bookSchema = mongoose.Schema(
 bookSchema.plugin(mongoosePaginate);
 const Book = mongoose.model("Book", bookSchema);
 
-module.exports = Book;
+export default Book;

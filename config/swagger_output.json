@@ -160,7 +160,7 @@
         }
       }
     },
-    "/api/auth/forget-password": {
+    "/api/auth/reset-password/request": {
       "post": {
         "tags": [
           "Auth"
@@ -209,7 +209,7 @@
         }
       }
     },
-    "/api/auth/verify/forget-password/{token}": {
+    "/api/auth/verify/reset-password/{token}": {
       "get": {
         "description": "",
         "parameters": [
@@ -221,15 +221,12 @@
           }
         ],
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "OK"
           }
         }
       },
       "post": {
-        "tags": [
-          "Auth"
-        ],
         "description": "",
         "parameters": [
           {
@@ -241,41 +238,19 @@
           {
             "name": "body",
             "in": "body",
-            "description": "Forgot Password params",
-            "required": true,
             "schema": {
-              "$ref": "#/definitions/LOG_IN"
+              "type": "object",
+              "properties": {
+                "password": {
+                  "example": "any"
+                }
+              }
             }
           }
         ],
         "responses": {
-          "200": {
-            "description": "Response body",
-            "schema": {
-              "$ref": "#/definitions/AUTH_RESPONSE"
-            }
-          },
           "201": {
             "description": "Created"
-          },
-          "400": {
-            "description": "Password or Email is wrong",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "msg": {
-                  "type": "string",
-                  "example": "Email or password is wrong"
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
           }
         }
       }

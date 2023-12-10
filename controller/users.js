@@ -1,9 +1,9 @@
-const Joi = require("joi");
-const Users = require("../models/users");
-const Book = require("../models/books");
-const Author = require("../models/authors");
+import Joi from "joi";
+import Users from "../models/users.js";
+import Book from "../models/books.js";
+import Author from "../models/authors.js";
 
-// exports.create = (req, res) => {
+// export const create = (req, res) => {
 //   // #swagger.tags = ['Auth']
 //   // #swagger.description = 'Endpoint para obter um usuário.'
 //   const { error } = validateCreate(req.body);
@@ -14,14 +14,14 @@ const Author = require("../models/authors");
 //     .catch(err => res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message }));
 // }
 
-// exports.fetchUsers = (req, res) => {
+// export const fetchUsers = (req, res) => {
 //   Users.find()
 //     .then(docs => {
 //       res.status(200).json({ success: true, payload: docs })
 //     })
 //     .catch(err => res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message }));
 // }
-exports.fetchUserById = async (req, res) => {
+export const fetchUserById = async (req, res) => {
   try {
     const user = await Users.findById(req.locals._id).populate([
       { path: "image", model: "File" },
@@ -49,7 +49,7 @@ exports.fetchUserById = async (req, res) => {
   } */
 };
 
-exports.updateUser = async (req, res) => {
+export const updateUser = async (req, res) => {
   const { error } = validateUpdate(req.body);
   if (error) {
     return res.status(400).json({ success: false, error: error.message });
@@ -90,7 +90,7 @@ exports.updateUser = async (req, res) => {
         }
   } */
 };
-exports.addToShelf = async (req, res) => {
+export const addToShelf = async (req, res) => {
   const { _id } = req.locals;
   const { bookId, shelfName } = req.body;
   try {
@@ -137,7 +137,7 @@ exports.addToShelf = async (req, res) => {
   } */
 };
 
-exports.removeFromShelf = async (req, res) => {
+export const removeFromShelf = async (req, res) => {
   const { _id } = req.locals;
   const { id } = req.params;
   try {
@@ -183,7 +183,7 @@ exports.removeFromShelf = async (req, res) => {
   } */
 };
 
-exports.fetchFromShelf = async (req, res) => {
+export const fetchFromShelf = async (req, res) => {
   const { _id } = req.locals;
   try {
     const userShelf = await Users.findById(_id)
@@ -222,7 +222,7 @@ exports.fetchFromShelf = async (req, res) => {
         }
   } */
 };
-exports.deleteUser = (req, res) => {
+export const deleteUser = (req, res) => {
   Users.findByIdAndDelete(req.locals._id)
     .then((docs) => {
       res.status(201).json({ success: true, payload: docs });

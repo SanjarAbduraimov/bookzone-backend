@@ -1,7 +1,7 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const { Schema } = mongoose;
-const mongoosePaginate = require("mongoose-paginate-v2");
+import mongoosePaginate from "mongoose-paginate-v2";
 
 const filesSchema = Schema(
   {
@@ -20,4 +20,4 @@ filesSchema.plugin(mongoosePaginate);
 
 const files = mongoose.model("File", filesSchema);
 
-module.exports = files;
+export default files;

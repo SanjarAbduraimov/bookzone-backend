@@ -1,6 +1,6 @@
-const multer = require("multer");
-const path = require("path");
-const { nanoid } = require("nanoid");
+import multer from "multer";
+import path from "path";
+import { nanoid } from "nanoid";
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -13,4 +13,4 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage });
 
-module.exports = upload;
+export default upload;

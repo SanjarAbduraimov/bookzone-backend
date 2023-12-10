@@ -1,4 +1,4 @@
-const myLib = require('./mylib');
+import myLib from './mylib.js';
 describe('absolute', () => {
   it("should return a positive number if input is positive", () => {
     const result = myLib.absolute(1);
