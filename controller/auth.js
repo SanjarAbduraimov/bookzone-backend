@@ -5,6 +5,8 @@ import Author from "../models/authors.js";
 import User from "../models/users.js";
 import emailService from "../lib/nodemailer/index.js";
 import MyError from "../utils/error.js";
+import sendSms from "../lib/sayqal/index.js";
+import { customAlphabet } from "nanoid";
 
 export const signUp = async (req, res) => {
   // #swagger.tags = ['Auth']
@@ -60,20 +62,46 @@ export const forgotPassword = async (req, res) => {
         }
   } */
 
-  const { error } = validateEmail({ email: req.body.email });
+  const { error } = validateForgotPassword(req.body);
   if (error) throw new MyError(error.message, 400);
   const user = await User.findOne({ email: req.body.email });
   // Generate a reset token and store it in the database
-  const resetToken = utils.createToken({ _id: user._id, email: user.email, role: user.role }, { expiresIn: "15m" });
-  const fullUrl = req.get("Referer") ? `${new URL(req.url, req.get("Referer"))}` : `${req.protocol}://${req.get('host')}${req.originalUrl}`
+  if (req.body.otp) {
+    if (user.otp.createdAt) {
+      const isExpired = user.otp.createdAt.getTime() + 2 * 60 * 1000 < Date.now()
+      if (!isExpired) {
+        throw new MyError("Too many OTP attempts. Please try again later.", 429)
+      }
+    }
 
-  const mail = await emailService.send({
-    to: user.email, //auth/verify/forget-password/:token
-    html: `<a style="padding:7px 15px; display:inline-block; background: blue; text-decoration: none;color:#fff" href='${fullUrl}/?token=${resetToken}'><b>Reset Password</b></a>`,
-  });
-  user.resetToken = resetToken;
-  await user.save();
-  return res.status(201).json({ success: true, msg: `Verification link sended to your email` });
+    const otp = customAlphabet("0123456789")(6)
+
+    await sendSms({
+      message: {
+        smsid: user._id,
+        phone: user.phone,
+        text: `Reset password: ${otp}`
+      }
+    })
+    user.otp = {
+      code: otp,
+      createdAt: new Date(),
+      attempts: 0,
+      verified: false
+    }
+    await user.save();
+    return res.status(201).json({ success: true, msg: `OTP sent to your phone number` });
+  } else {
+    const resetToken = utils.createToken({ _id: user._id, email: user.email, role: user.role }, { expiresIn: "15m" });
+    const fullUrl = req.get("Referer") ? `${new URL(req.url, req.get("Referer"))}` : `${req.protocol}://${req.get('host')}${req.originalUrl}`
+    const mail = await emailService.send({
+      to: user.email, //auth/verify/forget-password/:token
+      html: `<a style="padding:7px 15px; display:inline-block; background: blue; text-decoration: none;color:#fff" href='${fullUrl}/?token=${resetToken}'><b>Reset Password</b></a>`,
+    });
+    user.resetToken = resetToken;
+    await user.save();
+    return res.status(201).json({ success: true, msg: `Verification link sended to your email` });
+  }
 }
 export const changePassword = async (req, res) => {
   // #swagger.tags = ['Auth']
@@ -121,8 +149,45 @@ export const resetPassword = async (req, res) => {
   if (!user) throw new MyError("Invalid verification link", 400);
   user.password = req.body.password
   user.resetToken = undefined;
+  user.otp = undefined
   await user.save()
   return res.status(201).json({ success: true, msg: 'Password resettled successfully' });
+}
+export const verifyResetPasswordByOTP = async (req, res) => {
+
+  const { error } = validateVerifyForgotPassword(req.body);
+  if (error) throw new MyError(error.message, 400)
+
+  const { email, otp } = req.body;
+  const user = await User.findOne({ email })
+  if (!user) throw new MyError("User not found", 400);
+  console.log(user, "user");
+
+  if (user.otp.code === otp) {
+    if (!user.otp.code || !user.otp.createdAt || Date.now() - user.otp.createdAt.getTime() > 2 * 60 * 1000) {
+      throw new MyError("OTP expired", 400);
+    }
+    // Check if the user has reached the maximum OTP verification attempts
+    if (user.otp.attempts >= 3) {
+      return res.status(429).json({ success: false, message: 'Too many OTP attempts. Please try again later.' });
+    }
+
+    // Allow the user to reset their password
+    const token = utils.createToken({ _id: user._id, email: user.email, role: user.role }, { expiresIn: "15m" })
+    user.otp = {
+      ...user.otp,
+      verified: true
+    }
+    user.resetToken = token;
+    await user.save();
+    return res.status(200).json({ success: true, token, message: 'OTP verified successfully. Proceed to reset password.' });
+  } else {
+    // Increment the attempts if OTP verification fails
+    user.otp.attempts += 1;
+    await user.save();
+
+    return res.status(400).json({ success: false, message: 'Invalid OTP' });
+  }
 }
 export const verifyResetPassword = async (req, res) => {
   const token = req.params.token
@@ -208,12 +273,26 @@ export const login = async (req, res) => {
   }
   throw new MyError("Email or password is incorrect", 400)
 };
+function validateForgotPassword(formData) {
+  const schema = Joi.object({
+    email: Joi.string().required().email(),
+    otp: Joi.boolean().required(),
+  });
+  return schema.validate(formData, { abortEarly: false });
+}
+
+function validateVerifyForgotPassword(formData) {
+  const schema = Joi.object({
+    email: Joi.string().required().email(),
+    otp: Joi.number().required()
+  });
+  return schema.validate(formData, { abortEarly: false });
+}
 
 function validateEmail(formData) {
   const schema = Joi.object({
     email: Joi.string().required().email(),
   });
-
   return schema.validate(formData, { abortEarly: false });
 }
 function validatePassword(formData) {

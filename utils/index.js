@@ -70,7 +70,8 @@ export const isAuthorized = async (req, res, next) => {
 
 export const currentUser = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
-  const validToken = token ? this.validateToken(token) : {};
+
+  const validToken = token ? validateToken(token) : {};
   if (validToken._id) {
     try {
       const user = await Users.findById(validToken._id);

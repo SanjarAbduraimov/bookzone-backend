@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select: false },
-    phone: { type: String, unique: true },
+    phone: { type: String, unique: true, required: true },
     shelf: [{ type: mongoose.Schema.Types.ObjectId, ref: "Book" }],
     lang: {
       type: String,
@@ -29,6 +29,21 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["reader", "author"],
       required: true,
+    },
+    otp: {
+      code: {
+        type: Number,
+        default: null
+      },
+      createdAt: {
+        type: Date,
+        default: null
+      },
+      attempts: {
+        type: Number,
+        default: null
+      },
+      verified: Boolean
     },
     resetToken: { type: String },
     verified: { type: Boolean, default: false },

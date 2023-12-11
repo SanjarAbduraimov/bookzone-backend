@@ -115,7 +115,7 @@
         }
       }
     },
-    "/api/auth/verify": {
+    "/api/verify": {
       "post": {
         "description": "",
         "parameters": [
@@ -142,7 +142,7 @@
         }
       }
     },
-    "/api/auth/verify/{token}": {
+    "/api/verify/{token}": {
       "get": {
         "description": "",
         "parameters": [
@@ -160,7 +160,7 @@
         }
       }
     },
-    "/api/auth/reset-password/request": {
+    "/api/reset-password": {
       "post": {
         "tags": [
           "Auth"
@@ -209,7 +209,7 @@
         }
       }
     },
-    "/api/auth/verify/reset-password/{token}": {
+    "/api/verify/reset-password/{token}": {
       "get": {
         "description": "",
         "parameters": [
@@ -251,6 +251,39 @@
         "responses": {
           "201": {
             "description": "Created"
+          }
+        }
+      }
+    },
+    "/api/reset-password/otp": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "otp": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "429": {
+            "description": "Too Many Requests"
           }
         }
       }
