@@ -10,7 +10,7 @@
     "swagger-autogen": "node config/swagger.js"
   },
   "engines": {
-    "node": "v16.13.0"
+    "node": "v16.20.1"
   },
   "author": "Sanjarbek Abduraimov",
   "license": "ISC",
