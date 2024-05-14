@@ -93,6 +93,9 @@
               "$ref": "#/definitions/AUTH_RESPONSE"
             }
           },
+          "201": {
+            "description": "Created"
+          },
           "400": {
             "description": "Password or Email is wrong",
             "schema": {

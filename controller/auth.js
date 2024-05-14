@@ -7,6 +7,7 @@ import emailService from "../lib/nodemailer/index.js";
 import MyError from "../utils/error.js";
 import sendSms from "../lib/sayqal/index.js";
 import { customAlphabet } from "nanoid";
+import passport from "passport";
 
 export const signUp = async (req, res) => {
   // #swagger.tags = ['Auth']
@@ -36,7 +37,7 @@ export const signUp = async (req, res) => {
     await Author.create({ ...user._doc });
   }
 
-  let token = utils.createToken({ userId: user._id, role: user.role });
+  let token = utils.createToken({ id: user._id, role: user.role });
   const { password, ...docs } = user._doc;
   res.status(201).json({ token, user: docs, success: true });
 };
@@ -161,7 +162,6 @@ export const verifyResetPasswordByOTP = async (req, res) => {
   const { email, otp } = req.body;
   const user = await User.findOne({ email })
   if (!user) throw new MyError("User not found", 400);
-  console.log(user, "user");
 
   if (user.otp.code === otp) {
     if (!user.otp.code || !user.otp.createdAt || Date.now() - user.otp.createdAt.getTime() > 2 * 60 * 1000) {
@@ -225,19 +225,17 @@ export const generateEmailVerificationToken = async (req, res) => {
     let token = utils.createToken({ _id: user._id, email: user.email, role: user.role }, { expiresIn: "15m" });
 
     const fullUrl = req.get("Referer") ? `${new URL(req.url, req.get("Referer"))}` : `${req.protocol}://${req.get('host')}${req.originalUrl}`
-    console.log(token, "token");
     const mail = await emailService.send({
       to: user.email,
       html: `<a href='${fullUrl}/?token=${token}'><b>Bos Jails</b></a>`,
     })
-    console.log(fullUrl, `/?token=${token}`);
     return res.status(201).json({ success: true, msg: `Verification link sended to your email` });
   }
 
   return res.status(400).json({ success: true, msg: 'Email already verified' });
 
 }
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
   // #swagger.tags = ['Auth']
   /* #swagger.parameters['body'] = {
         in: 'body',
@@ -257,21 +255,15 @@ export const login = async (req, res) => {
             msg: 'Email or password is wrong'
         }
   } */
-  let { email, password } = req.body;
-  let { error } = validateLogin(req.body);
-  if (error) throw new MyError(error.message, 400)
-
-  // try {
-  let user = await Users.findOne({ email }, { password: { select: false } });
-  if (!user) throw new MyError("Email or password is incorrect", 400)
-
-  const isPasswordCorrect = await user.comparePassword(password);
-  if (isPasswordCorrect) {
-    let token = utils.createToken({ _id: user._id, role: user.role });
-    let { password, ...docs } = user._doc;
-    return res.status(200).json({ token, user: docs, success: true });
-  }
-  throw new MyError("Email or password is incorrect", 400)
+  // let { error } = validateLogin(req.body);
+  // if (error) throw new MyError(error.message, 400)
+  // passport.authenticate("local", (err, user, info) => {
+  // if (err) return res.status(500).json({ success: false, message: 'Internal Server Error' })
+  // if (!user) return res.status(401).json({ success: false, message: info.message || 'Invalid credentials' })
+  // let token = utils.createToken({ _id: user._id, role: user.role });
+  // return res.status(200).json({ token, user, success: true });
+  // })(req, res, next)
+  res.status(201).json({success: true, message: "Hey"})
 };
 function validateForgotPassword(formData) {
   const schema = Joi.object({

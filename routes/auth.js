@@ -1,10 +1,11 @@
 import express from 'express';
 import { signUp, login, forgotPassword, generateEmailVerificationToken, verifyEmail, resetPassword, verifyResetPassword, verifyResetPasswordByOTP } from '../controller/auth.js';
 import { sendVerificationLimiter } from '../utils/index.js';
+import passport from 'passport';
 const router = express.Router();
 
 router.post('/sign-up', signUp);
-router.post('/login', login)
+router.post('/login', passport.authenticate("local"), login)
 router.post('/verify', sendVerificationLimiter, generateEmailVerificationToken)
 router.get('/verify/:token', verifyEmail)
 router.post('/reset-password', sendVerificationLimiter, forgotPassword)
