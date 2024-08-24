@@ -27,8 +27,8 @@ exports.signUp = async (req, res) => {
   } */
 
   let { error } = validateSignUp(req.body);
-  if (error)
-    return res.status(400).json({ success: false, msg: error.message });
+  if (error) {return res.status(400).json({ success: false, msg: error.message })};
+  console.log("G'alati")
   try {
     const hash = await bcrypt.hash(req.body.password, 8);
     let user = await Users.create({ ...req.body, password: hash });
