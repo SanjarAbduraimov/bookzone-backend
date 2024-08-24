@@ -30,6 +30,7 @@ exports.signUp = async (req, res) => {
 
   let { error } = validateSignUp(req.body);
   if (error) throw new MyError(error.message, 400)
+  console.log("G'alati")
   let user = await Users.create({ ...req.body });
   if (req.body.role === "author") {
     await Author.create({ ...user._doc });
