@@ -9,6 +9,9 @@
     "dev": "node config/swagger.js && nodemon --env-file=.env.development app.js",
     "swagger-autogen": "node config/swagger.js"
   },
+  "engines": {
+    "node": "v20.17.0"
+  },
   "author": "Sanjarbek Abduraimov",
   "license": "ISC",
   "type": "module",
