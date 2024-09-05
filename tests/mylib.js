@@ -1,3 +1,3 @@
-exports.absolute = (number) => {
+export const absolute = (number) => {
   return (number >= 0) ? number : -number;
 }

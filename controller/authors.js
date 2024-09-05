@@ -1,7 +1,7 @@
-const Joi = require("joi");
-const Author = require("../models/authors");
+import Joi from "joi";
+import Author from "../models/authors.js";
 
-exports.create = (req, res) => {
+export const create = (req, res) => {
   let { error } = validateCreate(req.body);
   if (error) return res.send(error);
   Author.create({ ...req.body })
@@ -45,7 +45,7 @@ exports.create = (req, res) => {
   } */
 };
 
-exports.fetchAuthors = (req, res) => {
+export const fetchAuthors = (req, res) => {
   let { error } = validateCreate(req.body);
   if (error) return res.send(error);
   Author.find()
@@ -70,7 +70,7 @@ exports.fetchAuthors = (req, res) => {
   } */
 };
 
-exports.fetchAuthorById = (req, res) => {
+export const fetchAuthorById = (req, res) => {
   Author.findById(req.params.id)
     .then((docs) => {
       res.json({ success: true, payload: docs });
@@ -108,7 +108,7 @@ exports.fetchAuthorById = (req, res) => {
   } */
 };
 
-exports.updateAuthor = (req, res) => {
+export const updateAuthor = (req, res) => {
   Author.findByIdAndUpdate(
     req.params.id,
     { ...req.body, updatedAt: new Date() },
@@ -150,7 +150,7 @@ exports.updateAuthor = (req, res) => {
   } */
 };
 
-exports.deleteAuthor = (req, res) => {
+export const deleteAuthor = (req, res) => {
   Author.findByIdAndDelete(req.params.id)
     .then((docs) => {
       res.json({ success: true, payload: docs });

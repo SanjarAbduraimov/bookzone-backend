@@ -1,10 +1,9 @@
-const Joi = require("joi");
-const Users = require("../models/users");
-const Book = require("../models/books");
-const bcrypt = require("bcrypt");
-const Author = require("../models/authors");
+import Joi from "joi";
+import Users from "../models/users.js";
+import Book from "../models/books.js";
+import Author from "../models/authors.js";
 
-// exports.create = (req, res) => {
+// export const create = (req, res) => {
 //   // #swagger.tags = ['Auth']
 //   // #swagger.description = 'Endpoint para obter um usuário.'
 //   const { error } = validateCreate(req.body);
@@ -15,17 +14,16 @@ const Author = require("../models/authors");
 //     .catch(err => res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message }));
 // }
 
-// exports.fetchUsers = (req, res) => {
+// export const fetchUsers = (req, res) => {
 //   Users.find()
 //     .then(docs => {
 //       res.status(200).json({ success: true, payload: docs })
 //     })
 //     .catch(err => res.status(400).json({ success: false, msg: 'Something went wrong', error: err.message }));
 // }
-exports.fetchUserById = async (req, res) => {
+export const fetchUserById = async (req, res) => {
   try {
-    const user = await Users.findById(req.locals._id).populate([
-      { path: "image", model: "File" },
+    const user = await Users.findById(req.user._id).populate([
       { path: "shelf", model: "Book" },
     ]);
     res.status(200).json({ success: true, user });
@@ -49,33 +47,23 @@ exports.fetchUserById = async (req, res) => {
     }
   } */
 };
-exports.updateUser = async (req, res) => {
+
+export const updateUser = async (req, res) => {
   const { error } = validateUpdate(req.body);
   if (error) {
     return res.status(400).json({ success: false, error: error.message });
   }
-  let updatedProfile = { ...req.body };
-  try {
-    if (req.body?.password) {
-      const hash = await bcrypt.hash(req.body.password, 8);
-      updatedProfile = { ...updatedProfile, password: hash };
-    }
-    const user = await Users.findByIdAndUpdate(
-      req.locals._id,
-      { ...updatedProfile, updatedAt: new Date() },
-      { new: true }
-    ).populate([{ path: "image", model: "File" }]);
-    await Author.findByIdAndUpdate(user._id, {
-      ...updatedProfile,
-      updatedAt: new Date(),
-    });
+  const user = await Users.findByIdAndUpdate(
+    req.user._id,
+    { ...req.body, updatedAt: new Date() },
+    { new: true }
+  )
+  await Author.findByIdAndUpdate(user._id, {
+    ...req.body,
+    updatedAt: new Date(),
+  });
 
-    res.status(201).json({ success: true, payload: user });
-  } catch (ex) {
-    res
-      .status(400)
-      .json({ success: false, msg: "Something went wrong", error: ex.message });
-  }
+  res.status(201).json({ success: true, payload: user });
 
   // #swagger.tags = ['User']
   // #swagger.description = 'Only Admin can update a user or User can update his account'
@@ -87,7 +75,7 @@ exports.updateUser = async (req, res) => {
         description: 'Update user',
         required: true,
         type: 'obj',
-        schema: { $ref: '#/definitions/USER' }
+        schema: { $ref: '#/definitions/UPDATE_USER' }
 } */
   /* #swagger.responses[200] = {
           description: 'Response body',
@@ -101,8 +89,8 @@ exports.updateUser = async (req, res) => {
         }
   } */
 };
-exports.addToShelf = async (req, res) => {
-  const { _id } = req.locals;
+export const addToShelf = async (req, res) => {
+  const { _id } = req.user;
   const { bookId, shelfName } = req.body;
   try {
     await Book.findById(bookId);
@@ -148,8 +136,8 @@ exports.addToShelf = async (req, res) => {
   } */
 };
 
-exports.removeFromShelf = async (req, res) => {
-  const { _id } = req.locals;
+export const removeFromShelf = async (req, res) => {
+  const { _id } = req.user;
   const { id } = req.params;
   try {
     const book = await Users.findByIdAndUpdate(
@@ -194,8 +182,8 @@ exports.removeFromShelf = async (req, res) => {
   } */
 };
 
-exports.fetchFromShelf = async (req, res) => {
-  const { _id } = req.locals;
+export const fetchFromShelf = async (req, res) => {
+  const { _id } = req.user;
   try {
     const userShelf = await Users.findById(_id)
       .select("shelf -_id")
@@ -233,8 +221,8 @@ exports.fetchFromShelf = async (req, res) => {
         }
   } */
 };
-exports.deleteUser = (req, res) => {
-  Users.findByIdAndDelete(req.locals._id)
+export const deleteUser = (req, res) => {
+  Users.findByIdAndDelete(req.user._id)
     .then((docs) => {
       res.status(201).json({ success: true, payload: docs });
     })
@@ -271,8 +259,8 @@ function validateUpdate(formData) {
   const userSchema = Joi.object({
     firstName: Joi.string().min(3),
     lastName: Joi.string().min(3),
-    email: Joi.string().email(),
-    password: Joi.string().min(6),
+    // email: Joi.string().email(),
+    // password: Joi.string().min(6),
     phone: Joi.string().regex(/^\+?\d{9,12}$/),
     lang: Joi.string().valid("uz", "ru", "en"),
     image: Joi.string(),

@@ -1,23 +1,38 @@
-const jwt = require("jsonwebtoken");
-const { SECRET_KEY } = require("../config/keys");
-const Book = require("../models/books");
-const Comment = require("../models/comments");
-const Users = require("../models/users");
-exports.createToken = ({ userId }) => {
-  return jwt.sign({ _id: userId }, SECRET_KEY, { expiresIn: "10h" });
+import jwt from "jsonwebtoken";
+import { SECRET_KEY } from "../config/keys.js";
+import Book from "../models/books.js";
+import Comment from "../models/comments.js";
+import Users from "../models/users.js";
+import rateLimit from "express-rate-limit";
+import MyError from "./error.js";
+import passport from "../lib/passport/index.js";
+export const createToken = (user, options) => {
+  return jwt.sign({ ...user }, SECRET_KEY, { expiresIn: "10h", ...options });
 };
 
-exports.validateToken = (token) => {
+// Rate limiting middleware
+export const sendVerificationLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour window
+  max: 5, // Max 5 requests per hour
+  message: 'Too many attempts to send verification email, please try again later.',
+});
+export const validateToken = (token, msg) => {
   try {
     return jwt.verify(token, SECRET_KEY);
   } catch (err) {
-    return {};
+    throw new MyError(msg || err.message, 500);
   }
 };
-exports.isOwnComment = async (req, res, next) => {
-  const comment = await Comment.findById(req.params.commentId);
+export const isOwnComment = async (req, res, next) => {
+  const comment = await Comment.findById(req.params.id);
+  if (!comment) {
+    return res.status(400).json({
+      success: false,
+      msg: "invalid comment id",
+    });
+  }
   if (comment.user.toString() !== req.user._id.toString()) {
-    return res.status(401).json({
+    return res.status(403).json({
       success: false,
       msg: "You are not authorized to delete this comment",
     });
@@ -25,7 +40,7 @@ exports.isOwnComment = async (req, res, next) => {
   next();
 };
 
-exports.isOwnBook = async (req, res, next) => {
+export const isOwnBook = async (req, res, next) => {
   try {
     const book = await Book.findById(req.params.id);
     if (!book) {
@@ -33,7 +48,7 @@ exports.isOwnBook = async (req, res, next) => {
         .status(400)
         .json({ success: false, error: "book id  is invalid" });
     }
-    if (req.locals._id.toString() === book.author.toString()) {
+    if (req.user._id.toString() === book.author.toString()) {
       next();
     } else {
       res.status(401).json({ success: false, error: "You are not authorized" });
@@ -42,9 +57,9 @@ exports.isOwnBook = async (req, res, next) => {
     res.status(400).json({ success: false, error: "book id  is invalid" });
   }
 };
-exports.isAuthorized = async (req, res, next) => {
+export const isAuthorized = async (req, res, next) => {
   try {
-    const user = await Users.findById(req.locals._id);
+    const user = await Users.findById(req.user._id);
     if (!user) {
       return res
         .status(401)
@@ -59,17 +74,35 @@ exports.isAuthorized = async (req, res, next) => {
     res.status(401).json({ success: false, error: "user id  is invalid" });
   }
 };
+export const auth = async (req, res, next) => {
+  if (req.user || req.isAuthenticated()) {
+    return next()
+  }
 
-exports.currentUser = async (req, res, next) => {
+  passport().authenticate(["jwt"], {
+    session: false
+  }, (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).json({ success: false, msg: "You are not authenticated" });
+    }
+    req.user = user;
+    next()
+  })(req, res, next)
+
+
+}
+export const currentUser = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
-  console.log(token, "tokkeeeeeeen")
-  const validToken = token ? this.validateToken(token) : {};
-  console.log(validToken, "validToken")
+
+  const validToken = token ? validateToken(token) : {};
   if (validToken._id) {
     try {
       const user = await Users.findById(validToken._id);
       if (user) {
-        req.locals = { ...req.locals, _id: user._id, role: user.role };
+        req.user = { ...req.user, _id: user._id, role: user.role };
         next();
       } else {
         res
@@ -88,14 +121,14 @@ exports.currentUser = async (req, res, next) => {
       .json({ success: false, error: "You are not authenticated" });
   }
 };
-exports.isAdmin = async (req, res, next) => {
+export const isAdmin = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
   const validToken = token ? this.validateToken(token) : {};
   if (validToken._id) {
     try {
       const admin = await Users.findById(validToken._id);
       if (admin.isAdmin) {
-        req.locals = { ...req.locals, _id: admin._id, role: "admin" };
+        req.user = { ...req.user, _id: admin._id, role: "admin" };
         next();
       } else {
         res
@@ -114,7 +147,7 @@ exports.isAdmin = async (req, res, next) => {
       .json({ success: false, error: "You are not authenticated" });
   }
 };
-exports.deleteImg = (img) => {
+export const deleteImg = (img) => {
   let dir = `../public${img}`;
   if (process.env.NODE_ENV !== "development") {
     dir = `/var/www/${img}/`;
@@ -125,7 +158,7 @@ exports.deleteImg = (img) => {
   }
 };
 
-exports.imgFileFromBase64 = (dataurl, filename) => {
+export const imgFileFromBase64 = (dataurl, filename) => {
   const arr = dataurl.split(",");
   const mime = arr[0].match(/:(.*?);/)[1];
   const bstr = atob(arr[1]);

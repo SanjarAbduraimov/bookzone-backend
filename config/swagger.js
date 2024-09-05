@@ -1,4 +1,5 @@
-const swaggerAutogen = require("swagger-autogen")();
+import swaggerAutogen from "swagger-autogen"
+swaggerAutogen();
 const doc = {
   info: {
     title: "Book API",
@@ -148,6 +149,14 @@ const doc = {
     USER: {
       $email: "admin@mail.ru",
       $password: "123456",
+      firstName: "",
+      lastName: "",
+      lang: "",
+      image: "",
+      phone: "",
+      address: "",
+    },
+    UPDATE_USER: {
       firstName: "",
       lastName: "",
       lang: "",

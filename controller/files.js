@@ -1,9 +1,8 @@
-const fs = require("fs");
-const Files = require("../models/files");
-const constants = require("../constants/constants");
+import fs from "fs";
+import Files from "../models/files.js";
+import constants from "../constants/constants.js";
 
-const { webImgtoFile, resizeImg } = require("../utils");
-
+import * as utils from "../utils/index.js";
 function createFileUrl(req, filename) {
   if (filename) {
     const imageUrl = `${req.protocol}://${req.get("host")}/uploads/` + filename;
@@ -12,7 +11,7 @@ function createFileUrl(req, filename) {
   return "";
 }
 
-exports.fetchAllFiles = async (req, res) => {
+export const fetchAllFiles = async (req, res) => {
   try {
     const {
       page = 1,
@@ -52,7 +51,7 @@ exports.fetchAllFiles = async (req, res) => {
   }
 };
 
-exports.fetchFilesById = (req, res) => {
+export const fetchFilesById = (req, res) => {
   const { id } = req.params;
 
   Files.findById(id)
@@ -64,8 +63,8 @@ exports.fetchFilesById = (req, res) => {
     .catch((err) => res.send(err));
 };
 
-exports.createFiles = async (req, res) => {
-  const { _id: user } = req.locals;
+export const createFiles = async (req, res) => {
+  const { _id: user } = req.user;
   const files = await Promise.all(
     req.files?.map((item) => {
       const { originalname, filename, size, mimetype } = item;
@@ -102,8 +101,8 @@ exports.createFiles = async (req, res) => {
     });
 };
 
-exports.createBase64Files = async (req, res) => {
-  const { center } = req.locals;
+export const createBase64Files = async (req, res) => {
+  const { center } = req.user;
 
   if (!req.body.files.length) {
     return res.json({
@@ -114,7 +113,7 @@ exports.createBase64Files = async (req, res) => {
 
   const files = await Promise.all(
     req.body?.files?.map((item) => {
-      const imagePath = webImgtoFile(item);
+      const imagePath = utils.webImgtoFile(item);
       return {
         mimetype: "image/jpeg",
         url: createFileUrl(req, imagePath),
@@ -143,7 +142,7 @@ exports.createBase64Files = async (req, res) => {
     });
 };
 
-exports.deleteById = (req, res) => {
+export const deleteById = (req, res) => {
   const { files } = req.body;
   Files.updateMany(
     {
