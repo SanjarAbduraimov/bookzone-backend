@@ -64,7 +64,7 @@ export const fetchFilesById = (req, res) => {
 };
 
 export const createFiles = async (req, res) => {
-  const { _id: user } = req.locals;
+  const { _id: user } = req.user;
   const files = await Promise.all(
     req.files?.map((item) => {
       const { originalname, filename, size, mimetype } = item;
@@ -102,7 +102,7 @@ export const createFiles = async (req, res) => {
 };
 
 export const createBase64Files = async (req, res) => {
-  const { center } = req.locals;
+  const { center } = req.user;
 
   if (!req.body.files.length) {
     return res.json({

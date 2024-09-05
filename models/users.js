@@ -30,6 +30,7 @@ const userSchema = new mongoose.Schema(
       enum: ["reader", "author"],
       required: true,
     },
+    google: Object,
     otp: {
       code: {
         type: Number,
@@ -45,6 +46,7 @@ const userSchema = new mongoose.Schema(
       },
       verified: Boolean
     },
+    completed: Boolean,
     resetToken: { type: String },
     verified: { type: Boolean, default: false },
     image: { type: mongoose.Schema.Types.ObjectId, ref: "File" },

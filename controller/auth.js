@@ -7,7 +7,6 @@ import emailService from "../lib/nodemailer/index.js";
 import MyError from "../utils/error.js";
 import sendSms from "../lib/sayqal/index.js";
 import { customAlphabet } from "nanoid";
-import passport from "passport";
 
 export const signUp = async (req, res) => {
   // #swagger.tags = ['Auth']
@@ -37,7 +36,7 @@ export const signUp = async (req, res) => {
     await Author.create({ ...user._doc });
   }
 
-  let token = utils.createToken({ id: user._id, role: user.role });
+  let token = utils.createToken({ _id: user._id, role: user.role });
   const { password, ...docs } = user._doc;
   res.status(201).json({ token, user: docs, success: true });
 };
@@ -255,15 +254,30 @@ export const login = async (req, res, next) => {
             msg: 'Email or password is wrong'
         }
   } */
-  // let { error } = validateLogin(req.body);
-  // if (error) throw new MyError(error.message, 400)
+  let { error } = validateLogin(req.body);
+  if (error) throw new MyError(error.message, 400);
+  console.log(req.user, "req.user login----");
+
   // passport.authenticate("local", (err, user, info) => {
   // if (err) return res.status(500).json({ success: false, message: 'Internal Server Error' })
   // if (!user) return res.status(401).json({ success: false, message: info.message || 'Invalid credentials' })
   // let token = utils.createToken({ _id: user._id, role: user.role });
   // return res.status(200).json({ token, user, success: true });
-  // })(req, res, next)
-  res.status(201).json({success: true, message: "Hey"})
+  // // })(req, res, next)
+  // res.status(201).json({ success: true, message: "Hey" })
+
+  let { email, password } = req.body;
+
+  let user = await Users.findOne({ email }, { password: { select: false } });
+  if (!user) throw new MyError("Email or password is incorrect", 400)
+
+  const isPasswordCorrect = await user.comparePassword(password);
+  if (isPasswordCorrect) {
+    let token = utils.createToken({ _id: user._id, role: user.role });
+    let { password, ...docs } = user._doc;
+    return res.status(200).json({ token, user: docs, success: true });
+  }
+  throw new MyError("Email or password is incorrect", 400)
 };
 function validateForgotPassword(formData) {
   const schema = Joi.object({

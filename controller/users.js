@@ -23,8 +23,7 @@ import Author from "../models/authors.js";
 // }
 export const fetchUserById = async (req, res) => {
   try {
-    const user = await Users.findById(req.locals._id).populate([
-      { path: "image", model: "File" },
+    const user = await Users.findById(req.user._id).populate([
       { path: "shelf", model: "Book" },
     ]);
     res.status(200).json({ success: true, user });
@@ -55,10 +54,10 @@ export const updateUser = async (req, res) => {
     return res.status(400).json({ success: false, error: error.message });
   }
   const user = await Users.findByIdAndUpdate(
-    req.locals._id,
+    req.user._id,
     { ...req.body, updatedAt: new Date() },
     { new: true }
-  ).populate([{ path: "image", model: "File" }]);
+  )
   await Author.findByIdAndUpdate(user._id, {
     ...req.body,
     updatedAt: new Date(),
@@ -91,7 +90,7 @@ export const updateUser = async (req, res) => {
   } */
 };
 export const addToShelf = async (req, res) => {
-  const { _id } = req.locals;
+  const { _id } = req.user;
   const { bookId, shelfName } = req.body;
   try {
     await Book.findById(bookId);
@@ -138,7 +137,7 @@ export const addToShelf = async (req, res) => {
 };
 
 export const removeFromShelf = async (req, res) => {
-  const { _id } = req.locals;
+  const { _id } = req.user;
   const { id } = req.params;
   try {
     const book = await Users.findByIdAndUpdate(
@@ -184,7 +183,7 @@ export const removeFromShelf = async (req, res) => {
 };
 
 export const fetchFromShelf = async (req, res) => {
-  const { _id } = req.locals;
+  const { _id } = req.user;
   try {
     const userShelf = await Users.findById(_id)
       .select("shelf -_id")
@@ -223,7 +222,7 @@ export const fetchFromShelf = async (req, res) => {
   } */
 };
 export const deleteUser = (req, res) => {
-  Users.findByIdAndDelete(req.locals._id)
+  Users.findByIdAndDelete(req.user._id)
     .then((docs) => {
       res.status(201).json({ success: true, payload: docs });
     })

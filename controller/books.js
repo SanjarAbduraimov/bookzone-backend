@@ -2,23 +2,25 @@ import Joi from "joi";
 import Book from "../models/books.js";
 import Author from "../models/authors.js";
 import Comment from "../models/comments.js";
-import _ from "lodash";
-
+import { cloudinaryDelete } from "../lib/cloudinary/index.js";
 export const create = async (req, res) => {
   let { error } = validate(req.body);
   if (error) return res.status(400).json(error.message);
   try {
-    const authorData = await Author.findById(req.locals._id);
+    const authorData = await Author.findById(req.user._id);
     if (!authorData) {
       return res.status(400).json({
         success: false,
         msg: "You don't have a permission to create a book",
       });
     }
-
-    let data = { ...req.body };
-    let book = await Book.create({ ...data, author: req.locals._id });
-    book = await book.populate("author", "-createdAt").execPopulate();
+    let data = { ...req.body, author: req.user._id };
+    let book = new Book(data)
+    Object.assign(book, { newImage: req.file })
+    await book.save()
+    // let book = await Book.create({ ...data, image: { url: 'nimadur', publicId: "shu" }, newImage: req.file });
+    // book = await book.populate("author", "-createdAt").execPopulate();
+    book = await book.populate({ path: "author", select: "-createdAt", strictPopulate: false })
     const { user, ...docs } = book._doc;
     res.status(201).json({ success: true, payload: docs });
   } catch (error) {
@@ -56,7 +58,7 @@ export const create = async (req, res) => {
 
 export const createComment = async (req, res) => {
   try {
-    const { _id } = req.locals;
+    const { _id } = req.user;
     const { book, text } = req.body;
     const isExists = await Book.findById(book);
     if (!isExists) {
@@ -147,11 +149,7 @@ export const fetchBooks = async (req, res) => {
           {
             path: "author",
             select: " -createdAt -updatedAt",
-          },
-          {
-            path: "image",
-            model: "File",
-          },
+          }
         ],
       }
     );
@@ -187,7 +185,6 @@ export const searchBooks = async (req, res) => {
       title: { $regex: `^${title}`, $options: "i" },
     }).populate([
       { path: "author", select: "-createdAt -updatedAt" },
-      { path: "image", model: "File" },
     ]);
 
     res.status(200).json({ success: true, payload: book });
@@ -220,7 +217,7 @@ export const fetchCurrentUserBooks = async (req, res) => {
   try {
     const book = await Book.paginate(
       {
-        author: req.locals._id,
+        author: req.user._id,
       },
       {
         sort: { name: name },
@@ -230,10 +227,6 @@ export const fetchCurrentUserBooks = async (req, res) => {
           {
             path: "author",
             select: " -createdAt -updatedAt",
-          },
-          {
-            path: "image",
-            model: "File",
           },
         ],
       }
@@ -280,16 +273,17 @@ export const fetchBookById = async (req, res) => {
         select:
           "firstName lastName image email phone date_of_birth date_of_death",
       },
-      {
-        path: "image",
-        model: "File",
-      },
     ]);
+    if (!updatedBook) {
+      res.status(400).json({
+        success: false,
+        msg: "Book id is invalid",
+      });
+    }
     const comments = await Comment.find({ book: id }).populate({
       path: "user",
       model: "User",
       select: "firstName lastName image",
-      populate: { path: "image", model: "File" },
     });
     res.status(200).json({
       success: true,
@@ -318,11 +312,18 @@ export const updateBook = async (req, res) => {
   if (error) return res.status(404).json(error.message);
   const { id } = req.params;
   try {
-    const book = await Book.findByIdAndUpdate(
-      id,
-      { ...req.body },
-      { new: true }
-    ).select("-author");
+    console.log(req.body, "=======");
+    // let book = new Book(data)
+    // Object.assign(book, { newImage: req.file })
+    // await book.save()
+    const book = await Book.findById(id).select("-author");
+    Object.assign(book, { ...req.body, newImage: req.file })
+    // const book = await Book.findByIdAndUpdate(
+    //   id,
+    //   { ...req.body },
+    //   { new: true }
+    // ).select("-author");
+    await book.save()
     res.status(201).json({ success: true, payload: book });
   } catch (err) {
     res.status(400).json({
@@ -365,6 +366,7 @@ export const deleteBook = async (req, res) => {
   const { id } = req.params;
   try {
     const book = await Book.findByIdAndDelete(id);
+    const result = !book.imageId || await cloudinaryDelete(book.imageId)
     res.status(201).json({ success: true, payload: book });
   } catch (err) {
     res.status(400).json({

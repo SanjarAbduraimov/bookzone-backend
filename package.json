@@ -9,15 +9,13 @@
     "dev": "node config/swagger.js && nodemon --env-file=.env.development app.js",
     "swagger-autogen": "node config/swagger.js"
   },
-  "engines": {
-    "node": "v20.10.0"
-  },
   "author": "Sanjarbek Abduraimov",
   "license": "ISC",
   "type": "module",
   "dependencies": {
     "axios": "^1.6.2",
     "bcrypt": "^5.0.1",
+    "cloudinary": "^2.4.0",
     "compression": "^1.7.4",
     "config": "^3.3.6",
     "connect-mongodb-session": "^3.1.1",
@@ -38,6 +36,8 @@
     "nanoid": "^5.0.4",
     "nodemailer": "^6.9.7",
     "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "pug": "^3.0.2",
     "sass": "^1.49.7",

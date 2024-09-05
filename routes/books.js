@@ -1,9 +1,9 @@
 import express from "express";
 import {
-  currentUser,
   isOwnComment,
   isOwnBook,
   isAuthorized,
+  auth,
 } from "../utils/index.js";
 import {
   create,
@@ -17,17 +17,17 @@ import {
   deleteComment,
   fetchCurrentUserBooks,
 } from "../controller/books.js";
-import multer from "../utils/multer.js";
+import upload from "../utils/multer.js";
 
 const router = express.Router();
-router.get("/my-books", currentUser, fetchCurrentUserBooks);
+router.get("/my-books", auth, fetchCurrentUserBooks);
 router.get("/", fetchBooks);
 router.get("/author/:id", fetchBookByAuthorId);
 router.get("/search", searchBooks);
 router.get("/:id", fetchBookById);
-router.post("/", currentUser, isAuthorized, create);
-router.post("/comment", currentUser, createComment);
-router.delete("/comment/:id", currentUser, deleteComment);
-router.patch("/:id", currentUser, isAuthorized, isOwnBook, updateBook);
-router.delete("/:id", currentUser, isAuthorized, isOwnBook, deleteBook);
+router.post("/", auth, isAuthorized, upload.single("image"), create);
+router.post("/comment", auth, createComment);
+router.delete("/comment/:id", auth, isOwnComment, deleteComment);
+router.patch("/:id", auth, isAuthorized, isOwnBook, upload.single("image"), updateBook);
+router.delete("/:id", auth, isAuthorized, isOwnBook, deleteBook);
 export default router;

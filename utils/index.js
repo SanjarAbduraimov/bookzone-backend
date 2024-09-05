@@ -5,6 +5,7 @@ import Comment from "../models/comments.js";
 import Users from "../models/users.js";
 import rateLimit from "express-rate-limit";
 import MyError from "./error.js";
+import passport from "../lib/passport/index.js";
 export const createToken = (user, options) => {
   return jwt.sign({ ...user }, SECRET_KEY, { expiresIn: "10h", ...options });
 };
@@ -23,9 +24,15 @@ export const validateToken = (token, msg) => {
   }
 };
 export const isOwnComment = async (req, res, next) => {
-  const comment = await Comment.findById(req.params.commentId);
+  const comment = await Comment.findById(req.params.id);
+  if (!comment) {
+    return res.status(400).json({
+      success: false,
+      msg: "invalid comment id",
+    });
+  }
   if (comment.user.toString() !== req.user._id.toString()) {
-    return res.status(401).json({
+    return res.status(403).json({
       success: false,
       msg: "You are not authorized to delete this comment",
     });
@@ -41,7 +48,7 @@ export const isOwnBook = async (req, res, next) => {
         .status(400)
         .json({ success: false, error: "book id  is invalid" });
     }
-    if (req.locals._id.toString() === book.author.toString()) {
+    if (req.user._id.toString() === book.author.toString()) {
       next();
     } else {
       res.status(401).json({ success: false, error: "You are not authorized" });
@@ -52,7 +59,7 @@ export const isOwnBook = async (req, res, next) => {
 };
 export const isAuthorized = async (req, res, next) => {
   try {
-    const user = await Users.findById(req.locals._id);
+    const user = await Users.findById(req.user._id);
     if (!user) {
       return res
         .status(401)
@@ -67,7 +74,26 @@ export const isAuthorized = async (req, res, next) => {
     res.status(401).json({ success: false, error: "user id  is invalid" });
   }
 };
+export const auth = async (req, res, next) => {
+  if (req.user || req.isAuthenticated()) {
+    return next()
+  }
 
+  passport().authenticate(["jwt"], {
+    session: false
+  }, (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(401).json({ success: false, msg: "You are not authenticated" });
+    }
+    req.user = user;
+    next()
+  })(req, res, next)
+
+
+}
 export const currentUser = async (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
 
@@ -76,7 +102,7 @@ export const currentUser = async (req, res, next) => {
     try {
       const user = await Users.findById(validToken._id);
       if (user) {
-        req.locals = { ...req.locals, _id: user._id, role: user.role };
+        req.user = { ...req.user, _id: user._id, role: user.role };
         next();
       } else {
         res
@@ -102,7 +128,7 @@ export const isAdmin = async (req, res, next) => {
     try {
       const admin = await Users.findById(validToken._id);
       if (admin.isAdmin) {
-        req.locals = { ...req.locals, _id: admin._id, role: "admin" };
+        req.user = { ...req.user, _id: admin._id, role: "admin" };
         next();
       } else {
         res
