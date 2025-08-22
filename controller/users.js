@@ -187,7 +187,7 @@ exports.fetchFromShelf = async (req, res) => {
   const { _id } = req.locals;
   try {
     const userShelf = await Users.findById(_id)
-      .select("shelf -_id")
+      .select("shelf _id")
       .populate({
         path: "shelf",
         populate: {
