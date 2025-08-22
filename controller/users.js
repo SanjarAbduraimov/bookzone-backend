@@ -99,7 +99,7 @@ exports.addToShelf = async (req, res) => {
       _id,
       { $addToSet: { shelf: bookId } },
       { new: true }
-    ).select("shelf -_id");
+    ).select("shelf _id");
 
     res.status(201).json({ success: true, payload: userShelf });
   } catch (error) {

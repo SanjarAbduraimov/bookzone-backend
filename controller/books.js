@@ -57,14 +57,14 @@ exports.create = async (req, res) => {
 exports.createComment = async (req, res) => {
   try {
     const { _id } = req.locals;
-    const { book, text } = req.body;
-    const isExists = await Book.findById(book);
+    const { bookId, text } = req.body;
+    const isExists = await Book.findById(bookId);
     if (!isExists) {
       return res
         .status(400)
         .json({ success: false, msg: "book id is invalid" });
     }
-    const comment = await Comment.create({ text, book, user: _id });
+    const comment = await Comment.create({ text, bookId, user: _id });
     res.status(200).json({ success: true, payload: comment });
   } catch (error) {
     res

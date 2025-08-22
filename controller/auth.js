@@ -29,8 +29,8 @@ exports.signUp = async (req, res) => {
   } */
 
   let { error } = validateSignUp(req.body);
-  if (error) throw new MyError(error.message, 400)
-  console.log("G'alati")
+  if (error) throw new MyError(error.message, 400);
+  console.log("G'alati");
   let user = await Users.create({ ...req.body });
   if (req.body.role === "author") {
     await Author.create({ ...user._doc });
@@ -66,8 +66,13 @@ exports.forgotPassword = async (req, res) => {
   if (error) throw new MyError(error.message, 400);
   const user = await User.findOne({ email: req.body.email });
   // Generate a reset token and store it in the database
-  const resetToken = createToken({ _id: user._id, email: user.email, role: user.role }, { expiresIn: "15m" });
-  const fullUrl = req.get("Referer") ? `${new URL(req.url, req.get("Referer"))}` : `${req.protocol}://${req.get('host')}${req.originalUrl}`
+  const resetToken = createToken(
+    { _id: user._id, email: user.email, role: user.role },
+    { expiresIn: "15m" }
+  );
+  const fullUrl = req.get("Referer")
+    ? `${new URL(req.url, req.get("Referer"))}`
+    : `${req.protocol}://${req.get("host")}${req.originalUrl}`;
 
   const mail = await emailService.send({
     to: user.email, //auth/verify/forget-password/:token
@@ -75,9 +80,11 @@ exports.forgotPassword = async (req, res) => {
   });
   user.resetToken = resetToken;
   await user.save();
-  return res.status(201).json({ success: true, msg: `Verification link sended to your email` });
-}
-exports.changePassword  = async (req, res) => {
+  return res
+    .status(201)
+    .json({ success: true, msg: `Verification link sended to your email` });
+};
+exports.changePassword = async (req, res) => {
   // #swagger.tags = ['Auth']
   /* #swagger.parameters['body'] = {
         in: 'body',
@@ -102,8 +109,13 @@ exports.changePassword  = async (req, res) => {
   if (error) throw new MyError(error.message, 400);
   const user = await User.findOne({ email: req.body.email });
   // Generate a reset token and store it in the database
-  const resetToken = createToken({ _id: user._id, email: user.email, role: user.role }, { expiresIn: "15m" });
-  const fullUrl = req.get("Referer") ? `${new URL(req.url, req.get("Referer"))}` : `${req.protocol}://${req.get('host')}${req.originalUrl}`
+  const resetToken = createToken(
+    { _id: user._id, email: user.email, role: user.role },
+    { expiresIn: "15m" }
+  );
+  const fullUrl = req.get("Referer")
+    ? `${new URL(req.url, req.get("Referer"))}`
+    : `${req.protocol}://${req.get("host")}${req.originalUrl}`;
 
   const mail = await emailService.send({
     to: user.email, //auth/verify/forget-password/:token
@@ -111,69 +123,85 @@ exports.changePassword  = async (req, res) => {
   });
   user.resetToken = resetToken;
   await user.save();
-  return res.status(201).json({ success: true, msg: `Verification link sended to your email` });
-}
+  return res
+    .status(201)
+    .json({ success: true, msg: `Verification link sended to your email` });
+};
 
 exports.resetPassword = async (req, res) => {
-  const token = req.params.token
-  const { error } = validatePassword(req.body)
-  if (error) throw new MyError(error.message, 400)
-  const validatedToken = validateToken(token, "Invalid verification link")
-  const user = await User.findOne({ email: validatedToken.email, resetToken: token })
+  const token = req.params.token;
+  const { error } = validatePassword(req.body);
+  if (error) throw new MyError(error.message, 400);
+  const validatedToken = validateToken(token, "Invalid verification link");
+  const user = await User.findOne({
+    email: validatedToken.email,
+    resetToken: token,
+  });
   if (!user) throw new MyError("Invalid verification link", 400);
-  user.password = req.body.password
+  user.password = req.body.password;
   user.resetToken = undefined;
-  await user.save()
-  return res.status(201).json({ success: true, msg: 'Password resettled successfully' });
-}
+  await user.save();
+  return res
+    .status(201)
+    .json({ success: true, msg: "Password resettled successfully" });
+};
 exports.verifyResetPassword = async (req, res) => {
-  const token = req.params.token
-  const validatedToken = validateToken(token, "Invalid verification link")
-  const user = await User.findOne({ email: validatedToken.email, resetToken: token })
+  const token = req.params.token;
+  const validatedToken = validateToken(token, "Invalid verification link");
+  const user = await User.findOne({
+    email: validatedToken.email,
+    resetToken: token,
+  });
   if (!user) throw new MyError("Invalid verification link", 400);
   return res.status(200).json({ success: true });
-}
+};
 
 exports.verifyEmail = async (req, res) => {
-
-  const { token } = req.params
-  let validToken = validateToken(token, "Invalid verification link")
-  let user = await User.findById(validToken._id)
-  if (!user) throw new MyError("Invalid verification link", 400)
+  const { token } = req.params;
+  let validToken = validateToken(token, "Invalid verification link");
+  let user = await User.findById(validToken._id);
+  if (!user) throw new MyError("Invalid verification link", 400);
   user.verified = true;
   await user.save();
 
-  return res.status(201).json({ success: true, msg: 'Email has verified' });
-
-}
+  return res.status(201).json({ success: true, msg: "Email has verified" });
+};
 
 exports.generateEmailVerificationToken = async (req, res) => {
-
   const { error } = validateEmail(req.body);
   if (error) throw new MyError(error.message, 400);
 
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
-    return res.status(201).json({ success: true, msg: 'Email not found. Please register to continue.' });
+    return res.status(201).json({
+      success: true,
+      msg: "Email not found. Please register to continue.",
+    });
   }
 
   if (user && !user.verified) {
-    let token = createToken({ _id: user._id, email: user.email, role: user.role }, { expiresIn: "15m" });
+    let token = createToken(
+      { _id: user._id, email: user.email, role: user.role },
+      { expiresIn: "15m" }
+    );
 
-    const fullUrl = req.get("Referer") ? `${new URL(req.url, req.get("Referer"))}` : `${req.protocol}://${req.get('host')}${req.originalUrl}`
+    const fullUrl = req.get("Referer")
+      ? `${new URL(req.url, req.get("Referer"))}`
+      : `${req.protocol}://${req.get("host")}${req.originalUrl}`;
     console.log(token, "token");
     const mail = await emailService.send({
       to: user.email,
       html: `<a href='${fullUrl}/?token=${token}'><b>Bos Jails</b></a>`,
-    })
+    });
     console.log(fullUrl, `/?token=${token}`);
-    return res.status(201).json({ success: true, msg: `Verification link sended to your email` });
+    return res
+      .status(201)
+      .json({ success: true, msg: `Verification link sended to your email` });
   }
 
-  return res.status(400).json({ success: true, msg: 'Email already verified' });
-
-}
+  return res.status(400).json({ success: true, msg: "Email already verified" });
+};
 exports.login = async (req, res) => {
   // #swagger.tags = ['Auth']
   /* #swagger.parameters['body'] = {
@@ -197,11 +225,11 @@ exports.login = async (req, res) => {
 
   let { email, password } = req.body;
   let { error } = validateLogin(req.body);
-  if (error) throw new MyError(error.message, 400)
+  if (error) throw new MyError(error.message, 400);
 
   // try {
   let user = await Users.findOne({ email }, { password: { select: false } });
-  if (!user) throw new MyError("Email or password is incorrect", 400)
+  if (!user) throw new MyError("Email or password is incorrect", 400);
 
   const isPasswordCorrect = await user.comparePassword(password);
   if (isPasswordCorrect) {
@@ -209,7 +237,7 @@ exports.login = async (req, res) => {
     let { password, ...docs } = user._doc;
     return res.status(200).json({ token, user: docs, success: true });
   }
-  throw new MyError("Email or password is incorrect", 400)
+  throw new MyError("Email or password is incorrect", 400);
 };
 
 function validateEmail(formData) {
