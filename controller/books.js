@@ -64,7 +64,7 @@ exports.createComment = async (req, res) => {
         .status(400)
         .json({ success: false, msg: "book id is invalid" });
     }
-    const comment = await Comment.create({ text, bookId, user: _id });
+    const comment = await Comment.create({ text, book: bookId, user: _id });
     res.status(200).json({ success: true, payload: comment });
   } catch (error) {
     res
